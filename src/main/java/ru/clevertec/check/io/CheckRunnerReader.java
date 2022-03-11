@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class CheckRunnerReader {
 
     public void read(CheckRunnerDao checkRunnerDao) {
-        File checkRunner = new File("src/main/java/ru/clevertec/check/resources/checkRunner");
+        File checkRunner = new File("src/main/resources/checkRunner");
         try (Scanner scanner = new Scanner(checkRunner)) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();

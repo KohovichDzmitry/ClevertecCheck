@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class CardReader {
 
     public void read(CardDao cardDao) {
-        File cards = new File("src/main/java/ru/clevertec/check/resources/cards");
+        File cards = new File("src/main/resources/cards");
         try (Scanner scanner = new Scanner(cards)) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();

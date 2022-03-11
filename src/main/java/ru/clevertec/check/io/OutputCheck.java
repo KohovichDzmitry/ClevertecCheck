@@ -31,7 +31,7 @@ public class OutputCheck implements IOutputCheck{
 
     @Override
     public void printCheck(Integer numberCard) {
-        File file = new File("src/main/java/ru/clevertec/check/resources/check");
+        File file = new File("src/main/resources/check");
         try (PrintWriter pw = new PrintWriter(file)) {
             Card card = cardDao.getByNumber(numberCard);
             pw.println("\t\t\t  -=Магазин 777=-");

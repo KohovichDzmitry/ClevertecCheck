@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class ProductReader {
 
     public void read(ProductDao productDao) {
-        File products = new File("src/main/java/ru/clevertec/check/resources/products");
+        File products = new File("src/main/resources/products");
         try (Scanner scanner = new Scanner(products)) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
