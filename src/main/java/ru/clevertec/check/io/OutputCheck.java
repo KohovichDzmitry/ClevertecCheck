@@ -30,8 +30,8 @@ public class OutputCheck implements IOutputCheck{
     }
 
     @Override
-    public void printCheck(Integer numberCard) {
-        File file = new File("src/main/java/ru/clevertec/check/resources/check");
+    public void printCheck(int numberCard) {
+        File file = new File("src/main/resources/check");
         try (PrintWriter pw = new PrintWriter(file)) {
             Card card = cardDao.getByNumber(numberCard);
             pw.println("\t\t\t  -=Магазин 777=-");
@@ -41,7 +41,7 @@ public class OutputCheck implements IOutputCheck{
             pw.println("\t\t\t\t\t время: " + time.getHour() + ":" + time.getMinute() + ":" + time.getSecond());
             pw.println("-----------------------------------------");
             pw.println("Кол.\t" + "Наименование\t\t" + "Цена\t" + "Сумма");
-            Double totalSum = BigDecimal.valueOf(findNeededProduct(pw))
+            double totalSum = BigDecimal.valueOf(findNeededProduct(pw))
                     .setScale(2, RoundingMode.HALF_UP).doubleValue();
             pw.println("=========================================");
             pw.println("Сумма\t\t\t\t\t\t\t\t" + totalSum);
@@ -68,7 +68,7 @@ public class OutputCheck implements IOutputCheck{
     }
 
     @Override
-    public void discount(Integer discount, Double totalSum, PrintWriter pw) {
+    public void discount(int discount, double totalSum, PrintWriter pw) {
         if (discount != 0) {
             pw.println("Скидка по предъявленной карте\t\t" + discount + "%");
             pw.println("Сумма с учетом скидки\t\t\t\t" + BigDecimal.valueOf(totalSum
@@ -77,7 +77,7 @@ public class OutputCheck implements IOutputCheck{
     }
 
     @Override
-    public Double findNeededProduct(PrintWriter pw) {
+    public double findNeededProduct(PrintWriter pw) {
         try {
             double totalSum = 0;
             for (CheckRunner productInCheck : checkRunnerDao.getAll()) {
