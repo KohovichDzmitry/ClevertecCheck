@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class ProductReader {
 
@@ -21,7 +22,7 @@ public class ProductReader {
                 String[] data = line.split(" ");
                 String regex = "(([А-ЯЁ][а-яё]{2,29})|([A-Z][a-z]{2,29}))\\s" +
                         "((([1-9]|[1-9]\\d)\\.[0-9]{2})|(100\\.00))\\s([10])";
-                if (line.matches(regex)) {
+                if (Pattern.matches(regex, line)) {
                     String name = data[0];
                     double price = Double.parseDouble(data[1]);
                     int stock = Integer.parseInt(data[2]);
