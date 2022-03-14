@@ -8,15 +8,15 @@ public class CardDao implements ICardDao{
     private final List<Card> listOfCards = new ArrayList<>();
 
     @Override
-    public void save(Integer number, Integer discount) {
+    public void save(int number, int discount) {
         Card card = new Card(number, discount);
         listOfCards.add(card);
     }
 
     @Override
-    public Card getByNumber(Integer number) {
+    public Card getByNumber(int number) {
         for (Card card : listOfCards) {
-            if (number.equals(card.getNumber())) {
+            if (number == card.getNumber()) {
                 return card;
             }
         }

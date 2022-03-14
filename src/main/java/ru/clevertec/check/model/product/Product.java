@@ -2,22 +2,22 @@ package ru.clevertec.check.model.product;
 
 public class Product {
 
-    private Integer id;
+    private int id;
     private final String name;
-    private final Double price;
+    private final double price;
     private final int stock;
 
-    public Product(String name, Double price, int stock) {
+    public Product(String name, double price, int stock) {
         this.name = name;
         this.price = price;
         this.stock = stock;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
@@ -25,7 +25,7 @@ public class Product {
         return name;
     }
 
-    public Double getPrice() {
+    public double getPrice() {
         return price;
     }
 

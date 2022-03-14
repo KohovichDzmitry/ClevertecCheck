@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface ICheckRunnerDao {
 
-    void buy(Integer id, Integer quantity);
+    void buy(int id, int quantity);
 
     List<CheckRunner> getAll();
 }

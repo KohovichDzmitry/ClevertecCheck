@@ -15,7 +15,7 @@ public class ProductReader {
                 String line = scanner.nextLine();
                 String[] data = line.split(" ");
                 String name = data[0];
-                Double price = Double.parseDouble(data[1]);
+                double price = Double.parseDouble(data[1]);
                 int stock = Integer.parseInt(data[2]);
                 productDao.save(name, price, stock);
             }

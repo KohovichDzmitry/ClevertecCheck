@@ -14,8 +14,8 @@ public class CheckRunnerReader {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] data = line.split(" ");
-                Integer id = Integer.parseInt(data[0]);
-                Integer quantity = Integer.parseInt(data[1]);
+                int id = Integer.parseInt(data[0]);
+                int quantity = Integer.parseInt(data[1]);
                 checkRunnerDao.buy(id, quantity);
             }
         } catch (FileNotFoundException e) {

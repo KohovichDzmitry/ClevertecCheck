@@ -14,8 +14,8 @@ public class CardReader {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] data = line.split(" ");
-                Integer number = Integer.parseInt(data[0]);
-                Integer discount = Integer.parseInt(data[1]);
+                int number = Integer.parseInt(data[0]);
+                int discount = Integer.parseInt(data[1]);
                 cardDao.save(number, discount);
             }
         } catch (FileNotFoundException e) {

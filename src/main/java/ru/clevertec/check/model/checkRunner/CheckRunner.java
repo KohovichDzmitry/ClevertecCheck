@@ -2,19 +2,19 @@ package ru.clevertec.check.model.checkRunner;
 
 public class CheckRunner {
 
-    private final Integer id;
-    private final Integer quantity;
+    private final int id;
+    private final int quantity;
 
-    public CheckRunner(Integer id, Integer quantity) {
+    public CheckRunner(int id, int quantity) {
         this.id = id;
         this.quantity = quantity;
     }
 
-    public Integer getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
