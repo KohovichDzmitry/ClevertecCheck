@@ -22,3 +22,33 @@ application {
 test {
     useJUnitPlatform()
 }
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'ru.clevertec.check.Main'
+    }
+}
+
+sourceCompatibility = JavaVersion.VERSION_11
+
+class FileDownloader extends DefaultTask {
+    @Input
+    String sourceUrl
+
+    @OutputFile
+    File target
+
+    @TaskAction
+    void  download() {
+        try {
+            ant.get(src: sourceUrl, dest: target)
+        } catch (Exception e) {
+            println e
+        }
+    }
+}
+
+task downloadFileFromRepo(type: FileDownloader) {
+    sourceUrl = 'https://github.com/KohovichDzmitry/ClevertecCheck/blob/85664a955db49f3cc1dd2cff169c5bcab135137a/src/main/resources/check'
+    target = new File('src/main/resources/check.txt')
+}
