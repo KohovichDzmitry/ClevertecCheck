@@ -52,3 +52,9 @@ task downloadFileFromRepo(type: FileDownloader) {
     sourceUrl = 'https://github.com/KohovichDzmitry/ClevertecCheck/blob/85664a955db49f3cc1dd2cff169c5bcab135137a/src/main/resources/check'
     target = new File('src/main/resources/check.txt')
 }
+
+compileJava.options.encoding = 'UTF-8'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}

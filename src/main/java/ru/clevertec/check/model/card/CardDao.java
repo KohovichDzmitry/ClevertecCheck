@@ -3,7 +3,7 @@ package ru.clevertec.check.model.card;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CardDao implements ICardDao{
+public class CardDao implements ICardDao {
 
     private final List<Card> listOfCards = new ArrayList<>();
 

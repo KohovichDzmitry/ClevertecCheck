@@ -8,14 +8,15 @@ import ru.clevertec.check.model.product.IProductDao;
 import ru.clevertec.check.model.product.Product;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class OutputCheck implements IOutputCheck{
+public class OutputCheck implements IOutputCheck {
 
     private final IProductDao productDao;
     private final ICardDao cardDao;
@@ -32,7 +33,7 @@ public class OutputCheck implements IOutputCheck{
     @Override
     public void printCheck(int numberCard) {
         File file = new File("src/main/resources/check");
-        try (PrintWriter pw = new PrintWriter(file)) {
+        try (PrintWriter pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
             Card card = cardDao.getByNumber(numberCard);
             pw.println("\t\t\t  -=Магазин 777=-");
             pw.println("\t\t г.Минск, ул. Макаёнка 99");
@@ -50,7 +51,7 @@ public class OutputCheck implements IOutputCheck{
             pw.println("\t\t\tCпасибо за покупку!");
         } catch (NullPointerException e) {
             System.out.println("Не удалось определить предъявленную скидочную карту (если она есть)");
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             System.out.println("Файл для записи чека не найден");
         }
     }

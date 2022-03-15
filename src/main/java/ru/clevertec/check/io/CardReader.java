@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -14,7 +15,7 @@ public class CardReader {
     public void read(CardDao cardDao) {
         File cards = new File("src/main/resources/cards");
         File invalidData = new File("src/main/resources/invalidData.txt");
-        try (Scanner scanner = new Scanner(cards)) {
+        try (Scanner scanner = new Scanner(cards, StandardCharsets.UTF_8)) {
             FileWriter fw = new FileWriter(invalidData, true);
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();

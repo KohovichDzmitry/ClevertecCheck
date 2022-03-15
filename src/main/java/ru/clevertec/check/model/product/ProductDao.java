@@ -3,7 +3,7 @@ package ru.clevertec.check.model.product;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductDao implements IProductDao{
+public class ProductDao implements IProductDao {
 
     private final List<Product> listOfProducts = new ArrayList<>();
 

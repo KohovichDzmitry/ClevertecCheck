@@ -2,10 +2,9 @@ package ru.clevertec.check.io;
 
 import ru.clevertec.check.model.product.ProductDao;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import java.util.regex.Pattern;
