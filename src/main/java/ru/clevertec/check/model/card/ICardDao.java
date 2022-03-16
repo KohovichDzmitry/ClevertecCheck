@@ -2,7 +2,7 @@ package ru.clevertec.check.model.card;
 
 public interface ICardDao {
 
-    void save(Integer number, Integer discount);
+    void save(int number, int discount);
 
-    Card getByNumber(Integer number);
+    Card getByNumber(int number);
 }

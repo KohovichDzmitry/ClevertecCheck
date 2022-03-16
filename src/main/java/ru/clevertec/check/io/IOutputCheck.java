@@ -4,11 +4,11 @@ import java.io.PrintWriter;
 
 public interface IOutputCheck {
 
-    void printCheck(Integer numberCard);
+    void printCheck(int numberCard);
 
-    Double findNeededProduct(PrintWriter pw);
+    double findNeededProduct(PrintWriter pw);
 
-    void discount(Integer numberCard, Double totalSum, PrintWriter pw);
+    void discount(int numberCard, double totalSum, PrintWriter pw);
 
     int stockProduct();
 }
