@@ -3,8 +3,6 @@ package ru.clevertec.check.io;
 import ru.clevertec.check.model.product.ProductDao;
 
 import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import java.util.regex.Pattern;
