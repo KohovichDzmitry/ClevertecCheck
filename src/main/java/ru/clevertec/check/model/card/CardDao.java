@@ -1,11 +1,11 @@
 package ru.clevertec.check.model.card;
 
-import java.util.ArrayList;
-import java.util.List;
+import ru.clevertec.check.util.CustomArrayList;
+import ru.clevertec.check.util.CustomList;
 
 public class CardDao implements ICardDao {
 
-    private final List<Card> listOfCards = new ArrayList<>();
+    private final CustomList<Card> listOfCards = new CustomArrayList<>();
 
     @Override
     public void save(int number, int discount) {

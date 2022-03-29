@@ -6,7 +6,7 @@ public interface CustomList<E> extends Iterable<E> {
 
     Iterator<E> getIterator();
 
-    void setMaxSize(int i);
+    void setMaxSize(int index);
 
     void add(E element);
 
@@ -22,7 +22,7 @@ public interface CustomList<E> extends Iterable<E> {
 
     E get(int index);
 
-    E[] toArray();
+    Object[] toArray();
 
     int size();
 
