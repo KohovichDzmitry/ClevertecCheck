@@ -2,7 +2,7 @@ package ru.clevertec.check.util;
 
 import java.util.Iterator;
 
-public interface CustomList<E> extends Iterable<E> {
+public interface CustomList<E> {
 
     Iterator<E> getIterator();
 
