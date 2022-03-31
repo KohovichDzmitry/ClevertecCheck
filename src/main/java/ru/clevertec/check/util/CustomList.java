@@ -1,14 +1,14 @@
 package ru.clevertec.check.util;
 
-import java.util.Iterator;
-
 public interface CustomList<E> {
 
-    Iterator<E> getIterator();
+    CustomIterator<E> getIterator();
 
     void setMaxSize(int index);
 
     void add(E element);
+
+    void add(int index, E element);
 
     void addAll(CustomList<? extends E> customList);
 

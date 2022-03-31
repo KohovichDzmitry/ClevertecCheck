@@ -1,11 +1,11 @@
 package ru.clevertec.check.model.checkRunner;
 
-import java.util.ArrayList;
-import java.util.List;
+import ru.clevertec.check.util.CustomArrayList;
+import ru.clevertec.check.util.CustomList;
 
 public class CheckRunnerDao implements ICheckRunnerDao {
 
-    private final List<CheckRunner> listOfCheckRunner = new ArrayList<>();
+    private final CustomList<CheckRunner> listOfCheckRunner = new CustomArrayList<>();
 
     @Override
     public void buy(int id, int quantity) {
@@ -14,7 +14,7 @@ public class CheckRunnerDao implements ICheckRunnerDao {
     }
 
     @Override
-    public List<CheckRunner> getAll() {
-        return new ArrayList<>(listOfCheckRunner);
+    public CustomList<CheckRunner> getAll() {
+        return new CustomArrayList<>(listOfCheckRunner);
     }
 }

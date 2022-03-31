@@ -1,8 +1,6 @@
 package ru.clevertec.check.util;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Objects;
+import java.util.*;
 
 public class CustomArrayList<E> implements CustomList<E> {
 
@@ -11,6 +9,20 @@ public class CustomArrayList<E> implements CustomList<E> {
 
     public CustomArrayList() {
         this.elementData = new Object[]{};
+    }
+
+    public CustomArrayList(CustomList<? extends E> customList) {
+        Object[] a = customList.toArray();
+        size = a.length;
+        if (size != 0) {
+            if (customList.getClass() == CustomArrayList.class) {
+                elementData = a;
+            } else {
+                elementData = Arrays.copyOf(a, size, Object[].class);
+            }
+        } else {
+            elementData = new Object[]{};
+        }
     }
 
     @Override
@@ -33,6 +45,19 @@ public class CustomArrayList<E> implements CustomList<E> {
         if (maxSize == 0 || size < maxSize) {
             elementData = Arrays.copyOf(elementData, s + 1);
             elementData[s] = element;
+            size = s + 1;
+        } else {
+            throw new ArrayIndexOutOfBoundsException("Превышено установленное максимальное количество элементов");
+        }
+    }
+
+    @Override
+    public void add(int index, E element) {
+        int s = size;
+        if (maxSize == 0 || size < maxSize) {
+            elementData = Arrays.copyOf(elementData, s + 1);
+            System.arraycopy(elementData, index, elementData, index + 1, s - index);
+            elementData[index] = element;
             size = s + 1;
         } else {
             throw new ArrayIndexOutOfBoundsException("Превышено установленное максимальное количество элементов");
@@ -125,25 +150,9 @@ public class CustomArrayList<E> implements CustomList<E> {
     }
 
     @Override
-    public Iterator<E> getIterator() {
-        return null;
+    public CustomIterator<E> getIterator() {
+        return new CustomItr();
     }
-
-//    public String toString() {
-//        Iterator<E> it = getIterator();
-//        if (! it.hasNext())
-//            return "[]";
-//
-//        StringBuilder sb = new StringBuilder();
-//        sb.append('[');
-//        for (;;) {
-//            E e = it.next();
-//            sb.append(e == this ? "(this Collection)" : e);
-//            if (! it.hasNext())
-//                return sb.append(']').toString();
-//            sb.append(',').append(' ');
-//        }
-//    }
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -155,4 +164,48 @@ public class CustomArrayList<E> implements CustomList<E> {
         }
         return sb.append(']').toString();
     }
+
+    private class CustomItr implements CustomIterator<E> {
+
+        int cursor;
+        int lastRet = -1;
+
+        @Override
+        public boolean hasNext() {
+            return cursor != size;
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public E next() {
+            int i = cursor;
+            Object[] elementData = CustomArrayList.this.elementData;
+            cursor = i + 1;
+            return (E) elementData[lastRet = i];
+        }
+
+        @Override
+        public void remove() {
+            CustomArrayList.this.remove(lastRet);
+            cursor = lastRet;
+            lastRet = -1;
+        }
+
+        @Override
+        public void addBefore(E element) {
+            int i = cursor;
+            CustomArrayList.this.add(i - 1, element);
+            cursor = i + 1;
+            lastRet = -1;
+        }
+
+        @Override
+        public void addAfter(E element) {
+            int i = cursor;
+            CustomArrayList.this.add(i, element);
+            cursor = i + 1;
+            lastRet = -1;
+        }
+    }
 }
+

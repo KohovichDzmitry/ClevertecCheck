@@ -1,11 +1,12 @@
 package ru.clevertec.check.model.product;
 
-import java.util.ArrayList;
-import java.util.List;
+import ru.clevertec.check.util.CustomArrayList;
+import ru.clevertec.check.util.CustomIterator;
+import ru.clevertec.check.util.CustomList;
 
 public class ProductDao implements IProductDao {
 
-    private final List<Product> listOfProducts = new ArrayList<>();
+    private final CustomList<Product> listOfProducts = new CustomArrayList<>();
 
     @Override
     public void save(String name, double price, int stock) {
@@ -16,7 +17,9 @@ public class ProductDao implements IProductDao {
 
     @Override
     public Product getById(int id) {
-        for (Product product : listOfProducts) {
+        CustomIterator<Product> productCustomIterator = listOfProducts.getIterator();
+        while (productCustomIterator.hasNext()) {
+            Product product = productCustomIterator.next();
             if (id == product.getId()) {
                 return product;
             }
