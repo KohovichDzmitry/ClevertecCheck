@@ -168,7 +168,6 @@ public class CustomArrayList<E> implements CustomList<E> {
     private class CustomItr implements CustomIterator<E> {
 
         int cursor;
-        int lastRet = -1;
 
         @Override
         public boolean hasNext() {
@@ -178,34 +177,25 @@ public class CustomArrayList<E> implements CustomList<E> {
         @Override
         @SuppressWarnings("unchecked")
         public E next() {
-            int i = cursor;
-            Object[] elementData = CustomArrayList.this.elementData;
-            cursor = i + 1;
-            return (E) elementData[lastRet = i];
+            return (E) elementData[cursor++];
         }
 
         @Override
         public void remove() {
-            CustomArrayList.this.remove(lastRet);
-            cursor = lastRet;
-            lastRet = -1;
+            cursor--;
+            CustomArrayList.this.remove(cursor);
         }
 
         @Override
         public void addBefore(E element) {
-            int i = cursor;
-            CustomArrayList.this.add(i - 1, element);
-            cursor = i + 1;
-            lastRet = -1;
+            CustomArrayList.this.add(cursor - 1, element);
+            cursor++;
         }
 
         @Override
         public void addAfter(E element) {
-            int i = cursor;
-            CustomArrayList.this.add(i, element);
-            cursor = i + 1;
-            lastRet = -1;
+            CustomArrayList.this.add(cursor, element);
+            cursor++;
         }
     }
 }
-
