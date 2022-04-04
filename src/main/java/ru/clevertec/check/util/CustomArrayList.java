@@ -145,6 +145,7 @@ public class CustomArrayList<E> implements CustomList<E> {
         for (int i = 0; i < size; i++) {
             if (elementData[i] == null) {
                 remove(i);
+                i--;
             }
         }
     }
