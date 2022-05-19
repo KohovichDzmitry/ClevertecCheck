@@ -9,6 +9,4 @@ public interface IOutputCheck {
     double findNeededProduct(PrintWriter pw);
 
     void discount(int numberCard, double totalSum, PrintWriter pw);
-
-    //int stockProduct();
 }

@@ -57,20 +57,6 @@ public class OutputCheck implements IOutputCheck {
         }
     }
 
-//    @Override
-//    public int stockProduct() {
-//        int count = 0;
-//        CustomIterator<CheckRunner> checkRunnerCustomIterator = checkRunnerDao.getAll().getIterator();
-//        while (checkRunnerCustomIterator.hasNext()) {
-//            CheckRunner productInCheck = checkRunnerCustomIterator.next();
-//            Product stockProduct = productDao.getById(productInCheck.getId());
-//            if (stockProduct.getStock() == 1) {
-//                count++;
-//            }
-//        }
-//        return count;
-//    }
-
     @Override
     public void discount(int discount, double totalSum, PrintWriter pw) {
         if (discount != 0) {

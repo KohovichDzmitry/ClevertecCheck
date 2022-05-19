@@ -1,6 +1,5 @@
 package ru.clevertec.check.model.product;
 
-import ru.clevertec.check.model.checkRunner.CheckRunner;
 import ru.clevertec.check.util.CustomArrayList;
 import ru.clevertec.check.util.CustomIterator;
 import ru.clevertec.check.util.CustomList;
