@@ -6,6 +6,7 @@ import ru.clevertec.check.model.checkRunner.CheckRunner;
 import ru.clevertec.check.model.checkRunner.ICheckRunnerDao;
 import ru.clevertec.check.model.product.IProductDao;
 import ru.clevertec.check.model.product.Product;
+import ru.clevertec.check.util.CustomIterator;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,7 +60,9 @@ public class OutputCheck implements IOutputCheck {
     @Override
     public int stockProduct() {
         int count = 0;
-        for (CheckRunner productInCheck : checkRunnerDao.getAll()) {
+        CustomIterator<CheckRunner> checkRunnerCustomIterator = checkRunnerDao.getAll().getIterator();
+        while (checkRunnerCustomIterator.hasNext()) {
+            CheckRunner productInCheck = checkRunnerCustomIterator.next();
             Product stockProduct = productDao.getById(productInCheck.getId());
             if (stockProduct.getStock() == 1) {
                 count++;
@@ -81,7 +84,9 @@ public class OutputCheck implements IOutputCheck {
     public double findNeededProduct(PrintWriter pw) {
         try {
             double totalSum = 0;
-            for (CheckRunner productInCheck : checkRunnerDao.getAll()) {
+            CustomIterator<CheckRunner> checkRunnerCustomIterator = checkRunnerDao.getAll().getIterator();
+            while (checkRunnerCustomIterator.hasNext()) {
+                CheckRunner productInCheck = checkRunnerCustomIterator.next();
                 Product productInShop = productDao.getById(productInCheck.getId());
                 double sum = productInShop.getPrice() * productInCheck.getQuantity();
                 String field = productInCheck.getQuantity() + "\t\t" + productInShop.getName() + "\t\t\t\t" +
