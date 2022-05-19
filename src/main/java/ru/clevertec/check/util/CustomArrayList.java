@@ -1,6 +1,7 @@
 package ru.clevertec.check.util;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 public class CustomArrayList<E> implements CustomList<E> {
 
@@ -164,6 +165,12 @@ public class CustomArrayList<E> implements CustomList<E> {
                 sb.append(',').append(' ');
         }
         return sb.append(']').toString();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Stream<E> stream() {
+        return (Stream<E>) Arrays.stream(elementData);
     }
 
     private class CustomItr implements CustomIterator<E> {

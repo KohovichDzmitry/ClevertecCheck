@@ -1,5 +1,7 @@
 package ru.clevertec.check.util;
 
+import java.util.stream.Stream;
+
 public interface CustomList<E> {
 
     CustomIterator<E> getIterator();
@@ -27,4 +29,6 @@ public interface CustomList<E> {
     int size();
 
     void trim();
+
+    Stream<E> stream();
 }

@@ -1,6 +1,6 @@
 package ru.clevertec.check.io;
 
-import ru.clevertec.check.model.product.ProductDao;
+import ru.clevertec.check.model.product.IProductDao;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class ProductReader {
 
-    public void read(ProductDao productDao) {
+    public void read(IProductDao productDao) {
         File products = new File("src/main/resources/products");
         File invalidData = new File("src/main/resources/invalidData.txt");
         try (Scanner scanner = new Scanner(products, StandardCharsets.UTF_8)) {

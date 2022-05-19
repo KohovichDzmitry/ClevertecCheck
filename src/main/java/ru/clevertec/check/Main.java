@@ -18,15 +18,15 @@ public class Main {
     public static void main(String[] args) {
 
         ProductReader productReader = new ProductReader();
-        productReader.read((ProductDao) productDao);
+        productReader.read(productDao);
         //создали и сохранили 20 продуктов из файла products; stock: 1 - товар на акции, 0 - не на акции
 
         CardReader cardReader = new CardReader();
-        cardReader.read((CardDao) cardDao);
+        cardReader.read(cardDao);
         // создали и сохранили 5 скидочных карт из файла cards
 
         CheckRunnerReader checkRunnerReader = new CheckRunnerReader();
-        checkRunnerReader.read((CheckRunnerDao) checkRunnerDao);
+        checkRunnerReader.read(checkRunnerDao);
         //создали и сохранили содержимое чека (для примера) из файла checkRunner
 
         outputCheck.printCheck(4444);

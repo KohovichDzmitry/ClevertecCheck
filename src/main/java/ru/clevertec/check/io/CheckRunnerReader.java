@@ -1,6 +1,6 @@
 package ru.clevertec.check.io;
 
-import ru.clevertec.check.model.checkRunner.CheckRunnerDao;
+import ru.clevertec.check.model.checkRunner.ICheckRunnerDao;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class CheckRunnerReader {
 
-    public void read(CheckRunnerDao checkRunnerDao) {
+    public void read(ICheckRunnerDao checkRunnerDao) {
         File checkRunner = new File("src/main/resources/checkRunner");
         File invalidData = new File("src/main/resources/invalidData.txt");
         try (Scanner scanner = new Scanner(checkRunner, StandardCharsets.UTF_8)) {

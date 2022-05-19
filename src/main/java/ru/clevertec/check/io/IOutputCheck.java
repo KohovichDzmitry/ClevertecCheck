@@ -10,5 +10,5 @@ public interface IOutputCheck {
 
     void discount(int numberCard, double totalSum, PrintWriter pw);
 
-    int stockProduct();
+    //int stockProduct();
 }

@@ -57,19 +57,19 @@ public class OutputCheck implements IOutputCheck {
         }
     }
 
-    @Override
-    public int stockProduct() {
-        int count = 0;
-        CustomIterator<CheckRunner> checkRunnerCustomIterator = checkRunnerDao.getAll().getIterator();
-        while (checkRunnerCustomIterator.hasNext()) {
-            CheckRunner productInCheck = checkRunnerCustomIterator.next();
-            Product stockProduct = productDao.getById(productInCheck.getId());
-            if (stockProduct.getStock() == 1) {
-                count++;
-            }
-        }
-        return count;
-    }
+//    @Override
+//    public int stockProduct() {
+//        int count = 0;
+//        CustomIterator<CheckRunner> checkRunnerCustomIterator = checkRunnerDao.getAll().getIterator();
+//        while (checkRunnerCustomIterator.hasNext()) {
+//            CheckRunner productInCheck = checkRunnerCustomIterator.next();
+//            Product stockProduct = productDao.getById(productInCheck.getId());
+//            if (stockProduct.getStock() == 1) {
+//                count++;
+//            }
+//        }
+//        return count;
+//    }
 
     @Override
     public void discount(int discount, double totalSum, PrintWriter pw) {
@@ -91,7 +91,9 @@ public class OutputCheck implements IOutputCheck {
                 double sum = productInShop.getPrice() * productInCheck.getQuantity();
                 String field = productInCheck.getQuantity() + "\t\t" + productInShop.getName() + "\t\t\t\t" +
                         productInShop.getPrice() + "\t" + sum;
-                if (stockProduct() > 4 && productInShop.getStock() == 1) {
+                long numberOfProductsInStock = productDao.getAll().stream()
+                        .filter(e -> e.getStock() == 1).count();
+                if (numberOfProductsInStock > 4 && productInShop.getStock() == 1) {
                     pw.println(field);
                     sum = productInShop.getPrice() * productInCheck.getQuantity() * 0.9;
                     pw.println("\t(на товар \"" + productInShop.getName() + "\" акция -10%)\t"
@@ -99,7 +101,7 @@ public class OutputCheck implements IOutputCheck {
                 } else {
                     pw.println(field);
                 }
-                totalSum = totalSum + sum;
+                totalSum += sum;
             }
             return totalSum;
         } catch (NullPointerException e) {

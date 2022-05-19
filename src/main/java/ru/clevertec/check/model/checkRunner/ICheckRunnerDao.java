@@ -7,5 +7,4 @@ public interface ICheckRunnerDao {
     void buy(int id, int quantity);
 
     CustomList<CheckRunner> getAll();
-
 }
