@@ -1,11 +1,11 @@
-package ru.clevertec.check.model.checkRunner;
+package ru.clevertec.check.model.order;
 
-public class CheckRunner {
+public class Order {
 
     private final int id;
     private final int quantity;
 
-    public CheckRunner(int id, int quantity) {
+    public Order(int id, int quantity) {
         this.id = id;
         this.quantity = quantity;
     }
@@ -20,7 +20,7 @@ public class CheckRunner {
 
     @Override
     public String toString() {
-        return "CheckRunner{" +
+        return "Order{" +
                 "id=" + id +
                 ", quantity=" + quantity +
                 '}';

@@ -1,6 +1,6 @@
 package ru.clevertec.check.io;
 
-import ru.clevertec.check.model.checkRunner.CheckRunnerDao;
+import ru.clevertec.check.model.order.IOrderDao;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,10 +10,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
-public class CheckRunnerReader {
+public class OrderReader {
 
-    public void read(CheckRunnerDao checkRunnerDao) {
-        File checkRunner = new File("src/main/resources/checkRunner");
+    public void read(IOrderDao orderDao) {
+        File checkRunner = new File("src/main/resources/order");
         File invalidData = new File("src/main/resources/invalidData.txt");
         try (Scanner scanner = new Scanner(checkRunner, StandardCharsets.UTF_8)) {
             FileWriter fw = new FileWriter(invalidData, true);
@@ -24,7 +24,7 @@ public class CheckRunnerReader {
                 if (Pattern.matches(regex, line)) {
                     int id = Integer.parseInt(data[0]);
                     int quantity = Integer.parseInt(data[1]);
-                    checkRunnerDao.buy(id, quantity);
+                    orderDao.buy(id, quantity);
                 } else {
                     fw.write(line + "\n");
                 }

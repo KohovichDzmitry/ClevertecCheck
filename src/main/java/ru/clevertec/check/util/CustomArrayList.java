@@ -1,6 +1,8 @@
 package ru.clevertec.check.util;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 public class CustomArrayList<E> implements CustomList<E> {
 
@@ -20,6 +22,15 @@ public class CustomArrayList<E> implements CustomList<E> {
             } else {
                 elementData = Arrays.copyOf(a, size, Object[].class);
             }
+        } else {
+            elementData = new Object[]{};
+        }
+    }
+
+    public CustomArrayList(E[] array) {
+        size = array.length;
+        if (size != 0) {
+            elementData = Arrays.copyOf(array, size, Object[].class);
         } else {
             elementData = new Object[]{};
         }
@@ -164,6 +175,12 @@ public class CustomArrayList<E> implements CustomList<E> {
                 sb.append(',').append(' ');
         }
         return sb.append(']').toString();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Stream<E> stream() {
+        return (Stream<E>) Arrays.stream(elementData);
     }
 
     private class CustomItr implements CustomIterator<E> {

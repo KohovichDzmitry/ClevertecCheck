@@ -11,5 +11,4 @@ public interface CustomIterator<E> {
     void addBefore(E element);
 
     void addAfter(E element);
-
 }

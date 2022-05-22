@@ -1,7 +1,6 @@
 package ru.clevertec.check.model.product;
 
 import ru.clevertec.check.util.CustomArrayList;
-import ru.clevertec.check.util.CustomIterator;
 import ru.clevertec.check.util.CustomList;
 
 public class ProductDao implements IProductDao {
@@ -17,13 +16,14 @@ public class ProductDao implements IProductDao {
 
     @Override
     public Product getById(int id) {
-        CustomIterator<Product> productCustomIterator = listOfProducts.getIterator();
-        while (productCustomIterator.hasNext()) {
-            Product product = productCustomIterator.next();
-            if (id == product.getId()) {
-                return product;
-            }
-        }
-        return null;
+        return listOfProducts.stream()
+                .filter(product -> product.getId() == id)
+                .findFirst()
+                .orElseThrow(() -> new NullPointerException("Товара с выбранным id не существует"));
+    }
+
+    @Override
+    public CustomList<Product> getAll() {
+        return new CustomArrayList<>(listOfProducts);
     }
 }

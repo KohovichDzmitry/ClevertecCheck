@@ -1,7 +1,6 @@
 package ru.clevertec.check.model.card;
 
 import ru.clevertec.check.util.CustomArrayList;
-import ru.clevertec.check.util.CustomIterator;
 import ru.clevertec.check.util.CustomList;
 
 public class CardDao implements ICardDao {
@@ -16,13 +15,9 @@ public class CardDao implements ICardDao {
 
     @Override
     public Card getByNumber(int number) {
-        CustomIterator<Card> cardCustomIterator = listOfCards.getIterator();
-        while (cardCustomIterator.hasNext()) {
-            Card card = cardCustomIterator.next();
-            if (number == card.getNumber()) {
-                return card;
-            }
-        }
-        return null;
+        return listOfCards.stream()
+                .filter(card -> card.getNumber() == number)
+                .findFirst()
+                .orElseThrow(() -> new NullPointerException("Не удалось определить предъявленную скидочную карту"));
     }
 }

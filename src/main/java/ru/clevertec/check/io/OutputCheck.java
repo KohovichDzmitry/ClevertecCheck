@@ -2,10 +2,11 @@ package ru.clevertec.check.io;
 
 import ru.clevertec.check.model.card.Card;
 import ru.clevertec.check.model.card.ICardDao;
-import ru.clevertec.check.model.checkRunner.CheckRunner;
-import ru.clevertec.check.model.checkRunner.ICheckRunnerDao;
+import ru.clevertec.check.model.order.Order;
+import ru.clevertec.check.model.order.IOrderDao;
 import ru.clevertec.check.model.product.IProductDao;
 import ru.clevertec.check.model.product.Product;
+import ru.clevertec.check.service.ProductService;
 import ru.clevertec.check.util.CustomIterator;
 
 import java.io.File;
@@ -21,14 +22,16 @@ public class OutputCheck implements IOutputCheck {
 
     private final IProductDao productDao;
     private final ICardDao cardDao;
-    private final ICheckRunnerDao checkRunnerDao;
+    private final IOrderDao orderDao;
+    private final ProductService productService;
     private final LocalDate date = LocalDate.now();
     private final LocalTime time = LocalTime.now();
 
-    public OutputCheck(IProductDao productDao, ICardDao cardDao, ICheckRunnerDao checkRunnerDao) {
+    public OutputCheck(IProductDao productDao, ICardDao cardDao, IOrderDao orderDao) {
         this.productDao = productDao;
         this.cardDao = cardDao;
-        this.checkRunnerDao = checkRunnerDao;
+        this.orderDao = orderDao;
+        this.productService = new ProductService(orderDao, productDao);
     }
 
     @Override
@@ -43,6 +46,9 @@ public class OutputCheck implements IOutputCheck {
             pw.println("\t\t\t\t\t время: " + time.getHour() + ":" + time.getMinute() + ":" + time.getSecond());
             pw.println("-----------------------------------------");
             pw.println("Кол.\t" + "Наименование\t\t" + "Цена\t" + "Сумма");
+
+            productService.printProductFromTheOrder(pw);
+
             double totalSum = BigDecimal.valueOf(findNeededProduct(pw))
                     .setScale(2, RoundingMode.HALF_UP).doubleValue();
             pw.println("=========================================");
@@ -58,20 +64,6 @@ public class OutputCheck implements IOutputCheck {
     }
 
     @Override
-    public int stockProduct() {
-        int count = 0;
-        CustomIterator<CheckRunner> checkRunnerCustomIterator = checkRunnerDao.getAll().getIterator();
-        while (checkRunnerCustomIterator.hasNext()) {
-            CheckRunner productInCheck = checkRunnerCustomIterator.next();
-            Product stockProduct = productDao.getById(productInCheck.getId());
-            if (stockProduct.getStock() == 1) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    @Override
     public void discount(int discount, double totalSum, PrintWriter pw) {
         if (discount != 0) {
             pw.println("Скидка по предъявленной карте\t\t" + discount + "%");
@@ -84,14 +76,18 @@ public class OutputCheck implements IOutputCheck {
     public double findNeededProduct(PrintWriter pw) {
         try {
             double totalSum = 0;
-            CustomIterator<CheckRunner> checkRunnerCustomIterator = checkRunnerDao.getAll().getIterator();
+            CustomIterator<Order> checkRunnerCustomIterator = orderDao.getAll().getIterator();
             while (checkRunnerCustomIterator.hasNext()) {
-                CheckRunner productInCheck = checkRunnerCustomIterator.next();
+
+                Order productInCheck = checkRunnerCustomIterator.next();
+
                 Product productInShop = productDao.getById(productInCheck.getId());
                 double sum = productInShop.getPrice() * productInCheck.getQuantity();
                 String field = productInCheck.getQuantity() + "\t\t" + productInShop.getName() + "\t\t\t\t" +
                         productInShop.getPrice() + "\t" + sum;
-                if (stockProduct() > 4 && productInShop.getStock() == 1) {
+                long numberOfProductsInStock = productDao.getAll().stream()
+                        .filter(e -> e.getStock() == 1).count();
+                if (numberOfProductsInStock > 4 && productInShop.getStock() == 1) {
                     pw.println(field);
                     sum = productInShop.getPrice() * productInCheck.getQuantity() * 0.9;
                     pw.println("\t(на товар \"" + productInShop.getName() + "\" акция -10%)\t"
