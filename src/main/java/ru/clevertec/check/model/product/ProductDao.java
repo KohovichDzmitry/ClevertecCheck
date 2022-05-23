@@ -22,9 +22,4 @@ public class ProductDao implements IProductDao {
                 .findFirst()
                 .orElseThrow(() -> new ProjectException("Товара с выбранным id не существует"));
     }
-
-    @Override
-    public CustomList<Product> getProducts() {
-        return new CustomArrayList<>(listOfProducts);
-    }
 }

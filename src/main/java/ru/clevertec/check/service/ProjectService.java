@@ -1,6 +1,7 @@
 package ru.clevertec.check.service;
 
 import ru.clevertec.check.exception.ProjectException;
+import ru.clevertec.check.model.card.ICardDao;
 import ru.clevertec.check.model.order.IOrderDao;
 import ru.clevertec.check.model.order.Order;
 import ru.clevertec.check.model.product.IProductDao;
@@ -11,18 +12,19 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Arrays;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class ProjectService {
 
-    private final IOrderDao orderDao;
     private final IProductDao productDao;
+    private final ICardDao cardDao;
+    private final IOrderDao orderDao;
     private static final Double DISCOUNT_PERCENT = 10d;
 
-    public ProjectService(IOrderDao orderDao, IProductDao productDao) {
-        this.orderDao = orderDao;
+    public ProjectService(IProductDao productDao, ICardDao cardDao, IOrderDao orderDao) {
         this.productDao = productDao;
+        this.cardDao = cardDao;
+        this.orderDao = orderDao;
     }
 
     private CustomList<Product> listProductsFromOrder() {
@@ -57,22 +59,34 @@ public class ProjectService {
         return orderDao.getOrderById(id).getQuantity();
     }
 
+    private int getDiscountFromCard(int cardNumber) {
+        return cardDao.getCardByNumber(cardNumber).getDiscount();
+    }
+
     public void printProductFromTheOrder(PrintWriter pw) {
         CustomList<Product> actualList = listProductsFromOrder();
         actualList.stream()
                 .forEach(product -> {
                     pw.println(getQuantityFromOrder(product.getId()) + "\t\t"
                             + product.getName() + "\t\t\t\t" + product.getPrice() + "\t"
-                            + getProductStockCost(product.getId(), false));
+                            + getProductStockCost(product.getId(), false)
+                            * getQuantityFromOrder(product.getId()));
                     if (product.getStock() == 1 && numberOfProductsFromOrderWithStock(actualList) > 4) {
                         pw.println("\t(на товар \"" + product.getName() + "\" акция -10%)\t"
-                                + BigDecimal.valueOf(getProductStockCost(product.getId(), true))
+                                + BigDecimal.valueOf(getProductStockCost(product.getId(), true)
+                                        * getQuantityFromOrder(product.getId()))
                                 .setScale(2, RoundingMode.HALF_UP).doubleValue());
                     }
-                    pw.println("=========================================");
-                    pw.println("Сумма\t\t\t\t\t\t\t\t" + BigDecimal.valueOf(totalSum())
-                            .setScale(2, RoundingMode.HALF_UP).doubleValue());
-
                 });
+    }
+
+    public void printEndingCheck(PrintWriter pw, int cardNumber) {
+        pw.println("Сумма\t\t\t\t\t\t\t\t" + BigDecimal.valueOf(totalSum())
+                .setScale(2, RoundingMode.HALF_UP).doubleValue());
+        pw.println("Скидка по предъявленной карте\t\t"
+                + getDiscountFromCard(cardNumber) + "%");
+        pw.println("Сумма с учетом скидки\t\t\t\t"
+                + BigDecimal.valueOf(totalSum() * ((100 - getDiscountFromCard(cardNumber))) / 100)
+                .setScale(2, RoundingMode.HALF_UP).doubleValue());
     }
 }
