@@ -4,9 +4,9 @@ import ru.clevertec.check.util.CustomList;
 
 public interface IProductDao {
 
-    void save(String name, double price, int stock);
+    void saveProduct(String name, double price, int stock);
 
-    Product getById(int id);
+    Product getProductById(int id);
 
-    CustomList<Product> getAll();
+    CustomList<Product> getProducts();
 }

@@ -6,7 +6,7 @@ import ru.clevertec.check.model.order.Order;
 import ru.clevertec.check.model.order.IOrderDao;
 import ru.clevertec.check.model.product.IProductDao;
 import ru.clevertec.check.model.product.Product;
-import ru.clevertec.check.service.ProductService;
+import ru.clevertec.check.service.ProjectService;
 import ru.clevertec.check.util.CustomIterator;
 
 import java.io.File;
@@ -23,7 +23,7 @@ public class OutputCheck implements IOutputCheck {
     private final IProductDao productDao;
     private final ICardDao cardDao;
     private final IOrderDao orderDao;
-    private final ProductService productService;
+    private final ProjectService projectService;
     private final LocalDate date = LocalDate.now();
     private final LocalTime time = LocalTime.now();
 
@@ -31,14 +31,14 @@ public class OutputCheck implements IOutputCheck {
         this.productDao = productDao;
         this.cardDao = cardDao;
         this.orderDao = orderDao;
-        this.productService = new ProductService(orderDao, productDao);
+        this.projectService = new ProjectService(orderDao, productDao);
     }
 
     @Override
     public void printCheck(int numberCard) {
         File file = new File("src/main/resources/check");
         try (PrintWriter pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
-            Card card = cardDao.getByNumber(numberCard);
+            Card card = cardDao.getCardByNumber(numberCard);
             pw.println("\t\t\t  -=Магазин 777=-");
             pw.println("\t\t г.Минск, ул. Макаёнка 99");
             pw.println("\t\t   тел. 8017-123-45-67 \n");
@@ -47,7 +47,7 @@ public class OutputCheck implements IOutputCheck {
             pw.println("-----------------------------------------");
             pw.println("Кол.\t" + "Наименование\t\t" + "Цена\t" + "Сумма");
 
-            productService.printProductFromTheOrder(pw);
+            projectService.printProductFromTheOrder(pw);
 
             double totalSum = BigDecimal.valueOf(findNeededProduct(pw))
                     .setScale(2, RoundingMode.HALF_UP).doubleValue();
@@ -76,16 +76,16 @@ public class OutputCheck implements IOutputCheck {
     public double findNeededProduct(PrintWriter pw) {
         try {
             double totalSum = 0;
-            CustomIterator<Order> checkRunnerCustomIterator = orderDao.getAll().getIterator();
+            CustomIterator<Order> checkRunnerCustomIterator = orderDao.getOrder().getIterator();
             while (checkRunnerCustomIterator.hasNext()) {
 
                 Order productInCheck = checkRunnerCustomIterator.next();
 
-                Product productInShop = productDao.getById(productInCheck.getId());
+                Product productInShop = productDao.getProductById(productInCheck.getId());
                 double sum = productInShop.getPrice() * productInCheck.getQuantity();
                 String field = productInCheck.getQuantity() + "\t\t" + productInShop.getName() + "\t\t\t\t" +
                         productInShop.getPrice() + "\t" + sum;
-                long numberOfProductsInStock = productDao.getAll().stream()
+                long numberOfProductsInStock = productDao.getProducts().stream()
                         .filter(e -> e.getStock() == 1).count();
                 if (numberOfProductsInStock > 4 && productInShop.getStock() == 1) {
                     pw.println(field);

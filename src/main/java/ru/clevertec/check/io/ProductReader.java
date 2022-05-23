@@ -26,7 +26,7 @@ public class ProductReader {
                     String name = data[0];
                     double price = Double.parseDouble(data[1]);
                     int stock = Integer.parseInt(data[2]);
-                    productDao.save(name, price, stock);
+                    productDao.saveProduct(name, price, stock);
                 } else {
                     fw.write(line + "\n");
                 }

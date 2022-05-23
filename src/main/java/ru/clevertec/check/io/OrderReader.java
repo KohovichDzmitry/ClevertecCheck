@@ -24,7 +24,7 @@ public class OrderReader {
                 if (Pattern.matches(regex, line)) {
                     int id = Integer.parseInt(data[0]);
                     int quantity = Integer.parseInt(data[1]);
-                    orderDao.buy(id, quantity);
+                    orderDao.buyOrder(id, quantity);
                 } else {
                     fw.write(line + "\n");
                 }

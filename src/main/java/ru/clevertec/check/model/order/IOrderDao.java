@@ -4,7 +4,9 @@ import ru.clevertec.check.util.CustomList;
 
 public interface IOrderDao {
 
-    void buy(int id, int quantity);
+    void buyOrder(int id, int quantity);
 
-    CustomList<Order> getAll();
+    Order getOrderById(int id);
+
+    CustomList<Order> getOrder();
 }
