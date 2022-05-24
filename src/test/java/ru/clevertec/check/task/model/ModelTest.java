@@ -1,6 +1,7 @@
 package ru.clevertec.check.task.model;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -17,16 +18,14 @@ import ru.clevertec.check.model.order.OrderDao;
 import ru.clevertec.check.model.product.IProductDao;
 import ru.clevertec.check.model.product.Product;
 import ru.clevertec.check.model.product.ProductDao;
-import ru.clevertec.check.util.CustomList;
+import ru.clevertec.check.task.resolver.ProductParameterResolver;
 
 import java.util.stream.Stream;
 
+@ExtendWith(ProductParameterResolver.class)
 public class ModelTest {
 
-    static CustomList<Product> productCustomList;
-    static CustomList<Order> orderCustomList;
-    static CustomList<Card> cardCustomList;
-    static IProductDao productDao = new ProductDao();
+    public static IProductDao productDao = new ProductDao();
     static IOrderDao orderDao = new OrderDao();
     static ICardDao cardDao = new CardDao();
 
@@ -34,39 +33,33 @@ public class ModelTest {
     static void generateProductList() {
         ProductReader productReader = new ProductReader();
         productReader.read(productDao);
-        productCustomList = productDao.getProducts();
     }
 
     @BeforeAll
     static void generateOrderList() {
         OrderReader orderReader = new OrderReader();
         orderReader.read(orderDao);
-        orderCustomList = orderDao.getOrder();
     }
 
     @BeforeAll
     static void generateCardList() {
         CardReader cardReader = new CardReader();
         cardReader.read(cardDao);
-        cardCustomList = cardDao.getCards();
     }
 
     @AfterAll
     static void deleteProductList() {
         productDao = null;
-        productCustomList = null;
     }
 
     @AfterAll
     static void deleteOrderList() {
         orderDao = null;
-        orderCustomList = null;
     }
 
     @AfterAll
     static void deleteCardList() {
         cardDao = null;
-        cardCustomList = null;
     }
 
     private static Stream<Card> getValidCards() {
@@ -117,5 +110,18 @@ public class ModelTest {
         Assertions.assertThrows(ProjectException.class, () -> orderDao.getProductFromOrderById(expectedOrder));
     }
 
+    @DisplayName("Получение продукта по id - позитивный тест")
+    @Test
+    void getProductByIdTest(Product expectedProduct) {
+        int id = expectedProduct.getId();
+        Product actualProduct = productDao.getProductById(id);
+        Assertions.assertEquals(expectedProduct, actualProduct);
+    }
 
+    @DisplayName("Получение продукта по id - негативный тест")
+    @ParameterizedTest
+    @ValueSource(ints = {44, -1, 101, 0})
+    void getProductByIdFailTest(int expectedProduct) {
+        Assertions.assertThrows(ProjectException.class, () -> productDao.getProductById(expectedProduct));
+    }
 }

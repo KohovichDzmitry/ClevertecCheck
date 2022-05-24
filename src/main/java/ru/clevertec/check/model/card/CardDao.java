@@ -23,7 +23,7 @@ public class CardDao implements ICardDao {
     }
 
     @Override
-    public CustomList<Card> getCards() {
+    public CustomList<Card> getAllCards() {
         return new CustomArrayList<>(listOfCards);
     }
 }

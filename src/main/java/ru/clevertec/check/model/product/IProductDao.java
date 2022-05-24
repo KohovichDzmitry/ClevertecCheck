@@ -8,5 +8,5 @@ public interface IProductDao {
 
     Product getProductById(int id);
 
-    CustomList<Product> getProducts();
+    CustomList<Product> getAllProducts();
 }

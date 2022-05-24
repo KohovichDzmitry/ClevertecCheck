@@ -24,7 +24,7 @@ public class ProductDao implements IProductDao {
     }
 
     @Override
-    public CustomList<Product> getProducts() {
+    public CustomList<Product> getAllProducts() {
         return new CustomArrayList<>(listOfProducts);
     }
 }

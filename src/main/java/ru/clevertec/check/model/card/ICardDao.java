@@ -8,5 +8,5 @@ public interface ICardDao {
 
     Card getCardByNumber(int number);
 
-    CustomList<Card> getCards();
+    CustomList<Card> getAllCards();
 }

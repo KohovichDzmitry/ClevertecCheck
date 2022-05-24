@@ -31,7 +31,7 @@ public class ProjectManagerTest {
     static void generateProductList() {
         ProductReader productReader = new ProductReader();
         productReader.read(productDao);
-        productCustomList = productDao.getProducts();
+        productCustomList = productDao.getAllProducts();
     }
 
     @BeforeAll
@@ -45,7 +45,7 @@ public class ProjectManagerTest {
     void generateCardList() {
         CardReader cardReader = new CardReader();
         cardReader.read(cardDao);
-        cardCustomList = cardDao.getCards();
+        cardCustomList = cardDao.getAllCards();
     }
 
     @AfterAll
