@@ -10,13 +10,13 @@ public class OrderDao implements IOrderDao {
     private final CustomList<Order> listOfOrders = new CustomArrayList<>();
 
     @Override
-    public void buyOrder(int id, int quantity) {
+    public void buyProduct(int id, int quantity) {
         Order checkRunner = new Order(id, quantity);
         listOfOrders.add(checkRunner);
     }
 
     @Override
-    public Order getOrderById(int id) {
+    public Order getProductFromOrderById(int id) {
         return listOfOrders.stream()
                 .filter(order -> order.getId() == id)
                 .findFirst()

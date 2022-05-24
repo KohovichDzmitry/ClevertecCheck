@@ -56,7 +56,7 @@ public class ProjectService {
     }
 
     private int getQuantityFromOrder(int id) {
-        return orderDao.getOrderById(id).getQuantity();
+        return orderDao.getProductFromOrderById(id).getQuantity();
     }
 
     private int getDiscountFromCard(int cardNumber) {

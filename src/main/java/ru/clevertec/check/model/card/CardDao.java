@@ -21,4 +21,9 @@ public class CardDao implements ICardDao {
                 .findFirst()
                 .orElseThrow(() -> new ProjectException("Не удалось определить предъявленную скидочную карту"));
     }
+
+    @Override
+    public CustomList<Card> getCards() {
+        return new CustomArrayList<>(listOfCards);
+    }
 }
