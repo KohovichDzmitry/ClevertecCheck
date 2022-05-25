@@ -1,7 +1,6 @@
 package ru.clevertec.check.model.order;
 
 import ru.clevertec.check.exception.ProjectException;
-import ru.clevertec.check.model.product.Product;
 import ru.clevertec.check.util.CustomArrayList;
 import ru.clevertec.check.util.CustomList;
 

@@ -1,7 +1,8 @@
 package ru.clevertec.check.task.collection;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.clevertec.check.util.CustomArrayList;
 import ru.clevertec.check.util.CustomIterator;
@@ -11,12 +12,17 @@ public class CustomArrayListTest {
 
     static CustomList<String> list;
 
-    @BeforeAll
-    static void initTest() {
+    @BeforeEach
+    void generateCustomListTest() {
         list = new CustomArrayList<>();
         list.add("Hello");
         list.add(" beautiful ");
         list.add("World!");
+    }
+
+    @AfterEach
+    void clearCustomListTest() {
+        list.clear();
     }
 
     @Test
