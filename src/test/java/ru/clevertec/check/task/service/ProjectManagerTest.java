@@ -5,11 +5,9 @@ import ru.clevertec.check.exception.ProjectException;
 import ru.clevertec.check.io.CardReader;
 import ru.clevertec.check.io.OrderReader;
 import ru.clevertec.check.io.ProductReader;
-import ru.clevertec.check.model.card.Card;
 import ru.clevertec.check.model.card.CardDao;
 import ru.clevertec.check.model.card.ICardDao;
 import ru.clevertec.check.model.order.IOrderDao;
-import ru.clevertec.check.model.order.Order;
 import ru.clevertec.check.model.order.OrderDao;
 import ru.clevertec.check.model.product.IProductDao;
 import ru.clevertec.check.model.product.Product;
@@ -19,63 +17,75 @@ import ru.clevertec.check.util.CustomList;
 
 public class ProjectManagerTest {
 
-    static CustomList<Product> productCustomList;
-    static CustomList<Order> orderCustomList;
-    CustomList<Card> cardCustomList;
     static IProductDao productDao = new ProductDao();
     static IOrderDao orderDao = new OrderDao();
     ICardDao cardDao = new CardDao();
     ProjectService projectService = new ProjectService(productDao, cardDao, orderDao);
 
     @BeforeAll
-    static void generateProductList() {
+    static void generateProducts() {
         ProductReader productReader = new ProductReader();
         productReader.read(productDao);
-        productCustomList = productDao.getAllProducts();
     }
 
     @BeforeAll
-    static void generateOrderList() {
+    static void generateOrder() {
         OrderReader orderReader = new OrderReader();
         orderReader.read(orderDao);
-        orderCustomList = orderDao.getOrder();
     }
 
     @BeforeEach
-    void generateCardList() {
+    void generateCards() {
         CardReader cardReader = new CardReader();
         cardReader.read(cardDao);
-        cardCustomList = cardDao.getAllCards();
     }
 
     @AfterAll
-    static void deleteProductList() {
+    static void deleteProducts() {
         productDao = null;
-        productCustomList = null;
     }
 
     @AfterAll
-    static void deleteOrderList() {
+    static void deleteOrder() {
         orderDao = null;
-        orderCustomList = null;
     }
 
     @AfterEach
-    void deleteCardList() {
+    void deleteCards() {
         cardDao = null;
-        cardCustomList = null;
     }
 
-    @DisplayName("Получение скидочной карты по номеру")
+    @DisplayName("Проверка наличия продукта из заказа по id - позитивный тест")
     @Test
-    void getCardByNumberTest() {
-        Card expectedCard = new Card(1111, 1);
-        Card actualCard = cardDao.getCardByNumber(1111);
-        Assertions.assertEquals(expectedCard, actualCard);
+    void listProductsFromOrderTest() {
+        CustomList<Product> actualList = projectService.listProductsFromOrder();
+        actualList.stream().forEach(product -> Assertions
+                .assertEquals(product, productDao.getProductById(product.getId())));
     }
 
+    @DisplayName("Проверка наличия продукта из заказа по id - негативный тест")
     @Test
-    void getCardByNumberFailTest() {
-        Assertions.assertThrows(ProjectException.class, () -> cardDao.getCardByNumber(1112));
+    void listProductsFromOrderFailTest() {
+        CustomList<Product> actualList = projectService.listProductsFromOrder();
+        actualList.add(new Product("Вафли", 2.21, 1));
+        actualList.add(new Product("Майонез", 1.55, 0));
+        actualList.add(new Product("Сыр", 3.48, 1));
+        Assertions.assertThrows(ProjectException.class, () -> actualList
+                .stream().forEach(product -> Assertions
+                        .assertEquals(product, productDao.getProductById(product.getId()))));
+    }
+
+    @DisplayName("Получение общей стоимости заказа - позитивный тест")
+    @Test
+    void getTotalSumTest() {
+        Double actualSum = projectService.getTotalSum();
+        Assertions.assertEquals(40.066, actualSum);
+    }
+
+    @DisplayName("Получение общей стоимости заказа - негативный тест")
+    @Test
+    void getTotalSumFailTest() {
+        Double actualSum = projectService.getTotalSum();
+        Assertions.assertNotEquals(401.066, actualSum);
     }
 }

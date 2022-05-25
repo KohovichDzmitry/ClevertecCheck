@@ -1,233 +1,231 @@
 package ru.clevertec.check.task.collection;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import ru.clevertec.check.util.CustomArrayList;
 import ru.clevertec.check.util.CustomIterator;
 import ru.clevertec.check.util.CustomList;
 
 public class CustomArrayListTest {
 
-    private CustomList<String> list;
+    static CustomList<String> list;
 
-    @Before
-    public void init() {
+    @BeforeAll
+    static void initTest() {
         list = new CustomArrayList<>();
         list.add("Hello");
         list.add(" beautiful ");
         list.add("World!");
     }
 
-    @Test(expected = ArrayIndexOutOfBoundsException.class)
-    public void checkMaxSize(){
-        list = new CustomArrayList<>();
-        list.setMaxSize(3);
-        list.add("Hello");
-        list.add(" beautiful ");
-        list.add("World!");
-        list.add(" and ");
-        list.add("my ");
-        list.add("friends");
+    @Test
+    void checkMaxSizeTest() {
+        CustomList<String> list2 = new CustomArrayList<>();
+        list2.setMaxSize(3);
+        list2.add("Hello");
+        list2.add(" beautiful ");
+        list2.add("World!");
+        Assertions.assertThrows(ArrayIndexOutOfBoundsException.class, () -> list2.add(" and "));
     }
 
     @Test
-    public void checkMaxSize2(){
-        list = new CustomArrayList<>();
-        list.setMaxSize(3);
-        list.add("Hello");
-        list.add(" beautiful ");
-        list.add("World!");
-        Assert.assertEquals(3, list.size());
+    void checkMaxSize2Test() {
+        CustomList<String> list2 = new CustomArrayList<>();
+        list2.setMaxSize(3);
+        list2.add("Hello");
+        list2.add(" beautiful ");
+        list2.add("World!");
+        Assertions.assertEquals(3, list2.size());
     }
 
     @Test
-    public void checkMaxSize3(){
-        list = new CustomArrayList<>();
-        list.add("Hello");
-        list.add(" beautiful ");
-        list.add("World!");
-        list.add(" and ");
-        list.add("my ");
-        list.add("friends");
-        list.setMaxSize(3);
-        Assert.assertEquals(3, list.size());
+    void checkMaxSize3Test() {
+        CustomList<String> list2 = new CustomArrayList<>();
+        list2.add("Hello");
+        list2.add(" beautiful ");
+        list2.add("World!");
+        list2.add(" and ");
+        list2.add("my ");
+        list2.add("friends");
+        list2.setMaxSize(3);
+        Assertions.assertEquals(3, list2.size());
     }
 
     @Test
-    public void checkAdd(){
-        list = new CustomArrayList<>();
-        list.add(null);
-        list.add("Hello");
-        Assert.assertEquals(2, list.size());
-        Assert.assertNull(list.get(0));
-        Assert.assertEquals("Hello", list.get(1));
+    void checkAddTest() {
+        CustomList<String> list2 = new CustomArrayList<>();
+        list2.add(null);
+        list2.add("Hello");
+        Assertions.assertEquals(2, list2.size());
+        Assertions.assertNull(list2.get(0));
+        Assertions.assertEquals("Hello", list2.get(1));
     }
 
     @Test
-    public void checkAddWithIndex(){
-        list = new CustomArrayList<>();
-        list.add(null);
-        list.add("Hello");
-        list.add(" friend");
-        list.add(2, " my");
-        Assert.assertEquals(4, list.size());
-        Assert.assertEquals(" my", list.get(2));
+    void checkAddWithIndexTest() {
+        CustomList<String> list2 = new CustomArrayList<>();
+        list2.add(null);
+        list2.add("Hello");
+        list2.add(" friend");
+        list2.add(2, " my");
+        Assertions.assertEquals(4, list2.size());
+        Assertions.assertEquals(" my", list2.get(2));
     }
 
     @Test
-    public void checkAddAllCollection(){
+    void checkAddAllCollectionTest() {
         CustomList<String> newList = new CustomArrayList<>();
         newList.add(" friend");
         newList.add(null);
         list.addAll(newList);
-        Assert.assertEquals(5, list.size());
-        Assert.assertNull(list.get(4));
-        Assert.assertEquals("Hello", list.get(0));
+        Assertions.assertEquals(5, list.size());
+        Assertions.assertNull(list.get(4));
+        Assertions.assertEquals("Hello", list.get(0));
     }
 
     @Test
-    public void checkSet(){
-        Assert.assertEquals("Hello", list.set(0, "Wow"));
-        Assert.assertEquals(3, list.size());
-        Assert.assertEquals("Wow", list.get(0));
-    }
-
-    @Test(expected = IndexOutOfBoundsException.class)
-    public void checkSetByIncorrectIndex() {
-        list.set(5, "Bill");
+    void checkSetTest() {
+        Assertions.assertEquals("Hello", list.set(0, "Wow"));
+        Assertions.assertEquals(3, list.size());
+        Assertions.assertEquals("Wow", list.get(0));
     }
 
     @Test
-    public void checkRemove(){
-        Assert.assertEquals(" beautiful ", list.remove(1));
-        Assert.assertEquals(2, list.size());
-    }
-
-    @Test(expected = IndexOutOfBoundsException.class)
-    public void checkRemoveByIncorrectIndex() {
-        list.remove(5);
+    void checkSetByIncorrectIndexTest() {
+        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> list.set(5, "Bill"));
     }
 
     @Test
-    public void checkRemoveAndGet(){
+    void checkRemoveTest() {
+        Assertions.assertEquals(" beautiful ", list.remove(1));
+        Assertions.assertEquals(2, list.size());
+    }
+
+    @Test
+    void checkRemoveByIncorrectIndexTest() {
+        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> list.remove(5));
+    }
+
+    @Test
+    void checkRemoveAndGetTest() {
         list.remove(1);
-        Assert.assertEquals("World!", list.get(1));
+        Assertions.assertEquals("World!", list.get(1));
     }
 
     @Test
-    public void checkClear() {
+    void checkClearTest() {
         list.clear();
-        Assert.assertEquals(0, list.size());
+        Assertions.assertEquals(0, list.size());
     }
 
     @Test
-    public void checkFind() {
+    void checkFindTest() {
         list.add("program");
         list.add(null);
-        Assert.assertEquals(3, list.find("program"));
-        Assert.assertEquals(4, list.find(null));
-        Assert.assertEquals(-1, list.find("empty"));
-        Assert.assertEquals(5, list.size());
+        Assertions.assertEquals(3, list.find("program"));
+        Assertions.assertEquals(4, list.find(null));
+        Assertions.assertEquals(-1, list.find("empty"));
+        Assertions.assertEquals(5, list.size());
     }
 
     @Test
-    public void checkGet() {
-        Assert.assertEquals("Hello", list.get(0));
-    }
-
-    @Test(expected = IndexOutOfBoundsException.class)
-    public void checkGetByIncorrectIndex() {
-        list.get(5);
+    void checkGetTest() {
+        Assertions.assertEquals("Hello", list.get(0));
     }
 
     @Test
-    public void checkToArray() {
+    void checkGetByIncorrectIndexTest() {
+        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> list.get(5));
+    }
+
+    @Test
+    void checkToArrayTest() {
         Object[] array = list.toArray();
-        Assert.assertEquals(3, array.length);
-        Assert.assertEquals("Hello", array[0]);
-        Assert.assertEquals("World!", array[2]);
+        Assertions.assertEquals(3, array.length);
+        Assertions.assertEquals("Hello", array[0]);
+        Assertions.assertEquals("World!", array[2]);
     }
 
     @Test
-    public void checkSize() {
-        Assert.assertEquals(3, list.size());
+    void checkSizeTest() {
+        Assertions.assertEquals(3, list.size());
     }
 
     @Test
-    public void checkTrim() {
+    void checkTrimTest() {
         list.add(null);
         list.add(null);
         list.add("friend");
         list.add(null);
         list.trim();
-        Assert.assertEquals(4, list.size());
-        Assert.assertEquals("Hello", list.get(0));
-        Assert.assertEquals("World!", list.get(2));
-        Assert.assertEquals("friend", list.get(3));
+        Assertions.assertEquals(4, list.size());
+        Assertions.assertEquals("Hello", list.get(0));
+        Assertions.assertEquals("World!", list.get(2));
+        Assertions.assertEquals("friend", list.get(3));
     }
 
     @Test
-    public void checkIteratorNext() {
-        Assert.assertEquals("Hello", list.getIterator().next());
-        Assert.assertEquals("Hello", list.getIterator().next());
+    void checkIteratorNextTest() {
+        Assertions.assertEquals("Hello", list.getIterator().next());
+        Assertions.assertEquals("Hello", list.getIterator().next());
     }
 
     @Test
-    public void checkIteratorHasNext() {
+    void checkIteratorHasNextTest() {
         list = new CustomArrayList<>();
-        Assert.assertFalse(list.getIterator().hasNext());
+        Assertions.assertFalse(list.getIterator().hasNext());
     }
 
     @Test
-    public void checkIteratorNextAndHasNext() {
+    void checkIteratorNextAndHasNextTest() {
         CustomIterator<String> iterator = list.getIterator();
-        Assert.assertTrue(iterator.hasNext());
-        Assert.assertEquals("Hello", iterator.next());
-        Assert.assertTrue(iterator.hasNext());
-        Assert.assertEquals(" beautiful ", iterator.next());
-        Assert.assertTrue(iterator.hasNext());
-        Assert.assertEquals("World!", iterator.next());
-        Assert.assertFalse(iterator.hasNext());
-        Assert.assertFalse(iterator.hasNext());
+        Assertions.assertTrue(iterator.hasNext());
+        Assertions.assertEquals("Hello", iterator.next());
+        Assertions.assertTrue(iterator.hasNext());
+        Assertions.assertEquals(" beautiful ", iterator.next());
+        Assertions.assertTrue(iterator.hasNext());
+        Assertions.assertEquals("World!", iterator.next());
+        Assertions.assertFalse(iterator.hasNext());
+        Assertions.assertFalse(iterator.hasNext());
     }
 
     @Test
-    public void checkIteratorRemove() {
+    void checkIteratorRemoveTest() {
         CustomIterator<String> iterator = list.getIterator();
-        Assert.assertTrue(iterator.hasNext());
-        Assert.assertEquals("Hello", iterator.next());
+        Assertions.assertTrue(iterator.hasNext());
+        Assertions.assertEquals("Hello", iterator.next());
         iterator.remove();
-        Assert.assertTrue(iterator.hasNext());
-        Assert.assertEquals(" beautiful ", iterator.next());
-        Assert.assertTrue(iterator.hasNext());
-        Assert.assertEquals("World!", iterator.next());
-        Assert.assertFalse(iterator.hasNext());
+        Assertions.assertTrue(iterator.hasNext());
+        Assertions.assertEquals(" beautiful ", iterator.next());
+        Assertions.assertTrue(iterator.hasNext());
+        Assertions.assertEquals("World!", iterator.next());
+        Assertions.assertFalse(iterator.hasNext());
     }
 
     @Test
-    public void checkIteratorAddBefore() {
+    void checkIteratorAddBeforeTest() {
         CustomIterator<String> iterator = list.getIterator();
-        Assert.assertTrue(iterator.hasNext());
-        Assert.assertEquals("Hello", iterator.next());
-        Assert.assertTrue(iterator.hasNext());
-        Assert.assertEquals(" beautiful ", iterator.next());
+        Assertions.assertTrue(iterator.hasNext());
+        Assertions.assertEquals("Hello", iterator.next());
+        Assertions.assertTrue(iterator.hasNext());
+        Assertions.assertEquals(" beautiful ", iterator.next());
         iterator.addBefore(" perfect and ");
-        Assert.assertTrue(iterator.hasNext());
-        Assert.assertEquals("World!", iterator.next());
-        Assert.assertFalse(iterator.hasNext());
+        Assertions.assertTrue(iterator.hasNext());
+        Assertions.assertEquals("World!", iterator.next());
+        Assertions.assertFalse(iterator.hasNext());
     }
 
     @Test
-    public void checkIteratorAndAddAfter() {
+    void checkIteratorAndAddAfterTest() {
         CustomIterator<String> iterator = list.getIterator();
-        Assert.assertTrue(iterator.hasNext());
-        Assert.assertEquals("Hello", iterator.next());
+        Assertions.assertTrue(iterator.hasNext());
+        Assertions.assertEquals("Hello", iterator.next());
         iterator.addAfter(" perfect and ");
-        Assert.assertTrue(iterator.hasNext());
-        Assert.assertEquals(" beautiful ", iterator.next());
-        Assert.assertTrue(iterator.hasNext());
-        Assert.assertEquals("World!", iterator.next());
-        Assert.assertFalse(iterator.hasNext());
+        Assertions.assertTrue(iterator.hasNext());
+        Assertions.assertEquals(" beautiful ", iterator.next());
+        Assertions.assertTrue(iterator.hasNext());
+        Assertions.assertEquals("World!", iterator.next());
+        Assertions.assertFalse(iterator.hasNext());
     }
 }

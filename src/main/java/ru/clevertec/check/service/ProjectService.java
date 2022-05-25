@@ -27,7 +27,7 @@ public class ProjectService {
         this.orderDao = orderDao;
     }
 
-    private CustomList<Product> listProductsFromOrder() {
+    public CustomList<Product> listProductsFromOrder() {
         return CustomList.toCustomList(Arrays
                 .stream(orderDao.getOrder().stream()
                         .mapToInt(Order::getId).toArray())
@@ -39,7 +39,7 @@ public class ProjectService {
                 .filter(number -> number.getStock() == 1).count();
     }
 
-    private double totalSum() {
+    public double getTotalSum() {
         return orderDao.getOrder().stream()
                 .map(product -> product.getQuantity() * getProductStockCost(product.getId(), true))
                 .reduce(Double::sum)
@@ -55,38 +55,31 @@ public class ProjectService {
                 .orElse(productDao.getProductById(id).getPrice());
     }
 
-    private int getQuantityFromOrder(int id) {
-        return orderDao.getProductFromOrderById(id).getQuantity();
-    }
-
-    private int getDiscountFromCard(int cardNumber) {
-        return cardDao.getCardByNumber(cardNumber).getDiscount();
-    }
-
     public void printProductFromTheOrder(PrintWriter pw) {
         CustomList<Product> actualList = listProductsFromOrder();
         actualList.stream()
                 .forEach(product -> {
-                    pw.println(getQuantityFromOrder(product.getId()) + "\t\t"
+                    pw.println(orderDao.getProductFromOrderById(product.getId()).getQuantity() + "\t\t"
                             + product.getName() + "\t\t\t\t" + product.getPrice() + "\t"
                             + getProductStockCost(product.getId(), false)
-                            * getQuantityFromOrder(product.getId()));
+                            * orderDao.getProductFromOrderById(product.getId()).getQuantity());
                     if (product.getStock() == 1 && numberOfProductsFromOrderWithStock(actualList) > 4) {
                         pw.println("\t(на товар \"" + product.getName() + "\" акция -10%)\t"
                                 + BigDecimal.valueOf(getProductStockCost(product.getId(), true)
-                                        * getQuantityFromOrder(product.getId()))
+                                        * orderDao.getProductFromOrderById(product.getId()).getQuantity())
                                 .setScale(2, RoundingMode.HALF_UP).doubleValue());
                     }
                 });
     }
 
     public void printEndingCheck(PrintWriter pw, int cardNumber) {
-        pw.println("Сумма\t\t\t\t\t\t\t\t" + BigDecimal.valueOf(totalSum())
+        pw.println("Сумма\t\t\t\t\t\t\t\t" + BigDecimal.valueOf(getTotalSum())
                 .setScale(2, RoundingMode.HALF_UP).doubleValue());
         pw.println("Скидка по предъявленной карте\t\t"
-                + getDiscountFromCard(cardNumber) + "%");
+                + cardDao.getCardByNumber(cardNumber).getDiscount() + "%");
         pw.println("Сумма с учетом скидки\t\t\t\t"
-                + BigDecimal.valueOf(totalSum() * ((100 - getDiscountFromCard(cardNumber))) / 100)
+                + BigDecimal.valueOf(getTotalSum() * ((100 - cardDao
+                .getCardByNumber(cardNumber).getDiscount())) / 100)
                 .setScale(2, RoundingMode.HALF_UP).doubleValue());
     }
 }

@@ -30,35 +30,35 @@ public class ModelTest {
     static ICardDao cardDao = new CardDao();
 
     @BeforeAll
-    static void generateProductList() {
+    static void generateProducts() {
         ProductReader productReader = new ProductReader();
         productReader.read(productDao);
     }
 
     @BeforeAll
-    static void generateOrderList() {
+    static void generateOrder() {
         OrderReader orderReader = new OrderReader();
         orderReader.read(orderDao);
     }
 
     @BeforeAll
-    static void generateCardList() {
+    static void generateCards() {
         CardReader cardReader = new CardReader();
         cardReader.read(cardDao);
     }
 
     @AfterAll
-    static void deleteProductList() {
+    static void deleteProducts() {
         productDao = null;
     }
 
     @AfterAll
-    static void deleteOrderList() {
+    static void deleteOrder() {
         orderDao = null;
     }
 
     @AfterAll
-    static void deleteCardList() {
+    static void deleteCards() {
         cardDao = null;
     }
 
