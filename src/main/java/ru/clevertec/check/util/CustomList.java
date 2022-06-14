@@ -1,5 +1,7 @@
 package ru.clevertec.check.util;
 
+import java.util.stream.Stream;
+
 public interface CustomList<E> {
 
     CustomIterator<E> getIterator();
@@ -11,6 +13,11 @@ public interface CustomList<E> {
     void add(int index, E element);
 
     void addAll(CustomList<? extends E> customList);
+
+    @SuppressWarnings("unchecked")
+    static <E> CustomList<E> toCustomList(Object[] array) {
+        return new CustomArrayList<>((E[]) array);
+    }
 
     E set(int index, E element);
 
@@ -27,4 +34,6 @@ public interface CustomList<E> {
     int size();
 
     void trim();
+
+    Stream<E> stream();
 }

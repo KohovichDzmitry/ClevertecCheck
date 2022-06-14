@@ -1,6 +1,6 @@
 package ru.clevertec.check.io;
 
-import ru.clevertec.check.model.card.CardDao;
+import ru.clevertec.check.model.card.ICardDao;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class CardReader {
 
-    public void read(CardDao cardDao) {
+    public void read(ICardDao cardDao) {
         File cards = new File("src/main/resources/cards");
         File invalidData = new File("src/main/resources/invalidData.txt");
         try (Scanner scanner = new Scanner(cards, StandardCharsets.UTF_8)) {
@@ -24,7 +24,7 @@ public class CardReader {
                 if (Pattern.matches(regex, line)) {
                     int number = Integer.parseInt(data[0]);
                     int discount = Integer.parseInt(data[1]);
-                    cardDao.save(number, discount);
+                    cardDao.saveCard(number, discount);
                 } else {
                     fw.write(line + "\n");
                 }
