@@ -14,7 +14,7 @@ import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.Optional;
 
-public class ProjectService {
+public class ProjectService implements IProjectService {
 
     private final IProductDao productDao;
     private final ICardDao cardDao;
@@ -27,6 +27,7 @@ public class ProjectService {
         this.orderDao = orderDao;
     }
 
+    @Override
     public CustomList<Product> listProductsFromOrder() {
         return CustomList.toCustomList(Arrays
                 .stream(orderDao.getOrder().stream()
@@ -34,11 +35,13 @@ public class ProjectService {
                 .boxed().map(productDao::getProductById).toArray());
     }
 
-    private long numberOfProductsFromOrderWithStock(CustomList<Product> customList) {
+    @Override
+    public long numberOfProductsFromOrderWithStock(CustomList<Product> customList) {
         return customList.stream()
                 .filter(number -> number.getStock() == 1).count();
     }
 
+    @Override
     public double getTotalSum() {
         return orderDao.getOrder().stream()
                 .map(product -> product.getQuantity() * getProductStockCost(product.getId(), true))
@@ -46,7 +49,8 @@ public class ProjectService {
                 .orElseThrow(() -> new ProjectException("Неверный расчет стоимости заказа"));
     }
 
-    private double getProductStockCost(int id, boolean mark) {
+    @Override
+    public double getProductStockCost(int id, boolean mark) {
         CustomList<Product> actualList = listProductsFromOrder();
         return Optional.of(productDao.getProductById(id))
                 .filter(product -> mark && product.getStock() == 1
@@ -55,6 +59,7 @@ public class ProjectService {
                 .orElse(productDao.getProductById(id).getPrice());
     }
 
+    @Override
     public void printProductFromTheOrder(PrintWriter pw) {
         CustomList<Product> actualList = listProductsFromOrder();
         actualList.stream()
@@ -72,6 +77,7 @@ public class ProjectService {
                 });
     }
 
+    @Override
     public void printEndingCheck(PrintWriter pw, int cardNumber) {
         pw.println("Сумма\t\t\t\t\t\t\t\t" + BigDecimal.valueOf(getTotalSum())
                 .setScale(2, RoundingMode.HALF_UP).doubleValue());
@@ -79,7 +85,7 @@ public class ProjectService {
                 + cardDao.getCardByNumber(cardNumber).getDiscount() + "%");
         pw.println("Сумма с учетом скидки\t\t\t\t"
                 + BigDecimal.valueOf(getTotalSum() * ((100 - cardDao
-                .getCardByNumber(cardNumber).getDiscount())) / 100)
+                        .getCardByNumber(cardNumber).getDiscount())) / 100)
                 .setScale(2, RoundingMode.HALF_UP).doubleValue());
     }
 }
