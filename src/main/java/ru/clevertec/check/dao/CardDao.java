@@ -1,8 +1,10 @@
-package ru.clevertec.check.model.card;
+package ru.clevertec.check.dao;
 
-import ru.clevertec.check.exception.ProjectException;
-import ru.clevertec.check.util.CustomArrayList;
-import ru.clevertec.check.util.CustomList;
+import ru.clevertec.check.api.dao.ICardDao;
+import ru.clevertec.check.api.exceptions.DaoException;
+import ru.clevertec.check.model.Card;
+import ru.clevertec.check.custom.CustomArrayList;
+import ru.clevertec.check.custom.CustomList;
 
 public class CardDao implements ICardDao {
 
@@ -19,6 +21,6 @@ public class CardDao implements ICardDao {
         return listOfCards.stream()
                 .filter(card -> card.getNumber() == number)
                 .findFirst()
-                .orElseThrow(() -> new ProjectException("Не удалось определить предъявленную скидочную карту"));
+                .orElseThrow(() -> new DaoException("Не удалось определить предъявленную скидочную карту"));
     }
 }

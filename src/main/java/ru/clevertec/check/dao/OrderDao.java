@@ -1,8 +1,10 @@
-package ru.clevertec.check.model.order;
+package ru.clevertec.check.dao;
 
-import ru.clevertec.check.exception.ProjectException;
-import ru.clevertec.check.util.CustomArrayList;
-import ru.clevertec.check.util.CustomList;
+import ru.clevertec.check.api.dao.IOrderDao;
+import ru.clevertec.check.api.exceptions.DaoException;
+import ru.clevertec.check.model.Order;
+import ru.clevertec.check.custom.CustomArrayList;
+import ru.clevertec.check.custom.CustomList;
 
 public class OrderDao implements IOrderDao {
 
@@ -19,7 +21,7 @@ public class OrderDao implements IOrderDao {
         return listOfOrders.stream()
                 .filter(order -> order.getId() == id)
                 .findFirst()
-                .orElseThrow(() -> new ProjectException("В заказе товара с выбранным id не существует"));
+                .orElseThrow(() -> new DaoException("В заказе товара с выбранным id не существует"));
     }
 
     @Override

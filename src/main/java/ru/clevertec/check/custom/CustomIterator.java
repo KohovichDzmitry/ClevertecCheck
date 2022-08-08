@@ -1,4 +1,4 @@
-package ru.clevertec.check.util;
+package ru.clevertec.check.custom;
 
 public interface CustomIterator<E> {
 

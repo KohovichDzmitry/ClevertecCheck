@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.clevertec.check.annotation.Log;
-import ru.clevertec.check.service.IProjectService;
+import ru.clevertec.check.api.service.IProjectService;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

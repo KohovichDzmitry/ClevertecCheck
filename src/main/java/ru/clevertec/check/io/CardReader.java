@@ -1,6 +1,6 @@
 package ru.clevertec.check.io;
 
-import ru.clevertec.check.model.card.ICardDao;
+import ru.clevertec.check.api.dao.ICardDao;
 
 import java.io.File;
 import java.io.FileNotFoundException;

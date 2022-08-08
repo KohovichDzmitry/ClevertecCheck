@@ -1,19 +1,19 @@
 package ru.clevertec.check.task.service;
 
 import org.junit.jupiter.api.*;
-import ru.clevertec.check.exception.ProjectException;
+import ru.clevertec.check.api.exceptions.DaoException;
 import ru.clevertec.check.io.CardReader;
 import ru.clevertec.check.io.OrderReader;
 import ru.clevertec.check.io.ProductReader;
-import ru.clevertec.check.model.card.CardDao;
-import ru.clevertec.check.model.card.ICardDao;
-import ru.clevertec.check.model.order.IOrderDao;
-import ru.clevertec.check.model.order.OrderDao;
-import ru.clevertec.check.model.product.IProductDao;
-import ru.clevertec.check.model.product.Product;
-import ru.clevertec.check.model.product.ProductDao;
+import ru.clevertec.check.dao.CardDao;
+import ru.clevertec.check.api.dao.ICardDao;
+import ru.clevertec.check.api.dao.IOrderDao;
+import ru.clevertec.check.dao.OrderDao;
+import ru.clevertec.check.api.dao.IProductDao;
+import ru.clevertec.check.model.Product;
+import ru.clevertec.check.dao.ProductDao;
 import ru.clevertec.check.service.ProjectService;
-import ru.clevertec.check.util.CustomList;
+import ru.clevertec.check.custom.CustomList;
 
 public class ProjectManagerTest {
 
@@ -70,7 +70,7 @@ public class ProjectManagerTest {
         actualList.add(new Product("Вафли", 2.21, 1));
         actualList.add(new Product("Майонез", 1.55, 0));
         actualList.add(new Product("Сыр", 3.48, 1));
-        Assertions.assertThrows(ProjectException.class, () -> actualList
+        Assertions.assertThrows(DaoException.class, () -> actualList
                 .stream().forEach(product -> Assertions
                         .assertEquals(product, productDao.getProductById(product.getId()))));
     }

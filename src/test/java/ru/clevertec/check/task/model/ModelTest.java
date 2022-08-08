@@ -5,19 +5,19 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import ru.clevertec.check.exception.ProjectException;
+import ru.clevertec.check.api.exceptions.DaoException;
 import ru.clevertec.check.io.CardReader;
 import ru.clevertec.check.io.OrderReader;
 import ru.clevertec.check.io.ProductReader;
-import ru.clevertec.check.model.card.Card;
-import ru.clevertec.check.model.card.CardDao;
-import ru.clevertec.check.model.card.ICardDao;
-import ru.clevertec.check.model.order.IOrderDao;
-import ru.clevertec.check.model.order.Order;
-import ru.clevertec.check.model.order.OrderDao;
-import ru.clevertec.check.model.product.IProductDao;
-import ru.clevertec.check.model.product.Product;
-import ru.clevertec.check.model.product.ProductDao;
+import ru.clevertec.check.model.Card;
+import ru.clevertec.check.dao.CardDao;
+import ru.clevertec.check.api.dao.ICardDao;
+import ru.clevertec.check.api.dao.IOrderDao;
+import ru.clevertec.check.model.Order;
+import ru.clevertec.check.dao.OrderDao;
+import ru.clevertec.check.api.dao.IProductDao;
+import ru.clevertec.check.model.Product;
+import ru.clevertec.check.dao.ProductDao;
 import ru.clevertec.check.task.resolver.ProductParameterResolver;
 
 import java.util.stream.Stream;
@@ -83,7 +83,7 @@ public class ModelTest {
     @ParameterizedTest
     @ValueSource(ints = {1112, 2122, 3332, 4544})
     void getCardByNumberFailTest(int expectedCard) {
-        Assertions.assertThrows(ProjectException.class, () -> cardDao.getCardByNumber(expectedCard));
+        Assertions.assertThrows(DaoException.class, () -> cardDao.getCardByNumber(expectedCard));
     }
 
     private static Stream<Order> getValidOrder() {
@@ -107,7 +107,7 @@ public class ModelTest {
     @ParameterizedTest
     @ValueSource(ints = {4, -1, 101, 0})
     void getProductFromOrderByIdFailTest(int expectedOrder) {
-        Assertions.assertThrows(ProjectException.class, () -> orderDao.getProductFromOrderById(expectedOrder));
+        Assertions.assertThrows(DaoException.class, () -> orderDao.getProductFromOrderById(expectedOrder));
     }
 
     @DisplayName("Получение продукта по id - позитивный тест")
@@ -122,6 +122,6 @@ public class ModelTest {
     @ParameterizedTest
     @ValueSource(ints = {44, -1, 101, 0})
     void getProductByIdFailTest(int expectedProduct) {
-        Assertions.assertThrows(ProjectException.class, () -> productDao.getProductById(expectedProduct));
+        Assertions.assertThrows(DaoException.class, () -> productDao.getProductById(expectedProduct));
     }
 }

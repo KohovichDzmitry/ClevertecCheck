@@ -1,6 +1,7 @@
-package ru.clevertec.check.model.order;
+package ru.clevertec.check.api.dao;
 
-import ru.clevertec.check.util.CustomList;
+import ru.clevertec.check.model.Order;
+import ru.clevertec.check.custom.CustomList;
 
 public interface IOrderDao {
 

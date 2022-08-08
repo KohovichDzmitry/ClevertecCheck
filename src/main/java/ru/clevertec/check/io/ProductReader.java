@@ -1,6 +1,6 @@
 package ru.clevertec.check.io;
 
-import ru.clevertec.check.model.product.IProductDao;
+import ru.clevertec.check.api.dao.IProductDao;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,7 +26,7 @@ public class ProductReader {
                     String name = data[0];
                     double price = Double.parseDouble(data[1]);
                     int stock = Integer.parseInt(data[2]);
-                    productDao.saveProduct(name, price, stock);
+                    //productDao.saveProduct(name, price, stock);
                 } else {
                     fw.write(line + "\n");
                 }

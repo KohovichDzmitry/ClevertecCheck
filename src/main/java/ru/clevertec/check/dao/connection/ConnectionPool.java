@@ -1,4 +1,6 @@
-package ru.clevertec.check.model.util;
+package ru.clevertec.check.dao.connection;
+
+import ru.clevertec.check.api.exceptions.ConnectionException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -43,7 +45,7 @@ public enum ConnectionPool {
                     connection.setAutoCommit(true);
                 }
             } catch (SQLException e) {
-                throw new RuntimeException("Ошибка с выполнением транзакции в базе данных", e);
+                throw new ConnectionException(e);
             }
             freeConnections.offer((ProxyConnection) connection);
         } else {
@@ -56,7 +58,7 @@ public enum ConnectionPool {
             try {
                 freeConnections.take().reallyClose();
             } catch (SQLException e) {
-                throw new RuntimeException("Ошибка при закрытии потока", e);
+                throw new ConnectionException("Ошибка при закрытии потока", e);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
@@ -67,7 +69,7 @@ public enum ConnectionPool {
         try {
             Class.forName(DATABASE_DRIVER);
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Ошибка подключения к базе данных ", e);
+            throw new ConnectionException("Ошибка подключения к базе данных ", e);
         }
     }
 
@@ -76,7 +78,7 @@ public enum ConnectionPool {
             try {
                 DriverManager.registerDriver(driver);
             } catch (SQLException e) {
-                throw new RuntimeException("Ошибка при регистрации драйвера базы данных", e);
+                throw new ConnectionException("Ошибка при регистрации драйвера базы данных", e);
             }
         });
     }

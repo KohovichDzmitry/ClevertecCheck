@@ -1,6 +1,6 @@
 package ru.clevertec.check.io;
 
-import ru.clevertec.check.model.order.IOrderDao;
+import ru.clevertec.check.api.dao.IOrderDao;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -1,13 +1,16 @@
-package ru.clevertec.check.model.product;
+package ru.clevertec.check.model;
 
 import java.util.Objects;
 
 public class Product {
 
     private int id;
-    private final String name;
-    private final double price;
-    private final int stock;
+    private String name;
+    private double price;
+    private int stock;
+
+    public Product() {
+    }
 
     public Product(String name, double price, int stock) {
         this.name = name;
@@ -27,12 +30,24 @@ public class Product {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public double getPrice() {
         return price;
     }
 
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
     public int getStock() {
         return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
     }
 
     @Override

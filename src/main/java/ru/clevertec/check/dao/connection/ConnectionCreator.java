@@ -1,4 +1,6 @@
-package ru.clevertec.check.model.util;
+package ru.clevertec.check.dao.connection;
+
+import ru.clevertec.check.api.exceptions.ConnectionException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,7 +19,7 @@ public class ConnectionCreator {
             connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
             proxyConnection = new ProxyConnection(connection);
         } catch (SQLException e) {
-            throw new RuntimeException("Не удается создать подключение к базе данных ", e);
+            throw new ConnectionException("Не удается создать подключение к базе данных ", e);
         }
         return proxyConnection;
     }

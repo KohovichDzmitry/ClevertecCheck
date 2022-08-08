@@ -1,14 +1,15 @@
 package ru.clevertec.check.service;
 
 import ru.clevertec.check.annotation.Log;
-import ru.clevertec.check.exception.ProjectException;
-import ru.clevertec.check.model.card.ICardDao;
-import ru.clevertec.check.model.order.IOrderDao;
-import ru.clevertec.check.model.order.Order;
-import ru.clevertec.check.model.product.IProductDao;
-import ru.clevertec.check.model.product.Product;
+import ru.clevertec.check.api.dao.ICardDao;
+import ru.clevertec.check.api.dao.IOrderDao;
+import ru.clevertec.check.api.dao.IProductDao;
+import ru.clevertec.check.api.exceptions.ServiceException;
+import ru.clevertec.check.api.service.IProjectService;
+import ru.clevertec.check.custom.CustomList;
+import ru.clevertec.check.model.Order;
+import ru.clevertec.check.model.Product;
 import ru.clevertec.check.service.handler.ProjectServiceHandler;
-import ru.clevertec.check.util.CustomList;
 
 import java.io.PrintWriter;
 import java.lang.reflect.Proxy;
@@ -88,7 +89,7 @@ public class ProjectService implements IProjectService {
         return orderDao.getOrder().stream()
                 .map(product -> product.getQuantity() * getProductStockCost(product.getId(), true))
                 .reduce(Double::sum)
-                .orElseThrow(() -> new ProjectException("Неверный расчет стоимости заказа"));
+                .orElseThrow(() -> new ServiceException("Неверный расчет стоимости заказа"));
     }
 
     @Override

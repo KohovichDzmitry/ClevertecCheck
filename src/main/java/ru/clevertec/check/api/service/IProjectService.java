@@ -1,7 +1,7 @@
-package ru.clevertec.check.service;
+package ru.clevertec.check.api.service;
 
-import ru.clevertec.check.model.product.Product;
-import ru.clevertec.check.util.CustomList;
+import ru.clevertec.check.model.Product;
+import ru.clevertec.check.custom.CustomList;
 
 public interface IProjectService {
 

@@ -1,4 +1,6 @@
-package ru.clevertec.check.model.util;
+package ru.clevertec.check.dao.connection;
+
+import ru.clevertec.check.api.exceptions.ConnectionException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,7 +21,7 @@ public class DBPropertiesManager {
         try {
             InputStream inputStream = DBPropertiesManager.class.getClassLoader().getResourceAsStream(PROPERTIES_FILE);
             if (inputStream == null) {
-                throw new RuntimeException("Файл database.properties не найден");
+                throw new ConnectionException("Файл database.properties не найден");
             }
             properties.load(inputStream);
         } catch (IOException e) {

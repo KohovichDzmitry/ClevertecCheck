@@ -1,4 +1,6 @@
-package ru.clevertec.check.model.card;
+package ru.clevertec.check.api.dao;
+
+import ru.clevertec.check.model.Card;
 
 public interface ICardDao {
 

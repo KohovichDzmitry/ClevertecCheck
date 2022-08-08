@@ -1,4 +1,4 @@
-package ru.clevertec.check.model.util;
+package ru.clevertec.check.dao.connection;
 
 import java.sql.*;
 import java.util.Map;

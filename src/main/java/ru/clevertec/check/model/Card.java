@@ -1,4 +1,4 @@
-package ru.clevertec.check.model.card;
+package ru.clevertec.check.model;
 
 import java.util.Objects;
 

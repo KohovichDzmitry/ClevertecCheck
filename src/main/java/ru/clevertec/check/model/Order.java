@@ -1,4 +1,4 @@
-package ru.clevertec.check.model.order;
+package ru.clevertec.check.model;
 
 import java.util.Objects;
 

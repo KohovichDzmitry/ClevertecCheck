@@ -1,4 +1,4 @@
-package ru.clevertec.check.model.product;
+package ru.clevertec.check.model;
 
 public class IdGenerator {
 
