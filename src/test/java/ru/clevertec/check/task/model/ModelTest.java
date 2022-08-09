@@ -88,10 +88,10 @@ public class ModelTest {
 
     private static Stream<Order> getValidOrder() {
         return Stream.of(
-                new Order(1, 1),
-                new Order(2,1),
-                new Order(3, 2),
-                new Order(9, 5)
+                new Order(1, new Product("Хлеб",	1.51,	0), 1),
+                new Order(2, new Product("Батон",	1.49,	1), 1),
+                new Order(3, new Product("Молоко",	1.35,	0), 2),
+                new Order(9, new Product("Йогурт",	1.15,	0), 5)
         );
     }
 
@@ -99,7 +99,7 @@ public class ModelTest {
     @ParameterizedTest
     @MethodSource("getValidOrder")
     void getProductFromOrderByIdTest(Order expectedOrder) {
-        Order actualOrder = orderDao.getProductFromOrderById(expectedOrder.getId());
+        Order actualOrder = orderDao.getOrderById(expectedOrder.getId());
         Assertions.assertEquals(expectedOrder, actualOrder);
     }
 
@@ -107,7 +107,7 @@ public class ModelTest {
     @ParameterizedTest
     @ValueSource(ints = {4, -1, 101, 0})
     void getProductFromOrderByIdFailTest(int expectedOrder) {
-        Assertions.assertThrows(DaoException.class, () -> orderDao.getProductFromOrderById(expectedOrder));
+        Assertions.assertThrows(DaoException.class, () -> orderDao.getOrderById(expectedOrder));
     }
 
     @DisplayName("Получение продукта по id - позитивный тест")

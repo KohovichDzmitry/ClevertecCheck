@@ -44,14 +44,14 @@ public class ProjectService implements IProjectService {
         CustomList<Product> actualList = this.getProxyProjectService().listProductsFromOrder();
         actualList.stream()
                 .forEach(product -> {
-                    pw.println(orderDao.getProductFromOrderById(product.getId()).getQuantity() + "\t\t"
+                    pw.println(orderDao.getOrderById(product.getId()).getQuantity() + "\t\t"
                             + product.getName() + "\t\t\t\t" + product.getPrice() + "\t"
                             + getProductStockCost(product.getId(), false)
-                            * orderDao.getProductFromOrderById(product.getId()).getQuantity());
+                            * orderDao.getOrderById(product.getId()).getQuantity());
                     if (product.getStock() == 1 && numberOfProductsFromOrderWithStock(actualList) > 4) {
                         pw.println("\t(на товар \"" + product.getName() + "\" акция -10%)\t"
                                 + BigDecimal.valueOf(getProductStockCost(product.getId(), true)
-                                        * orderDao.getProductFromOrderById(product.getId()).getQuantity())
+                                        * orderDao.getOrderById(product.getId()).getQuantity())
                                 .setScale(2, RoundingMode.HALF_UP).doubleValue());
                     }
                 });

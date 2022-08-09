@@ -4,8 +4,11 @@ import java.util.Objects;
 
 public class Card {
 
-    private final int number;
-    private final int discount;
+    private int number;
+    private int discount;
+
+    public Card() {
+    }
 
     public Card(int number, int discount) {
         this.number = number;
@@ -16,8 +19,16 @@ public class Card {
         return number;
     }
 
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
     public int getDiscount() {
         return discount;
+    }
+
+    public void setDiscount(int discount) {
+        this.discount = discount;
     }
 
     @Override
@@ -37,7 +48,7 @@ public class Card {
     public String toString() {
         return "Card{" +
                 "number=" + number +
-                "discount=" + discount + "%" +
+                ", discount=" + discount + "%" +
                 '}';
     }
 }

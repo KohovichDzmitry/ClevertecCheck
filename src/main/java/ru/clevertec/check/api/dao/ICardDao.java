@@ -1,10 +1,17 @@
 package ru.clevertec.check.api.dao;
 
+import ru.clevertec.check.custom.CustomList;
 import ru.clevertec.check.model.Card;
 
 public interface ICardDao {
 
-    void saveCard(int number, int discount);
+    Card saveCard(Card card);
 
-    Card getCardByNumber(int number);
+    Card getCardByNumber(Integer number);
+
+    CustomList<Card> getAllCards();
+
+    Card updateDiscountInCard(Integer number, Integer discount);
+
+    void deleteCard(Integer number);
 }

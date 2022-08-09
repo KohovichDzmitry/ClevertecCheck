@@ -33,7 +33,14 @@ public class Main {
 //        outputCheck.printCheck(4444);
 //        //печать чека в файл check, с учетом скидки по предьявленной карте
 
-        System.out.println(productDao.getProductById(2));
+//        Product product = new Product("Колбаса", 12.25, 1);
+//        System.out.println(productDao.updateProduct(product, 21));
+////        System.out.println(productDao.getProductById(21));
+//        productDao.deleteProduct(21);
 
+//        System.out.println(cardDao.getCardByNumber(111));
+//        System.out.println(cardDao.getAllCards());
+
+        System.out.println(orderDao.getOrderById(2));
     }
 }

@@ -24,7 +24,7 @@ public class CardReader {
                 if (Pattern.matches(regex, line)) {
                     int number = Integer.parseInt(data[0]);
                     int discount = Integer.parseInt(data[1]);
-                    cardDao.saveCard(number, discount);
+                    //cardDao.saveCard(number, discount);
                 } else {
                     fw.write(line + "\n");
                 }
