@@ -64,64 +64,64 @@ public class ModelTest {
 
     private static Stream<Card> getValidCards() {
         return Stream.of(
-                new Card(1111, 1),
-                new Card(2222,2),
-                new Card(3333, 3),
-                new Card(4444, 4)
+                cardDao.getById(2L),
+                cardDao.getById(3L),
+                cardDao.getById(4L),
+                cardDao.getById(5L)
         );
     }
 
-    @DisplayName("Получение скидочной карты по номеру - позитивный тест")
+    @DisplayName("Получение скидочной карты по id - позитивный тест")
     @ParameterizedTest
     @MethodSource("getValidCards")
     void getCardByNumberTest(Card expectedCard) {
-        Card actualCard = cardDao.getCardByNumber(expectedCard.getNumber());
+        Card actualCard = cardDao.getById(expectedCard.getId());
         Assertions.assertEquals(expectedCard, actualCard);
     }
 
-    @DisplayName("Получение скидочной карты по номеру - негативный тест")
+    @DisplayName("Получение скидочной карты по id - негативный тест")
     @ParameterizedTest
-    @ValueSource(ints = {1112, 2122, 3332, 4544})
-    void getCardByNumberFailTest(int expectedCard) {
-        Assertions.assertThrows(DaoException.class, () -> cardDao.getCardByNumber(expectedCard));
+    @ValueSource(longs = {1112, 2122, 3332, 4544})
+    void getCardByNumberFailTest(Long expectedCard) {
+        Assertions.assertThrows(DaoException.class, () -> cardDao.getById(expectedCard));
     }
 
     private static Stream<Order> getValidOrder() {
         return Stream.of(
-                new Order(1, new Product("Хлеб",	1.51,	0), 1),
-                new Order(2, new Product("Батон",	1.49,	1), 1),
-                new Order(3, new Product("Молоко",	1.35,	0), 2),
-                new Order(9, new Product("Йогурт",	1.15,	0), 5)
+                orderDao.getById(1L),
+                orderDao.getById(2L),
+                orderDao.getById(3L),
+                orderDao.getById(9L)
         );
     }
 
-    @DisplayName("Получение продуктов из списка по id - позитивный тест")
+    @DisplayName("Получение продуктов из заказа по id - позитивный тест")
     @ParameterizedTest
     @MethodSource("getValidOrder")
     void getProductFromOrderByIdTest(Order expectedOrder) {
-        Order actualOrder = orderDao.getOrderById(expectedOrder.getId());
+        Order actualOrder = orderDao.getById(expectedOrder.getId());
         Assertions.assertEquals(expectedOrder, actualOrder);
     }
 
-    @DisplayName("Получение продуктов из списка по id - негативный тест")
+    @DisplayName("Получение продуктов из заказа по id - негативный тест")
     @ParameterizedTest
-    @ValueSource(ints = {4, -1, 101, 0})
-    void getProductFromOrderByIdFailTest(int expectedOrder) {
-        Assertions.assertThrows(DaoException.class, () -> orderDao.getOrderById(expectedOrder));
+    @ValueSource(longs = {42, -1, 101, 0})
+    void getProductFromOrderByIdFailTest(Long expectedOrder) {
+        Assertions.assertThrows(DaoException.class, () -> orderDao.getById(expectedOrder));
     }
 
     @DisplayName("Получение продукта по id - позитивный тест")
     @Test
     void getProductByIdTest(Product expectedProduct) {
-        int id = expectedProduct.getId();
-        Product actualProduct = productDao.getProductById(id);
+        Long id = expectedProduct.getId();
+        Product actualProduct = productDao.getById(id);
         Assertions.assertEquals(expectedProduct, actualProduct);
     }
 
     @DisplayName("Получение продукта по id - негативный тест")
     @ParameterizedTest
-    @ValueSource(ints = {44, -1, 101, 0})
-    void getProductByIdFailTest(int expectedProduct) {
-        Assertions.assertThrows(DaoException.class, () -> productDao.getProductById(expectedProduct));
+    @ValueSource(longs = {44, -1, 101, 0})
+    void getProductByIdFailTest(Long expectedProduct) {
+        Assertions.assertThrows(DaoException.class, () -> productDao.getById(expectedProduct));
     }
 }

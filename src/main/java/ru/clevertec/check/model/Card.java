@@ -2,32 +2,32 @@ package ru.clevertec.check.model;
 
 import java.util.Objects;
 
-public class Card {
+public class Card extends AEntity {
 
-    private int number;
-    private int discount;
+    private Integer number;
+    private Integer discount;
 
     public Card() {
     }
 
-    public Card(int number, int discount) {
+    public Card(Integer number, Integer discount) {
         this.number = number;
         this.discount = discount;
     }
 
-    public int getNumber() {
+    public Integer getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(Integer number) {
         this.number = number;
     }
 
-    public int getDiscount() {
+    public Integer getDiscount() {
         return discount;
     }
 
-    public void setDiscount(int discount) {
+    public void setDiscount(Integer discount) {
         this.discount = discount;
     }
 
@@ -36,7 +36,7 @@ public class Card {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Card card = (Card) o;
-        return number == card.number && discount == card.discount;
+        return Objects.equals(number, card.number) && Objects.equals(discount, card.discount);
     }
 
     @Override
@@ -47,8 +47,9 @@ public class Card {
     @Override
     public String toString() {
         return "Card{" +
-                "number=" + number +
-                ", discount=" + discount + "%" +
+                "id=" + getId() +
+                " number=" + number +
+                ", discount=" + discount +
                 '}';
     }
 }

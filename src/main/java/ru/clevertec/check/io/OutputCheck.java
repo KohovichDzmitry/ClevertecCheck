@@ -19,7 +19,7 @@ public class OutputCheck {
         this.projectService = projectService;
     }
 
-    public void printCheck(int cardNumber) {
+    public void printCheck(Long card_id) {
         File file = new File("src/main/resources/check");
         try (PrintWriter pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
             pw.println("\t\t\t  -=Магазин 777=-");
@@ -31,7 +31,7 @@ public class OutputCheck {
             pw.println("Кол.\t" + "Наименование\t\t" + "Цена\t" + "Сумма");
             projectService.printProductFromTheOrder(pw);
             pw.println("=========================================");
-            projectService.printEndingCheck(pw, cardNumber);
+            projectService.printEndingCheck(pw, card_id);
             pw.println("*****************************************");
             pw.println("\t\t\tCпасибо за покупку!");
         } catch (IOException e) {

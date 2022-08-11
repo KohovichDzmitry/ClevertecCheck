@@ -7,9 +7,9 @@ public interface IProjectService {
 
     CustomList<Product> listProductsFromOrder();
 
-    long numberOfProductsFromOrderWithStock(CustomList<Product> customList);
+    Long numberOfProductsFromOrderWithStock(CustomList<Product> customList);
 
-    double getTotalSum();
+    Double getTotalSum();
 
-    double getProductStockCost(int id, boolean mark);
+    Double getProductStockCost(Long id, Boolean mark);
 }

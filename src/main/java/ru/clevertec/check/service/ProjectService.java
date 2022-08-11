@@ -44,27 +44,27 @@ public class ProjectService implements IProjectService {
         CustomList<Product> actualList = this.getProxyProjectService().listProductsFromOrder();
         actualList.stream()
                 .forEach(product -> {
-                    pw.println(orderDao.getOrderById(product.getId()).getQuantity() + "\t\t"
+                    pw.println(orderDao.getById(product.getId()).getQuantity() + "\t\t"
                             + product.getName() + "\t\t\t\t" + product.getPrice() + "\t"
                             + getProductStockCost(product.getId(), false)
-                            * orderDao.getOrderById(product.getId()).getQuantity());
+                            * orderDao.getById(product.getId()).getQuantity());
                     if (product.getStock() == 1 && numberOfProductsFromOrderWithStock(actualList) > 4) {
                         pw.println("\t(на товар \"" + product.getName() + "\" акция -10%)\t"
                                 + BigDecimal.valueOf(getProductStockCost(product.getId(), true)
-                                        * orderDao.getOrderById(product.getId()).getQuantity())
+                                        * orderDao.getById(product.getId()).getQuantity())
                                 .setScale(2, RoundingMode.HALF_UP).doubleValue());
                     }
                 });
     }
 
-    public void printEndingCheck(PrintWriter pw, int cardNumber) {
+    public void printEndingCheck(PrintWriter pw, Long card_id) {
         pw.println("Сумма\t\t\t\t\t\t\t\t" + BigDecimal.valueOf(this.getProxyProjectService().getTotalSum())
                 .setScale(2, RoundingMode.HALF_UP).doubleValue());
         pw.println("Скидка по предъявленной карте\t\t"
-                + cardDao.getCardByNumber(cardNumber).getDiscount() + "%");
+                + cardDao.getById(card_id).getDiscount() + "%");
         pw.println("Сумма с учетом скидки\t\t\t\t"
                 + BigDecimal.valueOf(getTotalSum() * ((100 - cardDao
-                        .getCardByNumber(cardNumber).getDiscount())) / 100)
+                        .getById(card_id).getDiscount())) / 100)
                 .setScale(2, RoundingMode.HALF_UP).doubleValue());
     }
 
@@ -72,33 +72,33 @@ public class ProjectService implements IProjectService {
     @Override
     public CustomList<Product> listProductsFromOrder() {
         return CustomList.toCustomList(Arrays
-                .stream(orderDao.getOrder().stream()
-                        .mapToInt(Order::getId).toArray())
-                .boxed().map(productDao::getProductById).toArray());
+                .stream(orderDao.getAll().stream()
+                        .mapToLong(Order::getId).toArray())
+                .boxed().map(productDao::getById).toArray());
     }
 
     @Override
-    public long numberOfProductsFromOrderWithStock(CustomList<Product> customList) {
+    public Long numberOfProductsFromOrderWithStock(CustomList<Product> customList) {
         return customList.stream()
                 .filter(number -> number.getStock() == 1).count();
     }
 
     @Log
     @Override
-    public double getTotalSum() {
-        return orderDao.getOrder().stream()
+    public Double getTotalSum() {
+        return orderDao.getAll().stream()
                 .map(product -> product.getQuantity() * getProductStockCost(product.getId(), true))
                 .reduce(Double::sum)
                 .orElseThrow(() -> new ServiceException("Неверный расчет стоимости заказа"));
     }
 
     @Override
-    public double getProductStockCost(int id, boolean mark) {
+    public Double getProductStockCost(Long id, Boolean mark) {
         CustomList<Product> actualList = listProductsFromOrder();
-        return Optional.of(productDao.getProductById(id))
+        return Optional.of(productDao.getById(id))
                 .filter(product -> mark && product.getStock() == 1
                         && numberOfProductsFromOrderWithStock(actualList) > 4)
                 .map(product -> product.getPrice() * ((100 - DISCOUNT_PERCENT) / 100))
-                .orElse(productDao.getProductById(id).getPrice());
+                .orElse(productDao.getById(id).getPrice());
     }
 }

@@ -2,27 +2,17 @@ package ru.clevertec.check.model;
 
 import java.util.Objects;
 
-public class Order {
+public class Order extends AEntity {
 
-    private int id;
     private Product product;
-    private int quantity;
+    private Integer quantity;
 
     public Order() {
     }
 
-    public Order(int id, Product product, int quantity) {
-        this.id = id;
+    public Order(Product product, Integer quantity) {
         this.product = product;
         this.quantity = quantity;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public Product getProduct() {
@@ -33,11 +23,11 @@ public class Order {
         this.product = product;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 
@@ -46,19 +36,19 @@ public class Order {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return id == order.id && quantity == order.quantity && Objects.equals(product, order.product);
+        return Objects.equals(product, order.product) && Objects.equals(quantity, order.quantity);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, product, quantity);
+        return Objects.hash(product, quantity);
     }
 
     @Override
     public String toString() {
         return "Order{" +
-                "id=" + id +
-                ", product=" + product +
+                "id=" + getId() +
+                " product=" + product +
                 ", quantity=" + quantity +
                 '}';
     }

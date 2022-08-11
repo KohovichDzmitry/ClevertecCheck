@@ -6,6 +6,7 @@ import ru.clevertec.check.api.dao.IProductDao;
 import ru.clevertec.check.dao.CardDao;
 import ru.clevertec.check.dao.OrderDao;
 import ru.clevertec.check.dao.ProductDao;
+import ru.clevertec.check.io.OutputCheck;
 import ru.clevertec.check.service.ProjectService;
 
 public class Main {
@@ -29,8 +30,8 @@ public class Main {
 //        orderReader.read(orderDao);
 //        //создали и сохранили содержимое чека (для примера) из файла order
 //
-//        OutputCheck outputCheck = new OutputCheck(projectService);
-//        outputCheck.printCheck(4444);
+        OutputCheck outputCheck = new OutputCheck(projectService);
+        outputCheck.printCheck(5L);
 //        //печать чека в файл check, с учетом скидки по предьявленной карте
 
 //        Product product = new Product("Колбаса", 12.25, 1);
@@ -41,6 +42,11 @@ public class Main {
 //        System.out.println(cardDao.getCardByNumber(111));
 //        System.out.println(cardDao.getAllCards());
 
-        System.out.println(orderDao.getOrderById(2));
+//        System.out.println(orderDao.getOrderById(2));
+//        System.out.println(orderDao.getAllOrders());
+//        Product product = productDao.getProductById(2);
+//        Order order = new Order(product, 1);
+//        System.out.println(orderDao.updateOrder(order, 21L));
+
     }
 }

@@ -60,7 +60,7 @@ public class ProjectManagerTest {
     void listProductsFromOrderTest() {
         CustomList<Product> actualList = projectService.listProductsFromOrder();
         actualList.stream().forEach(product -> Assertions
-                .assertEquals(product, productDao.getProductById(product.getId())));
+                .assertEquals(product, productDao.getById(product.getId())));
     }
 
     @DisplayName("Проверка наличия продукта из заказа по id - негативный тест")
@@ -72,7 +72,7 @@ public class ProjectManagerTest {
         actualList.add(new Product("Сыр", 3.48, 1));
         Assertions.assertThrows(DaoException.class, () -> actualList
                 .stream().forEach(product -> Assertions
-                        .assertEquals(product, productDao.getProductById(product.getId()))));
+                        .assertEquals(product, productDao.getById(product.getId()))));
     }
 
     @DisplayName("Получение общей стоимости заказа - позитивный тест")

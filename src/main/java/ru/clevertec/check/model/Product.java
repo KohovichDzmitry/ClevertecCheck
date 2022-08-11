@@ -2,9 +2,8 @@ package ru.clevertec.check.model;
 
 import java.util.Objects;
 
-public class Product {
+public class Product extends AEntity {
 
-    private int id;
     private String name;
     private double price;
     private int stock;
@@ -16,14 +15,6 @@ public class Product {
         this.name = name;
         this.price = price;
         this.stock = stock;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getName() {
@@ -55,20 +46,19 @@ public class Product {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return id == product.id && Double.compare(product.price, price) == 0
-                && stock == product.stock && Objects.equals(name, product.name);
+        return Double.compare(product.price, price) == 0 && stock == product.stock && Objects.equals(name, product.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, price, stock);
+        return Objects.hash(name, price, stock);
     }
 
     @Override
     public String toString() {
         return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
+                "id=" + getId() +
+                " name='" + name + '\'' +
                 ", price=" + price +
                 ", stock=" + stock +
                 '}';

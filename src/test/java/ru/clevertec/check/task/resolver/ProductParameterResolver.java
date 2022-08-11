@@ -20,7 +20,7 @@ public class ProductParameterResolver implements ParameterResolver {
     @Override
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         Random rand = new Random();
-        System.out.println(productDao.getAllProducts().size());
-        return productDao.getAllProducts().get(rand.nextInt(productDao.getAllProducts().size()));
+        System.out.println(productDao.getAll().size());
+        return productDao.getAll().get(rand.nextInt(productDao.getAll().size()));
     }
 }
