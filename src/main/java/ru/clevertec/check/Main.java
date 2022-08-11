@@ -17,36 +17,7 @@ public class Main {
     private static final ProjectService projectService = new ProjectService(productDao, cardDao, orderDao);
 
     public static void main(String[] args) {
-
-//        ProductReader productReader = new ProductReader();
-//        productReader.read(productDao);
-//        //создали и сохранили 20 продуктов из файла products; stock: 1 - товар на акции, 0 - не на акции
-//
-//        CardReader cardReader = new CardReader();
-//        cardReader.read(cardDao);
-//        // создали и сохранили 5 скидочных карт из файла cards
-//
-//        OrderReader orderReader = new OrderReader();
-//        orderReader.read(orderDao);
-//        //создали и сохранили содержимое чека (для примера) из файла order
-//
         OutputCheck outputCheck = new OutputCheck(projectService);
         outputCheck.printCheck(5L);
-//        //печать чека в файл check, с учетом скидки по предьявленной карте
-
-//        Product product = new Product("Колбаса", 12.25, 1);
-//        System.out.println(productDao.updateProduct(product, 21));
-////        System.out.println(productDao.getProductById(21));
-//        productDao.deleteProduct(21);
-
-//        System.out.println(cardDao.getCardByNumber(111));
-//        System.out.println(cardDao.getAllCards());
-
-//        System.out.println(orderDao.getOrderById(2));
-//        System.out.println(orderDao.getAllOrders());
-//        Product product = productDao.getProductById(2);
-//        Order order = new Order(product, 1);
-//        System.out.println(orderDao.updateOrder(order, 21L));
-
     }
 }

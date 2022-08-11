@@ -51,6 +51,7 @@ public class CardDao extends AbstractDao<Card> implements ICardDao {
         }
     }
 
+    @Override
     protected Card prepareStatementForFind(ResultSet resultSet) {
         try {
             Card card = new Card();
@@ -73,100 +74,4 @@ public class CardDao extends AbstractDao<Card> implements ICardDao {
             throw new DaoException("Не удалось выполнить запрос ", e);
         }
     }
-
-//    @Override
-//    public Card saveCard(Card card) {
-//        try (Connection connection = ConnectionPool.INSTANCE.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(INSERT_CARD, Statement.RETURN_GENERATED_KEYS)) {
-//            statement.setInt(1, card.getNumber());
-//            statement.setInt(2, card.getDiscount());
-//            statement.executeUpdate();
-//            ResultSet resultSet = statement.getGeneratedKeys();
-//            if (resultSet.next()) {
-//                final Long key = resultSet.getLong(1);
-//                card.setId(key);
-//            } else {
-//                throw new DaoException("Не удалось автоматически создать id для заказа");
-//            }
-//            return card;
-//        } catch (SQLException e) {
-//            throw new DaoException("Ошибка при добавлении заказа в БД ", e);
-//        }
-//    }
-//
-//    @Override
-//    public Card getCardById(Long id) {
-//        Card card;
-//        try (Connection connection = ConnectionPool.INSTANCE.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(GET_CARD_BY_ID)) {
-//            statement.setLong(1, id);
-//            ResultSet resultSet = statement.executeQuery();
-//            if (resultSet.next()) {
-//                card = createFromResultSet(resultSet);
-//            } else {
-//                throw new DaoException(String.format("Не удалось найти скидочную карту по введённому id: %d", id));
-//            }
-//            return card;
-//        } catch (SQLException e) {
-//            throw new DaoException(String.format("Ошибка при попытке найти скидочную карту по введённому id: %d", id));
-//        }
-//    }
-//
-//    @Override
-//    public CustomList<Card> getAllCards() {
-//        CustomList<Card> cards = new CustomArrayList<>();
-//        try (Connection connection = ConnectionPool.INSTANCE.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(GET_ALL_CARDS)) {
-//            ResultSet resultSet = statement.executeQuery();
-//            while (resultSet.next()) {
-//                Card card = createFromResultSet(resultSet);
-//                cards.add(card);
-//            }
-//            return cards;
-//        } catch (SQLException e) {
-//            throw new DaoException("Ошибка при попытке найти скидочные карты в БД", e);
-//        }
-//    }
-//
-//    @Override
-//    public Card updateCard(Card card, Long id) {
-//        try (Connection connection = ConnectionPool.INSTANCE.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(UPDATE_CARD_BY_ID)) {
-//            statement.setInt(1, card.getNumber());
-//            statement.setInt(2, card.getDiscount());
-//            statement.setLong(3, id);
-//            card.setId(id);
-//            if (statement.executeUpdate() != 1) {
-//                throw new DaoException(String.format("Не удалось найти скидочную карту по введённому id: %d", id));
-//            }
-//            return card;
-//        } catch (SQLException e) {
-//            throw new DaoException(String.format("Ошибка при попытке обновить скидочную карту по введённому id: %d", id));
-//        }
-//    }
-//
-//    @Override
-//    public void deleteCard(Long id) {
-//        try (Connection connection = ConnectionPool.INSTANCE.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(DELETE_CARD_BY_ID)) {
-//            statement.setLong(1, id);
-//            if (statement.executeUpdate() != 1) {
-//                throw new DaoException(String.format("Не удалось найти скидочную карту с id: %d", id));
-//            }
-//        } catch (SQLException e) {
-//            throw new DaoException(String.format("Ошибка при попытке удалить скидочную карту с id: %d", id));
-//        }
-//    }
-//
-//    private Card createFromResultSet(ResultSet resultSet) {
-//        try {
-//            Card card = new Card();
-//            card.setId(resultSet.getLong("card_id"));
-//            card.setNumber(resultSet.getInt("card_number"));
-//            card.setDiscount(resultSet.getInt("discount"));
-//            return card;
-//        } catch (SQLException e) {
-//            throw new DaoException(e);
-//        }
-//    }
 }

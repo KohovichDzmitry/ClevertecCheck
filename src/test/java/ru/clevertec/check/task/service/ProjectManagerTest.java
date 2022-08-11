@@ -1,19 +1,16 @@
 package ru.clevertec.check.task.service;
 
 import org.junit.jupiter.api.*;
-import ru.clevertec.check.api.exceptions.DaoException;
-import ru.clevertec.check.io.CardReader;
-import ru.clevertec.check.io.OrderReader;
-import ru.clevertec.check.io.ProductReader;
-import ru.clevertec.check.dao.CardDao;
 import ru.clevertec.check.api.dao.ICardDao;
 import ru.clevertec.check.api.dao.IOrderDao;
-import ru.clevertec.check.dao.OrderDao;
 import ru.clevertec.check.api.dao.IProductDao;
-import ru.clevertec.check.model.Product;
-import ru.clevertec.check.dao.ProductDao;
-import ru.clevertec.check.service.ProjectService;
+import ru.clevertec.check.api.exceptions.DaoException;
 import ru.clevertec.check.custom.CustomList;
+import ru.clevertec.check.dao.CardDao;
+import ru.clevertec.check.dao.OrderDao;
+import ru.clevertec.check.dao.ProductDao;
+import ru.clevertec.check.model.Product;
+import ru.clevertec.check.service.ProjectService;
 
 public class ProjectManagerTest {
 
@@ -23,30 +20,19 @@ public class ProjectManagerTest {
     ProjectService projectService = new ProjectService(productDao, cardDao, orderDao);
 
     @BeforeAll
-    static void generateProducts() {
-        ProductReader productReader = new ProductReader();
-        productReader.read(productDao);
-    }
-
-    @BeforeAll
-    static void generateOrder() {
-        OrderReader orderReader = new OrderReader();
-        orderReader.read(orderDao);
+    static void generateProductsAndOrder() {
+        productDao.getAll();
+        orderDao.getAll();
     }
 
     @BeforeEach
     void generateCards() {
-        CardReader cardReader = new CardReader();
-        cardReader.read(cardDao);
+        cardDao.getAll();
     }
 
     @AfterAll
-    static void deleteProducts() {
+    static void deleteProductsAndOrder() {
         productDao = null;
-    }
-
-    @AfterAll
-    static void deleteOrder() {
         orderDao = null;
     }
 

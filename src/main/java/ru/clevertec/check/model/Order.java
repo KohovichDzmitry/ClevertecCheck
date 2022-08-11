@@ -48,7 +48,7 @@ public class Order extends AEntity {
     public String toString() {
         return "Order{" +
                 "id=" + getId() +
-                " product=" + product +
+                ", " + product +
                 ", quantity=" + quantity +
                 '}';
     }

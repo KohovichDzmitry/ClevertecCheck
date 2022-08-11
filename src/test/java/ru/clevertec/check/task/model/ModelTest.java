@@ -5,19 +5,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import ru.clevertec.check.api.exceptions.DaoException;
-import ru.clevertec.check.io.CardReader;
-import ru.clevertec.check.io.OrderReader;
-import ru.clevertec.check.io.ProductReader;
-import ru.clevertec.check.model.Card;
-import ru.clevertec.check.dao.CardDao;
 import ru.clevertec.check.api.dao.ICardDao;
 import ru.clevertec.check.api.dao.IOrderDao;
-import ru.clevertec.check.model.Order;
-import ru.clevertec.check.dao.OrderDao;
 import ru.clevertec.check.api.dao.IProductDao;
-import ru.clevertec.check.model.Product;
+import ru.clevertec.check.api.exceptions.DaoException;
+import ru.clevertec.check.dao.CardDao;
+import ru.clevertec.check.dao.OrderDao;
 import ru.clevertec.check.dao.ProductDao;
+import ru.clevertec.check.model.Card;
+import ru.clevertec.check.model.Order;
+import ru.clevertec.check.model.Product;
 import ru.clevertec.check.task.resolver.ProductParameterResolver;
 
 import java.util.stream.Stream;
@@ -30,35 +27,16 @@ public class ModelTest {
     static ICardDao cardDao = new CardDao();
 
     @BeforeAll
-    static void generateProducts() {
-        ProductReader productReader = new ProductReader();
-        productReader.read(productDao);
-    }
-
-    @BeforeAll
-    static void generateOrder() {
-        OrderReader orderReader = new OrderReader();
-        orderReader.read(orderDao);
-    }
-
-    @BeforeAll
-    static void generateCards() {
-        CardReader cardReader = new CardReader();
-        cardReader.read(cardDao);
+    static void generateEntitys() {
+        productDao.getAll();
+        orderDao.getAll();
+        cardDao.getAll();
     }
 
     @AfterAll
     static void deleteProducts() {
         productDao = null;
-    }
-
-    @AfterAll
-    static void deleteOrder() {
         orderDao = null;
-    }
-
-    @AfterAll
-    static void deleteCards() {
         cardDao = null;
     }
 

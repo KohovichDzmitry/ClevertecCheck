@@ -54,6 +54,7 @@ public class ProductDao extends AbstractDao<Product> implements IProductDao {
         }
     }
 
+    @Override
     protected Product prepareStatementForFind(ResultSet resultSet) {
         try {
             Product product = new Product();
@@ -78,103 +79,4 @@ public class ProductDao extends AbstractDao<Product> implements IProductDao {
             throw new DaoException("Не удалось выполнить запрос ", e);
         }
     }
-
-//    @Override
-//    public Product saveProduct(Product product) {
-//        try (Connection connection = ConnectionPool.INSTANCE.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(INSERT_PRODUCT, Statement.RETURN_GENERATED_KEYS)) {
-//            statement.setString(1, product.getName());
-//            statement.setDouble(2, product.getPrice());
-//            statement.setInt(3, product.getStock());
-//            statement.executeUpdate();
-//            ResultSet resultSet = statement.getGeneratedKeys();
-//            if (resultSet.next()) {
-//                final Long key = resultSet.getLong(1);
-//                product.setId(key);
-//            } else {
-//                throw new DaoException("Не удалось автоматически создать id для продукта");
-//            }
-//            return product;
-//        } catch (SQLException e) {
-//            throw new DaoException("Ошибка при добавлении продукта в БД ", e);
-//        }
-//    }
-//
-//    @Override
-//    public Product getProductById(Long id) {
-//        Product product;
-//        try (Connection connection = ConnectionPool.INSTANCE.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(GET_PRODUCT_BY_ID)) {
-//            statement.setLong(1, id);
-//            ResultSet resultSet = statement.executeQuery();
-//            if (resultSet.next()) {
-//                product = createFromResultSet(resultSet);
-//            } else {
-//                throw new DaoException(String.format("Не удалось найти продукт по введённому id: %d", id));
-//            }
-//            return product;
-//        } catch (SQLException e) {
-//            throw new DaoException(String.format("Ошибка при попытке найти продукт по введённому id: %d", id));
-//        }
-//    }
-//
-//    @Override
-//    public CustomList<Product> getAllProducts() {
-//        CustomList<Product> products = new CustomArrayList<>();
-//        try (Connection connection = ConnectionPool.INSTANCE.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(GET_ALL_PRODUCTS)) {
-//            ResultSet resultSet = statement.executeQuery();
-//            while (resultSet.next()) {
-//                Product product = createFromResultSet(resultSet);
-//                products.add(product);
-//            }
-//            return products;
-//        } catch (SQLException e) {
-//            throw new DaoException("Ошибка при попытке найти продукты в БД", e);
-//        }
-//    }
-//
-//    @Override
-//    public Product updateProduct(Product product, Long id) {
-//        try (Connection connection = ConnectionPool.INSTANCE.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(UPDATE_PRODUCT_BY_ID)) {
-//            statement.setString(1, product.getName());
-//            statement.setDouble(2, product.getPrice());
-//            statement.setInt(3, product.getStock());
-//            statement.setLong(4, id);
-//            product.setId(id);
-//            if (statement.executeUpdate() != 1) {
-//                throw new DaoException(String.format("Не удалось найти продукт по введённому id: %d", id));
-//            }
-//            return product;
-//        } catch (SQLException e) {
-//            throw new DaoException(String.format("Ошибка при попытке обновить продукт по введённому id: %d", id));
-//        }
-//    }
-//
-//    @Override
-//    public void deleteProduct(Long id) {
-//        try (Connection connection = ConnectionPool.INSTANCE.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(DELETE_PRODUCT_BY_ID)) {
-//            statement.setLong(1, id);
-//            if (statement.executeUpdate() != 1) {
-//                throw new DaoException(String.format("Не удалось найти продукт по введённому id: %d", id));
-//            }
-//        } catch (SQLException e) {
-//            throw new DaoException(String.format("Ошибка при попытке удалить продукт по введённому id: %d", id));
-//        }
-//    }
-//
-//    private Product createFromResultSet(ResultSet resultSet) {
-//        try {
-//            Product product = new Product();
-//            product.setId(resultSet.getLong("product_id"));
-//            product.setName(resultSet.getString("product_name"));
-//            product.setPrice(resultSet.getDouble("price"));
-//            product.setStock(resultSet.getInt("stock"));
-//            return product;
-//        } catch (SQLException e) {
-//            throw new DaoException(e);
-//        }
-//    }
 }

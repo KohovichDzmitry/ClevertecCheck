@@ -7,7 +7,6 @@ import ru.clevertec.check.api.dao.IProductDao;
 import ru.clevertec.check.api.exceptions.ServiceException;
 import ru.clevertec.check.api.service.IProjectService;
 import ru.clevertec.check.custom.CustomList;
-import ru.clevertec.check.model.Order;
 import ru.clevertec.check.model.Product;
 import ru.clevertec.check.service.handler.ProjectServiceHandler;
 
@@ -44,14 +43,14 @@ public class ProjectService implements IProjectService {
         CustomList<Product> actualList = this.getProxyProjectService().listProductsFromOrder();
         actualList.stream()
                 .forEach(product -> {
-                    pw.println(orderDao.getById(product.getId()).getQuantity() + "\t\t"
+                    pw.println(orderDao.getOrderByIdProduct(product.getId()).getQuantity() + "\t\t"
                             + product.getName() + "\t\t\t\t" + product.getPrice() + "\t"
                             + getProductStockCost(product.getId(), false)
-                            * orderDao.getById(product.getId()).getQuantity());
+                            * orderDao.getOrderByIdProduct(product.getId()).getQuantity());
                     if (product.getStock() == 1 && numberOfProductsFromOrderWithStock(actualList) > 4) {
                         pw.println("\t(на товар \"" + product.getName() + "\" акция -10%)\t"
                                 + BigDecimal.valueOf(getProductStockCost(product.getId(), true)
-                                        * orderDao.getById(product.getId()).getQuantity())
+                                        * orderDao.getOrderByIdProduct(product.getId()).getQuantity())
                                 .setScale(2, RoundingMode.HALF_UP).doubleValue());
                     }
                 });
@@ -73,7 +72,7 @@ public class ProjectService implements IProjectService {
     public CustomList<Product> listProductsFromOrder() {
         return CustomList.toCustomList(Arrays
                 .stream(orderDao.getAll().stream()
-                        .mapToLong(Order::getId).toArray())
+                        .mapToLong(order -> order.getProduct().getId()).toArray())
                 .boxed().map(productDao::getById).toArray());
     }
 
@@ -87,7 +86,7 @@ public class ProjectService implements IProjectService {
     @Override
     public Double getTotalSum() {
         return orderDao.getAll().stream()
-                .map(product -> product.getQuantity() * getProductStockCost(product.getId(), true))
+                .map(product -> product.getQuantity() * getProductStockCost(product.getProduct().getId(), true))
                 .reduce(Double::sum)
                 .orElseThrow(() -> new ServiceException("Неверный расчет стоимости заказа"));
     }
