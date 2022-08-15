@@ -1,6 +1,8 @@
 package ru.clevertec.check.task.service;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import ru.clevertec.check.api.dao.ICardDao;
 import ru.clevertec.check.api.dao.IOrderDao;
 import ru.clevertec.check.api.dao.IProductDao;
@@ -50,15 +52,11 @@ public class ProjectManagerTest {
     }
 
     @DisplayName("Проверка наличия продукта из заказа по id - негативный тест")
-    @Test
-    void listProductsFromOrderFailTest() {
-        CustomList<Product> actualList = projectService.listProductsFromOrder();
-        actualList.add(new Product("Вафли", 2.21, 1));
-        actualList.add(new Product("Майонез", 1.55, 0));
-        actualList.add(new Product("Сыр", 3.48, 1));
-        Assertions.assertThrows(DaoException.class, () -> actualList
-                .stream().forEach(product -> Assertions
-                        .assertEquals(product, productDao.getById(product.getId()))));
+    @ParameterizedTest
+    @ValueSource(longs = {112, 22, 33, 45404})
+    void listProductsFromOrderFailTest(Long expectedProduct) {
+        Assertions.assertThrows(DaoException.class, () ->
+                productDao.getById(expectedProduct));
     }
 
     @DisplayName("Получение общей стоимости заказа - позитивный тест")
