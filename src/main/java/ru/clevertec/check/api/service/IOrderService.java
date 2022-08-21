@@ -1,9 +1,10 @@
 package ru.clevertec.check.api.service;
 
-import ru.clevertec.check.model.Product;
 import ru.clevertec.check.custom.CustomList;
+import ru.clevertec.check.model.Order;
+import ru.clevertec.check.model.Product;
 
-public interface IProjectService {
+public interface IOrderService extends GenericService<Order> {
 
     CustomList<Product> listProductsFromOrder();
 

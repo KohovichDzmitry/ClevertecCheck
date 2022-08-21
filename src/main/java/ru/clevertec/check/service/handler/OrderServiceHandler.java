@@ -4,26 +4,26 @@ import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.clevertec.check.annotation.Log;
-import ru.clevertec.check.api.service.IProjectService;
+import ru.clevertec.check.api.service.IOrderService;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
-public class ProjectServiceHandler implements InvocationHandler {
+public class OrderServiceHandler implements InvocationHandler {
 
-    private final IProjectService iProjectService;
+    private final IOrderService iOrderService;
 
-    public ProjectServiceHandler(IProjectService iProjectService) {
-        this.iProjectService = iProjectService;
+    public OrderServiceHandler(IOrderService iOrderService) {
+        this.iOrderService = iOrderService;
     }
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         Logger logger = LogManager.getLogger(method.getDeclaringClass().getName());
         Gson gson = new Gson();
-        Object invoke = method.invoke(iProjectService, args);
+        Object invoke = method.invoke(iOrderService, args);
         if (method.getAnnotation(Log.class) != null ||
-                iProjectService.getClass().getMethod(method.getName(), method.getParameterTypes())
+                iOrderService.getClass().getMethod(method.getName(), method.getParameterTypes())
                         .getAnnotation(Log.class) != null) {
             logger.debug("Название метода: {}, аргументы метода: {}", method.getName(), gson.toJson(args));
             logger.debug("Результат выполнения метода {} - {}", method.getName(), gson.toJson(invoke));

@@ -1,6 +1,6 @@
 package ru.clevertec.check.io;
 
-import ru.clevertec.check.service.ProjectService;
+import ru.clevertec.check.service.OrderService;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,12 +11,12 @@ import java.time.LocalTime;
 
 public class OutputCheck {
 
-    private final ProjectService projectService;
+    private final OrderService orderService;
     private final LocalDate date = LocalDate.now();
     private final LocalTime time = LocalTime.now();
 
-    public OutputCheck(ProjectService projectService) {
-        this.projectService = projectService;
+    public OutputCheck(OrderService orderService) {
+        this.orderService = orderService;
     }
 
     public void printCheck(Long card_id) {
@@ -29,9 +29,9 @@ public class OutputCheck {
             pw.println("\t\t\t\t\t время: " + time.getHour() + ":" + time.getMinute() + ":" + time.getSecond());
             pw.println("-----------------------------------------");
             pw.println("Кол.\t" + "Наименование\t\t" + "Цена\t" + "Сумма");
-            projectService.printProductFromTheOrder(pw);
+            orderService.printProductFromTheOrder(pw);
             pw.println("=========================================");
-            projectService.printEndingCheck(pw, card_id);
+            orderService.printEndingCheck(pw, card_id);
             pw.println("*****************************************");
             pw.println("\t\t\tCпасибо за покупку!");
         } catch (IOException e) {

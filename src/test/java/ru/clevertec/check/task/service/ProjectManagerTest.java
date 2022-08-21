@@ -12,14 +12,14 @@ import ru.clevertec.check.dao.CardDao;
 import ru.clevertec.check.dao.OrderDao;
 import ru.clevertec.check.dao.ProductDao;
 import ru.clevertec.check.model.Product;
-import ru.clevertec.check.service.ProjectService;
+import ru.clevertec.check.service.OrderService;
 
 public class ProjectManagerTest {
 
     static IProductDao productDao = new ProductDao();
     static IOrderDao orderDao = new OrderDao();
     ICardDao cardDao = new CardDao();
-    ProjectService projectService = new ProjectService(productDao, cardDao, orderDao);
+    OrderService projectService = new OrderService(productDao, cardDao, orderDao);
 
     @BeforeAll
     static void generateProductsAndOrder() {

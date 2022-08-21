@@ -8,6 +8,7 @@ import ru.clevertec.check.dao.connection.ConnectionPool;
 import ru.clevertec.check.model.AEntity;
 
 import java.sql.*;
+import java.util.Comparator;
 
 public abstract class AbstractDao<T extends AEntity> implements GenericDao<T> {
 
@@ -95,6 +96,11 @@ public abstract class AbstractDao<T extends AEntity> implements GenericDao<T> {
         } catch (SQLException e) {
             throw new DaoException(String.format("Ошибка при попытке удалить сущность по введённому id: %d", id));
         }
+    }
+
+    @Override
+    public CustomList<T> getAllSorted(Comparator<T> comparator) {
+        return CustomList.toCustomList(getAll().stream().sorted(comparator).toArray());
     }
 
     protected abstract String getInsertQuery();
