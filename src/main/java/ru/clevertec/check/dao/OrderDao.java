@@ -13,6 +13,7 @@ import java.sql.SQLException;
 
 public class OrderDao extends AbstractDao<Order> implements IOrderDao {
 
+    private static final OrderDao INSTANCE = new OrderDao();
     private static final String INSERT_ORDER = "INSERT INTO custom_order (id_product, quantity) values (?, ?)";
     private static final String GET_ORDER_BY_ID = "SELECT products.product_id, products.product_name, products.price, " +
             "products.stock, custom_order.order_id, custom_order.quantity FROM custom_order JOIN products " +
@@ -21,10 +22,20 @@ public class OrderDao extends AbstractDao<Order> implements IOrderDao {
             "products.stock, custom_order.order_id, custom_order.quantity FROM custom_order JOIN products " +
             "ON products.product_id = custom_order.id_product WHERE custom_order.id_product = ?";
     private static final String GET_ALL_ORDERS = "SELECT products.product_id, products.product_name, products.price, " +
-            "products.stock, custom_order.order_id, custom_order.quantity FROM custom_order JOIN products " +
-            "ON products.product_id = custom_order.id_product";
+            "products.stock, custom_order.order_id, custom_order.quantity FROM custom_order " +
+            "JOIN products ON products.product_id = custom_order.id_product";
+    private static final String FIND_ALL_ORDERS = "SELECT products.product_id, products.product_name, products.price, " +
+            "products.stock, custom_order.order_id, custom_order.quantity FROM custom_order LIMIT ? OFFSET ? " +
+            "JOIN products ON products.product_id = custom_order.id_product";
     private static final String UPDATE_ORDER_BY_ID = "UPDATE custom_order SET id_product = ?, quantity = ? WHERE order_id = ?";
     private static final String DELETE_ORDER_BY_ID = "DELETE FROM custom_order WHERE order_id = ?";
+
+    private OrderDao() {
+    }
+
+    public static OrderDao getInstance() {
+        return INSTANCE;
+    }
 
     @Override
     protected String getInsertQuery() {
@@ -37,8 +48,13 @@ public class OrderDao extends AbstractDao<Order> implements IOrderDao {
     }
 
     @Override
-    protected String getFindAllQuery() {
+    protected String getAllQuery() {
         return GET_ALL_ORDERS;
+    }
+
+    @Override
+    protected String getFindAllQuery() {
+        return FIND_ALL_ORDERS;
     }
 
     @Override
@@ -91,6 +107,7 @@ public class OrderDao extends AbstractDao<Order> implements IOrderDao {
         }
     }
 
+    @Override
     public Order getOrderByIdProduct(Long id) {
         Order order;
         try (Connection connection = ConnectionPool.INSTANCE.getConnection();

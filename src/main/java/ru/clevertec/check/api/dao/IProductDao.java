@@ -4,4 +4,5 @@ import ru.clevertec.check.model.Product;
 
 public interface IProductDao extends GenericDao<Product> {
 
+    Product getProductByName(String name);
 }

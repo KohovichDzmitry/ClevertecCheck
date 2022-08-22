@@ -12,6 +12,8 @@ import java.util.Map;
 public abstract class AbstractService<T extends AEntity, D extends GenericDao<T>> implements GenericService<T> {
 
     protected abstract D getDao();
+    private static final Integer PAGE_SIZE_DEFAULT = 20;
+    private static final Integer PAGE_DEFAULT = 0;
 
     @Override
     public T save(Map<String, String> parameters) {
@@ -41,6 +43,23 @@ public abstract class AbstractService<T extends AEntity, D extends GenericDao<T>
     }
 
     @Override
+    public CustomList<T> findAll(String pageSizeStr, String pageStr) {
+        int pageSize = PAGE_SIZE_DEFAULT;
+        int page = PAGE_DEFAULT * pageSize;
+        if (pageSizeStr != null) {
+            pageSize = Integer.parseInt(pageSizeStr);
+        }
+        if (pageStr != null) {
+            page = Integer.parseInt(pageStr) * pageSize;
+        }
+        try {
+            return getDao().findAll(pageSize, page);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
     public T update(Map<String, String> parameters, Long id) {
         try {
             return getDao().update(actionForSave(parameters), id);
@@ -59,7 +78,7 @@ public abstract class AbstractService<T extends AEntity, D extends GenericDao<T>
     }
 
     @Override
-    public Integer countAllEntity() {
+    public Integer countAllEntities() {
         return getDao().getAll().size();
     }
 

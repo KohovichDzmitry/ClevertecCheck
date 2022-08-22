@@ -3,6 +3,7 @@ package ru.clevertec.check.service;
 import ru.clevertec.check.api.dao.ICardDao;
 import ru.clevertec.check.api.exceptions.ServiceException;
 import ru.clevertec.check.api.service.ICardService;
+import ru.clevertec.check.dao.CardDao;
 import ru.clevertec.check.model.Card;
 import ru.clevertec.check.validator.CardDataValidator;
 
@@ -10,10 +11,14 @@ import java.util.Map;
 
 public class CardService extends AbstractService<Card, ICardDao> implements ICardService {
 
-    private final ICardDao cardDao;
+    private final static CardService INSTANCE = new CardService();
+    private final ICardDao cardDao = CardDao.getInstance();
 
-    public CardService(ICardDao cardDao) {
-        this.cardDao = cardDao;
+    private CardService() {
+    }
+
+    public static CardService getInstance() {
+        return INSTANCE;
     }
 
     @Override
@@ -31,5 +36,10 @@ public class CardService extends AbstractService<Card, ICardDao> implements ICar
         } else {
             throw new ServiceException("Ошибка при валидации данных скидочной карты");
         }
+    }
+
+    @Override
+    public Card getCardByNumber(Integer number) {
+        return cardDao.getCardByNumber(number);
     }
 }

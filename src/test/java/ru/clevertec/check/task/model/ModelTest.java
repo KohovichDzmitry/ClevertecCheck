@@ -22,12 +22,12 @@ import java.util.stream.Stream;
 @ExtendWith(ProductParameterResolver.class)
 public class ModelTest {
 
-    public static IProductDao productDao = new ProductDao();
-    static IOrderDao orderDao = new OrderDao();
-    static ICardDao cardDao = new CardDao();
+    public static IProductDao productDao = ProductDao.getInstance();
+    static IOrderDao orderDao = OrderDao.getInstance();
+    static ICardDao cardDao = CardDao.getInstance();
 
     @BeforeAll
-    static void generateEntitys() {
+    static void generateEntities() {
         productDao.getAll();
         orderDao.getAll();
         cardDao.getAll();

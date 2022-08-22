@@ -53,16 +53,35 @@ public abstract class AbstractDao<T extends AEntity> implements GenericDao<T> {
 
     @Override
     public CustomList<T> getAll() {
-        String sql = getFindAllQuery();
-        CustomList<T> entitys = new CustomArrayList<>();
+        String sql = getAllQuery();
+        CustomList<T> entities = new CustomArrayList<>();
         try (Connection connection = ConnectionPool.INSTANCE.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 T entity = prepareStatementForFind(resultSet);
-                entitys.add(entity);
+                entities.add(entity);
             }
-            return entitys;
+            return entities;
+        } catch (SQLException e) {
+            throw new DaoException("Ошибка при попытке найти сущности в БД", e);
+        }
+    }
+
+    @Override
+    public CustomList<T> findAll(Integer pageSize, Integer page) {
+        String sql = getFindAllQuery();
+        CustomList<T> entities = new CustomArrayList<>();
+        try (Connection connection = ConnectionPool.INSTANCE.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, pageSize);
+            statement.setInt(2, page);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                T entity = prepareStatementForFind(resultSet);
+                entities.add(entity);
+            }
+            return entities;
         } catch (SQLException e) {
             throw new DaoException("Ошибка при попытке найти сущности в БД", e);
         }
@@ -76,7 +95,7 @@ public abstract class AbstractDao<T extends AEntity> implements GenericDao<T> {
             prepareStatementForUpdate(statement, entity, id);
             entity.setId(id);
             if (statement.executeUpdate() != 1) {
-                throw new DaoException(String.format("Не удалось найти сущность по введённому id: %d", id));
+                throw new DaoException(String.format("Не удалось обновить сущность по введённому id: %d", id));
             }
             return entity;
         } catch (SQLException e) {
@@ -107,6 +126,8 @@ public abstract class AbstractDao<T extends AEntity> implements GenericDao<T> {
 
     protected abstract String getFindQuery();
 
+    protected abstract String getAllQuery();
+
     protected abstract String getFindAllQuery();
 
     protected abstract String getUpdateQuery();
@@ -118,5 +139,4 @@ public abstract class AbstractDao<T extends AEntity> implements GenericDao<T> {
     protected abstract T prepareStatementForFind(ResultSet resultSet);
 
     protected abstract void prepareStatementForUpdate(PreparedStatement statement, T entity, Long id);
-
 }

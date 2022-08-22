@@ -6,6 +6,8 @@ import ru.clevertec.check.model.Product;
 
 public interface IOrderService extends GenericService<Order> {
 
+    Order getOrderByIdProduct(Long id);
+
     CustomList<Product> listProductsFromOrder();
 
     Long numberOfProductsFromOrderWithStock(CustomList<Product> customList);

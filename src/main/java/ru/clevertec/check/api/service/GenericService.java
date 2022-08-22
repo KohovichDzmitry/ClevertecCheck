@@ -13,9 +13,11 @@ public interface GenericService<T extends AEntity> {
 
     CustomList<T> getAll();
 
+    CustomList<T> findAll(String pageSizeStr, String pageStr);
+
     T update(Map<String, String> parameters, Long id);
 
     void delete(Long id);
 
-    public Integer countAllEntity();
+    public Integer countAllEntities();
 }

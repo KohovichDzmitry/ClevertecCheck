@@ -16,10 +16,10 @@ import ru.clevertec.check.service.OrderService;
 
 public class ProjectManagerTest {
 
-    static IProductDao productDao = new ProductDao();
-    static IOrderDao orderDao = new OrderDao();
-    ICardDao cardDao = new CardDao();
-    OrderService projectService = new OrderService(productDao, cardDao, orderDao);
+    static IProductDao productDao = ProductDao.getInstance();
+    static IOrderDao orderDao = OrderDao.getInstance();
+    ICardDao cardDao = CardDao.getInstance();
+    OrderService projectService = OrderService.getInstance();
 
     @BeforeAll
     static void generateProductsAndOrder() {

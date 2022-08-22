@@ -4,6 +4,7 @@ import ru.clevertec.check.api.dao.IProductDao;
 import ru.clevertec.check.api.exceptions.ServiceException;
 import ru.clevertec.check.api.service.IProductService;
 import ru.clevertec.check.custom.CustomList;
+import ru.clevertec.check.dao.ProductDao;
 import ru.clevertec.check.model.Product;
 import ru.clevertec.check.validator.ProductDataValidator;
 
@@ -12,10 +13,14 @@ import java.util.Map;
 
 public class ProductService extends AbstractService<Product, IProductDao> implements IProductService {
 
-    private final IProductDao productDao;
+    private static final ProductService INSTANCE = new ProductService();
+    private final IProductDao productDao = ProductDao.getInstance();
 
-    public ProductService(IProductDao productDao) {
-        this.productDao = productDao;
+    private ProductService() {
+    }
+
+    public static ProductService getInstance() {
+        return INSTANCE;
     }
 
     @Override
@@ -34,6 +39,11 @@ public class ProductService extends AbstractService<Product, IProductDao> implem
         } else {
             throw new ServiceException("Ошибка при валидации данных продукта");
         }
+    }
+
+    @Override
+    public Product getProductByName(String name) {
+        return productDao.getProductByName(name);
     }
 
     @Override

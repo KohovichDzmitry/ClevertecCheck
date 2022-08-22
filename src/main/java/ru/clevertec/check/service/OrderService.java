@@ -8,6 +8,9 @@ import ru.clevertec.check.api.exceptions.DaoException;
 import ru.clevertec.check.api.exceptions.ServiceException;
 import ru.clevertec.check.api.service.IOrderService;
 import ru.clevertec.check.custom.CustomList;
+import ru.clevertec.check.dao.CardDao;
+import ru.clevertec.check.dao.OrderDao;
+import ru.clevertec.check.dao.ProductDao;
 import ru.clevertec.check.model.Order;
 import ru.clevertec.check.model.Product;
 import ru.clevertec.check.service.handler.OrderServiceHandler;
@@ -23,16 +26,18 @@ import java.util.Optional;
 
 public class OrderService extends AbstractService<Order, IOrderDao> implements IOrderService {
 
-    private final IProductDao productDao;
-    private final ICardDao cardDao;
-    private final IOrderDao orderDao;
+    private static final OrderService INSTANCE = new OrderService();
+    private final IProductDao productDao = ProductDao.getInstance();
+    private final ICardDao cardDao = CardDao.getInstance();
+    private final IOrderDao orderDao = OrderDao.getInstance();
 
     private static final Double DISCOUNT_PERCENT = 10d;
 
-    public OrderService(IProductDao productDao, ICardDao cardDao, IOrderDao orderDao) {
-        this.productDao = productDao;
-        this.cardDao = cardDao;
-        this.orderDao = orderDao;
+    private OrderService() {
+    }
+
+    public static OrderService getInstance() {
+        return INSTANCE;
     }
 
     @Override
@@ -92,6 +97,11 @@ public class OrderService extends AbstractService<Order, IOrderDao> implements I
                 + BigDecimal.valueOf(getTotalSum() * ((100 - cardDao
                         .getById(card_id).getDiscount())) / 100)
                 .setScale(2, RoundingMode.HALF_UP).doubleValue());
+    }
+
+    @Override
+    public Order getOrderByIdProduct(Long id) {
+        return orderDao.getOrderByIdProduct(id);
     }
 
     @Log

@@ -13,6 +13,8 @@ public interface GenericDao<T extends AEntity> {
 
     CustomList<T> getAll();
 
+    CustomList<T> findAll(Integer pageSize, Integer page);
+
     T update(T entity, Long id);
 
     void delete(Long id);
