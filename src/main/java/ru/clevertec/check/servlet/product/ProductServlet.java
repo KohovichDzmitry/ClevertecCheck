@@ -1,4 +1,4 @@
-package ru.clevertec.check.servlet;
+package ru.clevertec.check.servlet.product;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -26,11 +26,15 @@ public class ProductServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String pageSize = req.getParameter("page_size");
         String page = req.getParameter("page");
-        CustomList<Product> products = productService.findAll(pageSize, page);
-        String json = new Gson().toJson(products);
-        try (PrintWriter out = resp.getWriter()) {
-            out.write(json);
-            resp.setStatus(200);
+        try {
+            CustomList<Product> products = productService.findAll(pageSize, page);
+            String json = new Gson().toJson(products);
+            try (PrintWriter out = resp.getWriter()) {
+                out.write(json);
+                resp.setStatus(200);
+            }
+        } catch (ServiceException e) {
+            resp.sendError(400, "Не удалось найти список продуктов");
         }
     }
 
@@ -44,10 +48,14 @@ public class ProductServlet extends HttpServlet {
         productParameters.put("product_name", name);
         productParameters.put("price", price);
         productParameters.put("stock", stock);
-        Product product = productService.save(productParameters);
-        try (PrintWriter out = resp.getWriter()) {
-            out.write(String.valueOf(product));
-            resp.setStatus(201);
+        try {
+            Product product = productService.save(productParameters);
+            try (PrintWriter out = resp.getWriter()) {
+                out.write(String.valueOf(product));
+                resp.setStatus(201);
+            }
+        } catch (ServiceException e) {
+            resp.sendError(400, "Не удалось создать продукт");
         }
     }
 
@@ -75,8 +83,7 @@ public class ProductServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        JsonObject data = new Gson().fromJson(req.getReader(), JsonObject.class);
-        Long id = Long.valueOf(data.get("product_id").toString().replaceAll("\"", ""));
+        Long id = Long.valueOf(req.getParameter("product_id"));
         try {
             productService.delete(id);
             String json = new Gson().toJson(String.format("Продукт с id %d был удален", id));

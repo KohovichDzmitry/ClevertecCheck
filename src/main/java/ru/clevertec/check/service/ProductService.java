@@ -43,7 +43,11 @@ public class ProductService extends AbstractService<Product, IProductDao> implem
 
     @Override
     public Product getProductByName(String name) {
-        return productDao.getProductByName(name);
+        if (ProductDataValidator.isValidNameProduct(name)) {
+            return productDao.getProductByName(name);
+        } else {
+            throw new ServiceException("Ошибка при валидации названия продукта");
+        }
     }
 
     @Override

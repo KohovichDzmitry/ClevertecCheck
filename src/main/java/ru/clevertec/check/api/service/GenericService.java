@@ -19,5 +19,5 @@ public interface GenericService<T extends AEntity> {
 
     void delete(Long id);
 
-    public Integer countAllEntities();
+    Integer countAllEntities();
 }
