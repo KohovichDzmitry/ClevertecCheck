@@ -101,7 +101,11 @@ public class OrderService extends AbstractService<Order, IOrderDao> implements I
 
     @Override
     public Order getOrderByIdProduct(Long id) {
-        return orderDao.getOrderByIdProduct(id);
+        if (OrderDataValidator.isValidProductIDInOrder(String.valueOf(id))) {
+            return orderDao.getOrderByIdProduct(id);
+        } else {
+            throw new ServiceException("Ошибка при валидации id продукта из заказа");
+        }
     }
 
     @Log

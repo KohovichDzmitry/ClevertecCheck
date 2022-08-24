@@ -40,6 +40,10 @@ public class CardService extends AbstractService<Card, ICardDao> implements ICar
 
     @Override
     public Card getCardByNumber(Integer number) {
-        return cardDao.getCardByNumber(number);
+        if (CardDataValidator.isValidNumberCard(String.valueOf(number))) {
+            return cardDao.getCardByNumber(number);
+        } else {
+            throw new ServiceException("Ошибка при валидации номера скидочной карты");
+        }
     }
 }

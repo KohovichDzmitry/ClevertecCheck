@@ -14,7 +14,7 @@ public class OrderDataValidator {
         if (!isValidProductIDInOrder(orderParameters.get("id_product"))) {
             return false;
         }
-        return isValidQuantityProductsInOrder(orderParameters.get("stock"));
+        return isValidQuantityProductsInOrder(orderParameters.get("quantity"));
     }
 
     public static boolean isValidProductIDInOrder(String id_product) {
