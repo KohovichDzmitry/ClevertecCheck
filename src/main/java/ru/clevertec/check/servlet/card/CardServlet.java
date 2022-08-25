@@ -34,7 +34,7 @@ public class CardServlet extends HttpServlet {
                 resp.setStatus(200);
             }
         } catch (ServiceException e) {
-            resp.sendError(400, "Не удалось найти список скидочных карт");
+            resp.sendError(400, String.valueOf(e));
         }
     }
 
@@ -53,7 +53,7 @@ public class CardServlet extends HttpServlet {
                 resp.setStatus(201);
             }
         } catch (ServiceException e) {
-            resp.sendError(400, "Не удалось создать скидочную карту");
+            resp.sendError(400, String.valueOf(e));
         }
     }
 
@@ -73,7 +73,7 @@ public class CardServlet extends HttpServlet {
                 resp.setStatus(200);
             }
         } catch (ServiceException e) {
-            resp.sendError(400, String.format("Не удалось обновить скидочную карту по введённому id: %d", id));
+            resp.sendError(400, String.valueOf(e));
         }
     }
 
@@ -88,7 +88,7 @@ public class CardServlet extends HttpServlet {
                 resp.setStatus(200);
             }
         } catch (ServiceException e) {
-            resp.sendError(400, String.format("Не удалось удалить скидочную карту по введённому id: %d", id));
+            resp.sendError(400, String.valueOf(e));
         }
     }
 }

@@ -34,7 +34,7 @@ public class OrderServlet extends HttpServlet {
                 resp.setStatus(200);
             }
         } catch (ServiceException e) {
-            resp.sendError(400, "Не удалось найти заказ");
+            resp.sendError(400, String.valueOf(e));
         }
     }
 
@@ -53,7 +53,7 @@ public class OrderServlet extends HttpServlet {
                 resp.setStatus(201);
             }
         } catch (ServiceException e) {
-            resp.sendError(400, "Не удалось добавить продукт в заказ");
+            resp.sendError(400, String.valueOf(e));
         }
     }
 
@@ -73,7 +73,7 @@ public class OrderServlet extends HttpServlet {
                 resp.setStatus(200);
             }
         } catch (ServiceException e) {
-            resp.sendError(400, String.format("Не удалось обновить продукт в заказе по введённому id: %d", id));
+            resp.sendError(400, String.valueOf(e));
         }
     }
 
@@ -88,7 +88,7 @@ public class OrderServlet extends HttpServlet {
                 resp.setStatus(200);
             }
         } catch (ServiceException e) {
-            resp.sendError(400, String.format("Не удалось удалить продукт в заказе по введённому id: %d", id));
+            resp.sendError(400, String.valueOf(e));
         }
     }
 }

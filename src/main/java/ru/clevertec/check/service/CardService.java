@@ -1,6 +1,7 @@
 package ru.clevertec.check.service;
 
 import ru.clevertec.check.api.dao.ICardDao;
+import ru.clevertec.check.api.exceptions.DaoException;
 import ru.clevertec.check.api.exceptions.ServiceException;
 import ru.clevertec.check.api.service.ICardService;
 import ru.clevertec.check.dao.CardDao;
@@ -27,23 +28,25 @@ public class CardService extends AbstractService<Card, ICardDao> implements ICar
     }
 
     @Override
-    protected Card actionForSave(Map<String, String> parameters) {
+    protected Card actionForSave(Map<String, String> parameters) throws ServiceException {
         Card card = new Card();
-        if (CardDataValidator.isValidCardParameters(parameters)) {
-            card.setNumber(Integer.valueOf(parameters.get("card_number")));
-            card.setDiscount(Integer.valueOf(parameters.get("discount")));
-            return card;
-        } else {
+        if (!CardDataValidator.isValidCardParameters(parameters)) {
             throw new ServiceException("Ошибка при валидации данных скидочной карты");
         }
+        card.setNumber(Integer.valueOf(parameters.get("card_number")));
+        card.setDiscount(Integer.valueOf(parameters.get("discount")));
+        return card;
     }
 
     @Override
-    public Card getCardByNumber(Integer number) {
-        if (CardDataValidator.isValidNumberCard(String.valueOf(number))) {
-            return cardDao.getCardByNumber(number);
-        } else {
+    public Card getCardByNumber(Integer number) throws ServiceException {
+        if (!CardDataValidator.isValidNumberCard(String.valueOf(number))) {
             throw new ServiceException("Ошибка при валидации номера скидочной карты");
+        }
+        try {
+            return cardDao.getCardByNumber(number);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
         }
     }
 }

@@ -29,7 +29,7 @@ public class GetByNumberCardServlet extends HttpServlet {
                 resp.setStatus(200);
             }
         } catch (ServiceException e) {
-            resp.sendError(400, String.format("Не удалось найти скидочную карту по введённому номеру: %d", number));
+            resp.sendError(400, String.valueOf(e));
         }
     }
 }

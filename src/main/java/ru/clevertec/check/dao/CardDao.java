@@ -14,6 +14,8 @@ public class CardDao extends AbstractDao<Card> implements ICardDao {
 
     private static final CardDao INSTANCE = new CardDao();
 
+    private static final String NAME = "скидочную карту";
+
     private static final String INSERT_CARD = "INSERT INTO cards (card_number, discount) values (?, ?)";
     private static final String GET_CARD_BY_ID = "SELECT card_id, card_number, discount FROM cards WHERE card_id = ?";
     private static final String GET_CARD_BY_NUMBER = "SELECT card_id, card_number, discount FROM cards WHERE card_number = ?";
@@ -27,6 +29,11 @@ public class CardDao extends AbstractDao<Card> implements ICardDao {
 
     public static CardDao getInstance() {
         return INSTANCE;
+    }
+
+    @Override
+    protected String getEntityName() {
+        return NAME;
     }
 
     @Override
@@ -60,17 +67,17 @@ public class CardDao extends AbstractDao<Card> implements ICardDao {
     }
 
     @Override
-    protected void prepareStatementForSave(PreparedStatement statement, Card card) {
+    protected void prepareStatementForSave(PreparedStatement statement, Card card) throws DaoException {
         try {
             statement.setInt(1, card.getNumber());
             statement.setInt(2, card.getDiscount());
         } catch (SQLException e) {
-            throw new DaoException("Не удалось выполнить запрос ", e);
+            throw new DaoException("Не удалось выполнить запрос");
         }
     }
 
     @Override
-    protected Card prepareStatementForFind(ResultSet resultSet) {
+    protected Card prepareStatementForFind(ResultSet resultSet) throws DaoException {
         try {
             Card card = new Card();
             card.setId(resultSet.getLong("card_id"));
@@ -78,23 +85,23 @@ public class CardDao extends AbstractDao<Card> implements ICardDao {
             card.setDiscount(resultSet.getInt("discount"));
             return card;
         } catch (SQLException e) {
-            throw new DaoException(e);
+            throw new DaoException("Не удалось выполнить запрос");
         }
     }
 
     @Override
-    protected void prepareStatementForUpdate(PreparedStatement statement, Card card, Long id) {
+    protected void prepareStatementForUpdate(PreparedStatement statement, Card card, Long id) throws DaoException {
         try {
             statement.setInt(1, card.getNumber());
             statement.setInt(2, card.getDiscount());
             statement.setLong(3, id);
         } catch (SQLException e) {
-            throw new DaoException("Не удалось выполнить запрос ", e);
+            throw new DaoException("Не удалось выполнить запрос");
         }
     }
 
     @Override
-    public Card getCardByNumber(Integer number) {
+    public Card getCardByNumber(Integer number) throws DaoException {
         Card card;
         try (Connection connection = ConnectionPool.INSTANCE.getConnection();
              PreparedStatement statement = connection.prepareStatement(GET_CARD_BY_NUMBER)) {
@@ -103,11 +110,11 @@ public class CardDao extends AbstractDao<Card> implements ICardDao {
             if (resultSet.next()) {
                 card = prepareStatementForFind(resultSet);
             } else {
-                throw new DaoException(String.format("Не удалось найти скидочную карту по введённому номеру: %d", number));
+                throw new DaoException(String.format("Не удалось найти " + NAME + " по введённому номеру: %d", number));
             }
             return card;
         } catch (SQLException e) {
-            throw new DaoException(String.format("Ошибка при попытке найти скидочную карту по введённому номеру: %d", number));
+            throw new DaoException(String.format("Ошибка при попытке найти" + NAME + "по введённому номеру: %d", number));
         }
     }
 }

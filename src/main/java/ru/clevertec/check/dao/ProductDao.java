@@ -14,6 +14,8 @@ public class ProductDao extends AbstractDao<Product> implements IProductDao {
 
     private static final ProductDao INSTANCE = new ProductDao();
 
+    private static final String NAME = "продукт";
+
     private static final String INSERT_PRODUCT = "INSERT INTO products (product_name, price, stock) values (?, ?, ?)";
     private static final String GET_PRODUCT_BY_ID = "SELECT product_id, product_name, price, stock " +
             "FROM products WHERE product_id = ?";
@@ -31,6 +33,11 @@ public class ProductDao extends AbstractDao<Product> implements IProductDao {
 
     public static ProductDao getInstance() {
         return INSTANCE;
+    }
+
+    @Override
+    protected String getEntityName() {
+        return NAME;
     }
 
     @Override
@@ -64,18 +71,18 @@ public class ProductDao extends AbstractDao<Product> implements IProductDao {
     }
 
     @Override
-    protected void prepareStatementForSave(PreparedStatement statement, Product product) {
+    protected void prepareStatementForSave(PreparedStatement statement, Product product) throws DaoException {
         try {
             statement.setString(1, product.getName());
             statement.setDouble(2, product.getPrice());
             statement.setInt(3, product.getStock());
         } catch (SQLException e) {
-            throw new DaoException("Не удалось выполнить запрос ", e);
+            throw new DaoException("Не удалось выполнить запрос");
         }
     }
 
     @Override
-    protected Product prepareStatementForFind(ResultSet resultSet) {
+    protected Product prepareStatementForFind(ResultSet resultSet) throws DaoException {
         try {
             Product product = new Product();
             product.setId(resultSet.getLong("product_id"));
@@ -84,24 +91,24 @@ public class ProductDao extends AbstractDao<Product> implements IProductDao {
             product.setStock(resultSet.getInt("stock"));
             return product;
         } catch (SQLException e) {
-            throw new DaoException(e);
+            throw new DaoException("Не удалось выполнить запрос");
         }
     }
 
     @Override
-    protected void prepareStatementForUpdate(PreparedStatement statement, Product product, Long id) {
+    protected void prepareStatementForUpdate(PreparedStatement statement, Product product, Long id) throws DaoException {
         try {
             statement.setString(1, product.getName());
             statement.setDouble(2, product.getPrice());
             statement.setInt(3, product.getStock());
             statement.setLong(4, id);
         } catch (SQLException e) {
-            throw new DaoException("Не удалось выполнить запрос ", e);
+            throw new DaoException("Не удалось выполнить запрос");
         }
     }
 
     @Override
-    public Product getProductByName(String name) {
+    public Product getProductByName(String name) throws DaoException {
         Product product;
         try (Connection connection = ConnectionPool.INSTANCE.getConnection();
              PreparedStatement statement = connection.prepareStatement(GET_PRODUCT_BY_NAME)) {
@@ -110,11 +117,11 @@ public class ProductDao extends AbstractDao<Product> implements IProductDao {
             if (resultSet.next()) {
                 product = prepareStatementForFind(resultSet);
             } else {
-                throw new DaoException(String.format("Не удалось найти продукт по введённому имени: %s", name));
+                throw new DaoException(String.format("Не удалось найти " + NAME + " по введённому названию: %s", name));
             }
             return product;
         } catch (SQLException e) {
-            throw new DaoException(String.format("Ошибка при попытке найти продукт по введённому имени: %s", name));
+            throw new DaoException(String.format("Ошибка при попытке найти " + NAME + " по введённому названию: %s", name));
         }
     }
 }

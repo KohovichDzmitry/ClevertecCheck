@@ -29,7 +29,7 @@ public class GetSortedByAlphabetAllProductsServlet extends HttpServlet {
                 resp.setStatus(200);
             }
         } catch (ServiceException e) {
-            resp.sendError(400, "Не удалось найти список продуктов");
+            resp.sendError(400, String.valueOf(e));
         }
     }
 }

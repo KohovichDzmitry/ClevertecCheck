@@ -1,6 +1,7 @@
 package ru.clevertec.check.service;
 
 import ru.clevertec.check.api.dao.IProductDao;
+import ru.clevertec.check.api.exceptions.DaoException;
 import ru.clevertec.check.api.exceptions.ServiceException;
 import ru.clevertec.check.api.service.IProductService;
 import ru.clevertec.check.custom.CustomList;
@@ -29,7 +30,7 @@ public class ProductService extends AbstractService<Product, IProductDao> implem
     }
 
     @Override
-    protected Product actionForSave(Map<String, String> parameters) {
+    protected Product actionForSave(Map<String, String> parameters) throws ServiceException {
         Product product = new Product();
         if (ProductDataValidator.isValidProductParameters(parameters)) {
             product.setName(parameters.get("product_name"));
@@ -42,21 +43,30 @@ public class ProductService extends AbstractService<Product, IProductDao> implem
     }
 
     @Override
-    public Product getProductByName(String name) {
+    public Product getProductByName(String name) throws ServiceException {
         if (ProductDataValidator.isValidNameProduct(name)) {
             return productDao.getProductByName(name);
         } else {
-            throw new ServiceException("Ошибка при валидации названия продукта");
+            throw new ServiceException("Ошибка при валидации названия продукта. Название продукта должно начинаться " +
+                    "с прописной буквы!");
         }
     }
 
     @Override
-    public CustomList<Product> getAllSortedByAlphabet() {
-        return productDao.getAllSorted(Comparator.comparing(Product::getName));
+    public CustomList<Product> getAllSortedByAlphabet() throws ServiceException {
+        try {
+            return productDao.getAllSorted(Comparator.comparing(Product::getName));
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
-    public CustomList<Product> getAllSortedByPrice() {
-        return productDao.getAllSorted(Comparator.comparing(Product::getPrice));
+    public CustomList<Product> getAllSortedByPrice() throws ServiceException {
+        try {
+            return productDao.getAllSorted(Comparator.comparing(Product::getPrice));
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 }

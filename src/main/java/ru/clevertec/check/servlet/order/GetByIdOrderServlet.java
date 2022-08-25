@@ -29,7 +29,7 @@ public class GetByIdOrderServlet extends HttpServlet {
                 resp.setStatus(200);
             }
         } catch (ServiceException e) {
-            resp.sendError(400, String.format("Не удалось найти продукт в заказе по введённому id: %d", id));
+            resp.sendError(400, String.valueOf(e));
         }
     }
 }

@@ -27,7 +27,7 @@ public class GetCountAllCardsServlet extends HttpServlet {
                 resp.setStatus(200);
             }
         } catch (ServiceException e) {
-            resp.sendError(400, "Не удалось найти список скидочных карт");
+            resp.sendError(400, String.valueOf(e));
         }
     }
 }

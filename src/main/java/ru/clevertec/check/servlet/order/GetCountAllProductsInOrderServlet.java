@@ -27,7 +27,7 @@ public class GetCountAllProductsInOrderServlet extends HttpServlet {
                 resp.setStatus(200);
             }
         } catch (ServiceException e) {
-            resp.sendError(400, "Не удалось найти заказ");
+            resp.sendError(400, String.valueOf(e));
         }
     }
 }

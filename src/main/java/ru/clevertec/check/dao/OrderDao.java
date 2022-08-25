@@ -14,6 +14,9 @@ import java.sql.SQLException;
 public class OrderDao extends AbstractDao<Order> implements IOrderDao {
 
     private static final OrderDao INSTANCE = new OrderDao();
+
+    private static final String NAME = "заказ";
+
     private static final String INSERT_ORDER = "INSERT INTO custom_order (id_product, quantity) values (?, ?)";
     private static final String GET_ORDER_BY_ID = "SELECT products.product_id, products.product_name, products.price, " +
             "products.stock, custom_order.order_id, custom_order.quantity FROM custom_order JOIN products " +
@@ -21,12 +24,12 @@ public class OrderDao extends AbstractDao<Order> implements IOrderDao {
     private static final String GET_ORDER_BY_ID_PRODUCT = "SELECT products.product_id, products.product_name, products.price, " +
             "products.stock, custom_order.order_id, custom_order.quantity FROM custom_order JOIN products " +
             "ON products.product_id = custom_order.id_product WHERE custom_order.id_product = ?";
-    private static final String GET_ALL_ORDERS = "SELECT products.product_id, products.product_name, products.price, " +
+    private static final String GET_ALL_PRODUCTS_IN_ORDER = "SELECT products.product_id, products.product_name, products.price, " +
             "products.stock, custom_order.order_id, custom_order.quantity FROM custom_order " +
             "JOIN products ON products.product_id = custom_order.id_product";
-    private static final String FIND_ALL_ORDERS = "SELECT products.product_id, products.product_name, products.price, " +
-            "products.stock, custom_order.order_id, custom_order.quantity FROM custom_order LIMIT ? OFFSET ? " +
-            "JOIN products ON products.product_id = custom_order.id_product";
+    private static final String FIND_ALL_PRODUCTS_IN_ORDER = "SELECT products.product_id, products.product_name, products.price, " +
+            "products.stock, custom_order.order_id, custom_order.quantity FROM custom_order " +
+            "JOIN products ON products.product_id = custom_order.id_product LIMIT ? OFFSET ?";
     private static final String UPDATE_ORDER_BY_ID = "UPDATE custom_order SET id_product = ?, quantity = ? WHERE order_id = ?";
     private static final String DELETE_ORDER_BY_ID = "DELETE FROM custom_order WHERE order_id = ?";
 
@@ -35,6 +38,11 @@ public class OrderDao extends AbstractDao<Order> implements IOrderDao {
 
     public static OrderDao getInstance() {
         return INSTANCE;
+    }
+
+    @Override
+    protected String getEntityName() {
+        return NAME;
     }
 
     @Override
@@ -49,12 +57,12 @@ public class OrderDao extends AbstractDao<Order> implements IOrderDao {
 
     @Override
     protected String getAllQuery() {
-        return GET_ALL_ORDERS;
+        return GET_ALL_PRODUCTS_IN_ORDER;
     }
 
     @Override
     protected String getFindAllQuery() {
-        return FIND_ALL_ORDERS;
+        return FIND_ALL_PRODUCTS_IN_ORDER;
     }
 
     @Override
@@ -68,17 +76,17 @@ public class OrderDao extends AbstractDao<Order> implements IOrderDao {
     }
 
     @Override
-    protected void prepareStatementForSave(PreparedStatement statement, Order order) {
+    protected void prepareStatementForSave(PreparedStatement statement, Order order) throws DaoException {
         try {
             statement.setLong(1, order.getProduct().getId());
             statement.setInt(2, order.getQuantity());
         } catch (SQLException e) {
-            throw new DaoException("Не удалось выполнить запрос ", e);
+            throw new DaoException("Не удалось выполнить запрос");
         }
     }
 
     @Override
-    protected Order prepareStatementForFind(ResultSet resultSet) {
+    protected Order prepareStatementForFind(ResultSet resultSet) throws DaoException {
         try {
             Product product = new Product();
             product.setId(resultSet.getLong("product_id"));
@@ -92,23 +100,23 @@ public class OrderDao extends AbstractDao<Order> implements IOrderDao {
             order.setQuantity(resultSet.getInt("quantity"));
             return order;
         } catch (SQLException e) {
-            throw new DaoException(e);
+            throw new DaoException("Не удалось выполнить запрос");
         }
     }
 
     @Override
-    protected void prepareStatementForUpdate(PreparedStatement statement, Order order, Long id) {
+    protected void prepareStatementForUpdate(PreparedStatement statement, Order order, Long id) throws DaoException {
         try {
             statement.setLong(1, order.getProduct().getId());
             statement.setInt(2, order.getQuantity());
             statement.setLong(3, id);
         } catch (SQLException e) {
-            throw new DaoException("Не удалось выполнить запрос ", e);
+            throw new DaoException("Не удалось выполнить запрос");
         }
     }
 
     @Override
-    public Order getOrderByIdProduct(Long id) {
+    public Order getOrderByIdProduct(Long id) throws DaoException {
         Order order;
         try (Connection connection = ConnectionPool.INSTANCE.getConnection();
              PreparedStatement statement = connection.prepareStatement(GET_ORDER_BY_ID_PRODUCT)) {
@@ -117,11 +125,11 @@ public class OrderDao extends AbstractDao<Order> implements IOrderDao {
             if (resultSet.next()) {
                 order = prepareStatementForFind(resultSet);
             } else {
-                throw new DaoException(String.format("Не удалось найти заказ по введённому id продукта: %d", id));
+                throw new DaoException(String.format("Не удалось найти " + NAME + " по введённому id продукта: %d", id));
             }
             return order;
         } catch (SQLException e) {
-            throw new DaoException(String.format("Ошибка при попытке найти заказ по введённому id продукта: %d", id));
+            throw new DaoException(String.format("Ошибка при попытке найти " + NAME + " по введённому id продукта: %d", id));
         }
     }
 }
