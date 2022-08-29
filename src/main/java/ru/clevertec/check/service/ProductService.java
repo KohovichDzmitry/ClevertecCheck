@@ -38,7 +38,8 @@ public class ProductService extends AbstractService<Product, IProductDao> implem
             product.setStock(Integer.parseInt(parameters.get("stock")));
             return product;
         } else {
-            throw new ServiceException("Ошибка при валидации данных продукта");
+            throw new ServiceException("Ошибка при валидации данных продукта. Название продукта должно начинаться " +
+                    "с прописной буквы, значение цены не должно быть отрицательным, а значение скидки - 0 или 1");
         }
     }
 

@@ -41,7 +41,8 @@ public class CardService extends AbstractService<Card, ICardDao> implements ICar
     @Override
     public Card getCardByNumber(Integer number) throws ServiceException {
         if (!CardDataValidator.isValidNumberCard(String.valueOf(number))) {
-            throw new ServiceException("Ошибка при валидации номера скидочной карты");
+            throw new ServiceException("Ошибка при валидации номера скидочной карты. Доступные номера скидочных карт: " +
+                    "0000, 1111, 2222, 3333, 4444 или 5555");
         }
         try {
             return cardDao.getCardByNumber(number);
