@@ -1,9 +1,11 @@
 package ru.clevertec.check.task.model;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import ru.clevertec.check.api.dao.ICardDao;
 import ru.clevertec.check.api.dao.IOrderDao;
@@ -14,7 +16,6 @@ import ru.clevertec.check.dao.OrderDao;
 import ru.clevertec.check.dao.ProductDao;
 import ru.clevertec.check.model.Card;
 import ru.clevertec.check.model.Order;
-import ru.clevertec.check.model.Product;
 import ru.clevertec.check.task.resolver.ProductParameterResolver;
 
 import java.util.stream.Stream;
@@ -49,13 +50,13 @@ public class ModelTest {
         );
     }
 
-    @DisplayName("Получение скидочной карты по id - позитивный тест")
-    @ParameterizedTest
-    @MethodSource("getValidCards")
-    void getCardByNumberTest(Card expectedCard) {
-        Card actualCard = cardDao.getById(expectedCard.getId());
-        Assertions.assertEquals(expectedCard, actualCard);
-    }
+//    @DisplayName("Получение скидочной карты по id - позитивный тест")
+//    @ParameterizedTest
+//    @MethodSource("getValidCards")
+//    void getCardByNumberTest(Card expectedCard) {
+//        Card actualCard = cardDao.getById(expectedCard.getId());
+//        Assertions.assertEquals(expectedCard, actualCard);
+//    }
 
     @DisplayName("Получение скидочной карты по id - негативный тест")
     @ParameterizedTest
@@ -73,13 +74,13 @@ public class ModelTest {
         );
     }
 
-    @DisplayName("Получение продуктов из заказа по id - позитивный тест")
-    @ParameterizedTest
-    @MethodSource("getValidOrder")
-    void getProductFromOrderByIdTest(Order expectedOrder) {
-        Order actualOrder = orderDao.getById(expectedOrder.getId());
-        Assertions.assertEquals(expectedOrder, actualOrder);
-    }
+//    @DisplayName("Получение продуктов из заказа по id - позитивный тест")
+//    @ParameterizedTest
+//    @MethodSource("getValidOrder")
+//    void getProductFromOrderByIdTest(Order expectedOrder) {
+//        Order actualOrder = orderDao.getById(expectedOrder.getId());
+//        Assertions.assertEquals(expectedOrder, actualOrder);
+//    }
 
     @DisplayName("Получение продуктов из заказа по id - негативный тест")
     @ParameterizedTest
@@ -88,13 +89,13 @@ public class ModelTest {
         Assertions.assertThrows(DaoException.class, () -> orderDao.getById(expectedOrder));
     }
 
-    @DisplayName("Получение продукта по id - позитивный тест")
-    @Test
-    void getProductByIdTest(Product expectedProduct) {
-        Long id = expectedProduct.getId();
-        Product actualProduct = productDao.getById(id);
-        Assertions.assertEquals(expectedProduct, actualProduct);
-    }
+//    @DisplayName("Получение продукта по id - позитивный тест")
+//    @Test
+//    void getProductByIdTest(Product expectedProduct) {
+//        Long id = expectedProduct.getId();
+//        Product actualProduct = productDao.getById(id);
+//        Assertions.assertEquals(expectedProduct, actualProduct);
+//    }
 
     @DisplayName("Получение продукта по id - негативный тест")
     @ParameterizedTest

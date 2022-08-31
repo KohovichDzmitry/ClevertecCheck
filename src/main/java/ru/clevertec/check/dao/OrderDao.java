@@ -17,7 +17,7 @@ public class OrderDao extends AbstractDao<Order> implements IOrderDao {
 
     private static final String NAME = "заказ";
 
-    private static final String INSERT_ORDER = "INSERT INTO custom_order (id_product, quantity) values (?, ?)";
+    private static final String INSERT_ORDER = "INSERT INTO custom_order (id_product, quantity) VALUES (?, ?)";
     private static final String GET_ORDER_BY_ID = "SELECT products.product_id, products.product_name, products.price, " +
             "products.stock, custom_order.order_id, custom_order.quantity FROM custom_order JOIN products " +
             "ON products.product_id = custom_order.id_product WHERE custom_order.order_id = ?";

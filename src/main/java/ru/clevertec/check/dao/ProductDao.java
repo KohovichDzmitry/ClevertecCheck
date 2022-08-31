@@ -16,7 +16,7 @@ public class ProductDao extends AbstractDao<Product> implements IProductDao {
 
     private static final String NAME = "продукт";
 
-    private static final String INSERT_PRODUCT = "INSERT INTO products (product_name, price, stock) values (?, ?, ?)";
+    private static final String INSERT_PRODUCT = "INSERT INTO products (product_name, price, stock) VALUES (?, ?, ?)";
     private static final String GET_PRODUCT_BY_ID = "SELECT product_id, product_name, price, stock " +
             "FROM products WHERE product_id = ?";
     private static final String GET_PRODUCT_BY_NAME = "SELECT product_id, product_name, price, stock " +

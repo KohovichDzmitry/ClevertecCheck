@@ -1,5 +1,9 @@
 package ru.clevertec.check.service;
 
+import com.itextpdf.layout.border.Border;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.property.TextAlignment;
 import ru.clevertec.check.annotation.Log;
 import ru.clevertec.check.api.dao.ICardDao;
 import ru.clevertec.check.api.dao.IOrderDao;
@@ -93,6 +97,34 @@ public class OrderService extends AbstractService<Order, IOrderDao> implements I
     }
 
     @Override
+    public void printProductFromTheOrderPDF(Table table) throws ServiceException {
+        CustomList<Product> actualList = this.getProxyOrderService().listProductsFromOrder();
+        try {
+            actualList.stream()
+                    .forEach(product -> {
+                        table.addCell(new Cell().add(String.valueOf(orderDao.getOrderByIdProduct(product.getId())
+                                .getQuantity())).setBorder(Border.NO_BORDER));
+                        table.addCell(new Cell().add(product.getName()).setBorder(Border.NO_BORDER));
+                        table.addCell(new Cell().add(String.valueOf(product.getPrice())).setBorder(Border.NO_BORDER));
+                        table.addCell(new Cell().add(String.valueOf(getProductStockCost(product.getId(), false)
+                                * orderDao.getOrderByIdProduct(product.getId()).getQuantity())).setBorder(Border.NO_BORDER));
+                        if (product.getStock() == 1 && numberOfProductsFromOrderWithStock(actualList) > 4) {
+                            table.addCell(new Cell().add("(на ").setBorder(Border.NO_BORDER)
+                                    .setTextAlignment(TextAlignment.RIGHT));
+                            table.addCell(new Cell().add("товар \"" + product.getName() + "\" акция ")
+                                    .setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.JUSTIFIED_ALL));
+                            table.addCell(new Cell().add("-10%)").setBorder(Border.NO_BORDER));
+                            table.addCell(new Cell().add(String.valueOf(BigDecimal.valueOf(getProductStockCost(product
+                                            .getId(), true) * orderDao.getOrderByIdProduct(product.getId()).getQuantity())
+                                    .setScale(2, RoundingMode.HALF_UP).doubleValue())).setBorder(Border.NO_BORDER));
+                        }
+                    });
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
     public void printEndingCheck(PrintWriter pw, Long card_id) throws ServiceException {
         try {
             pw.println("Сумма\t\t\t\t\t\t\t\t" + BigDecimal.valueOf(this.getProxyOrderService().getTotalSum())
@@ -103,6 +135,23 @@ public class OrderService extends AbstractService<Order, IOrderDao> implements I
                     + BigDecimal.valueOf(getTotalSum() * ((100 - cardDao
                             .getById(card_id).getDiscount())) / 100)
                     .setScale(2, RoundingMode.HALF_UP).doubleValue());
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public void printEndingCheckPDF(Table table, Long card_id) throws ServiceException {
+        try {
+            table.addCell(new Cell().add("Сумма").setBorder(Border.NO_BORDER));
+            table.addCell(new Cell().add(String.valueOf(BigDecimal.valueOf(this.getProxyOrderService().getTotalSum())
+                    .setScale(2, RoundingMode.HALF_UP).doubleValue())).setBorder(Border.NO_BORDER));
+            table.addCell(new Cell().add("Скидка по предъявленной карте").setBorder(Border.NO_BORDER));
+            table.addCell(new Cell().add(cardDao.getById(card_id).getDiscount() + "%").setBorder(Border.NO_BORDER));
+            table.addCell(new Cell().add("Сумма с учетом скидки").setBorder(Border.NO_BORDER));
+            table.addCell(new Cell().add(String.valueOf(BigDecimal.valueOf(getTotalSum() * ((100 - cardDao
+                            .getById(card_id).getDiscount())) / 100).setScale(2, RoundingMode.HALF_UP)
+                    .doubleValue())).setBorder(Border.NO_BORDER));
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

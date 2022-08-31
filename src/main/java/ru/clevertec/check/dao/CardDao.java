@@ -16,7 +16,7 @@ public class CardDao extends AbstractDao<Card> implements ICardDao {
 
     private static final String NAME = "скидочную карту";
 
-    private static final String INSERT_CARD = "INSERT INTO cards (card_number, discount) values (?, ?)";
+    private static final String INSERT_CARD = "INSERT INTO cards (card_number, discount) VALUES (?, ?)";
     private static final String GET_CARD_BY_ID = "SELECT card_id, card_number, discount FROM cards WHERE card_id = ?";
     private static final String GET_CARD_BY_NUMBER = "SELECT card_id, card_number, discount FROM cards WHERE card_number = ?";
     private static final String GET_ALL_CARDS = "SELECT card_id, card_number, discount FROM cards";

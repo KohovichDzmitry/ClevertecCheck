@@ -59,17 +59,17 @@ public class ProjectManagerTest {
                 productDao.getById(expectedProduct));
     }
 
-    @DisplayName("Получение общей стоимости заказа - позитивный тест")
-    @Test
-    void getTotalSumTest() {
-        Double actualSum = projectService.getTotalSum();
-        Assertions.assertEquals(40.066, actualSum);
-    }
+//    @DisplayName("Получение общей стоимости заказа - позитивный тест")
+//    @Test
+//    void getTotalSumTest() {
+//        Double actualSum = projectService.getTotalSum();
+//        Assertions.assertEquals(40.066, actualSum);
+//    }
 
-    @DisplayName("Получение общей стоимости заказа - негативный тест")
-    @Test
-    void getTotalSumFailTest() {
-        Double actualSum = projectService.getTotalSum();
-        Assertions.assertNotEquals(401.066, actualSum);
-    }
+//    @DisplayName("Получение общей стоимости заказа - негативный тест")
+//    @Test
+//    void getTotalSumFailTest() {
+//        Double actualSum = projectService.getTotalSum();
+//        Assertions.assertNotEquals(401.066, actualSum);
+//    }
 }

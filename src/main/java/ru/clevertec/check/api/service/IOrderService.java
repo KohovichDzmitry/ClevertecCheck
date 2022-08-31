@@ -1,5 +1,6 @@
 package ru.clevertec.check.api.service;
 
+import com.itextpdf.layout.element.Table;
 import ru.clevertec.check.api.exceptions.ServiceException;
 import ru.clevertec.check.custom.CustomList;
 import ru.clevertec.check.model.Order;
@@ -21,5 +22,9 @@ public interface IOrderService extends GenericService<Order> {
 
     void printEndingCheck(PrintWriter pw, Long card_id) throws ServiceException;
 
+    void printEndingCheckPDF(Table table, Long card_id) throws ServiceException;
+
     void printProductFromTheOrder(PrintWriter pw) throws ServiceException;
+
+    void printProductFromTheOrderPDF(Table table) throws ServiceException;
 }

@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: src/main/resources/db/changelog/changeset/create-tables.sql
+  - include:
+      file: src/main/resources/db/changelog/changeset/add-products.sql
+  - include:
+      file: src/main/resources/db/changelog/changeset/add-cards.sql
