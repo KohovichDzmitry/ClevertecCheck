@@ -24,10 +24,8 @@ public class OrderServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String pageSize = req.getParameter("page_size");
-        String page = req.getParameter("page");
         try {
-            CustomList<Order> order = orderService.findAll(pageSize, page);
+            CustomList<Order> order = orderService.getAll();
             String json = new Gson().toJson(order);
             try (PrintWriter out = resp.getWriter()) {
                 out.write(json);

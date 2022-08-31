@@ -32,3 +32,4 @@ build/
 *.iml
 .idea/
 target
+*.db
