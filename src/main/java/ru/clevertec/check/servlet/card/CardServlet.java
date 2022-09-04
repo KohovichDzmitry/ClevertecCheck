@@ -8,12 +8,10 @@ import ru.clevertec.check.custom.CustomList;
 import ru.clevertec.check.model.Card;
 import ru.clevertec.check.service.CardService;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +23,7 @@ public class CardServlet extends HttpServlet {
 
     @SneakyThrows
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         String pageSize = req.getParameter("pageSize");
         String page = req.getParameter("page");
         try {

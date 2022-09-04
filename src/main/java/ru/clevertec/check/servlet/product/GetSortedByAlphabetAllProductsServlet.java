@@ -7,12 +7,10 @@ import ru.clevertec.check.custom.CustomList;
 import ru.clevertec.check.model.Product;
 import ru.clevertec.check.service.ProductService;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.PrintWriter;
 
 @WebServlet("/api/products/sorted_by_alphabet")
@@ -22,7 +20,7 @@ public class GetSortedByAlphabetAllProductsServlet extends HttpServlet {
 
     @SneakyThrows
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
             CustomList<Product> products = productService.getAllSortedByAlphabet();
             String json = new Gson().toJson(products);

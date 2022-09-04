@@ -31,42 +31,42 @@ public class CardDao extends AbstractDao<Card> implements ICardDao {
     }
 
     @Override
-    protected String getEntityName() {
+    public String getEntityName() {
         return NAME;
     }
 
     @Override
-    protected String getInsertQuery() {
+    public String getInsertQuery() {
         return INSERT_CARD;
     }
 
     @Override
-    protected String getFindQuery() {
+    public String getFindQuery() {
         return GET_CARD_BY_ID;
     }
 
     @Override
-    protected String getAllQuery() {
+    public String getAllQuery() {
         return GET_ALL_CARDS;
     }
 
     @Override
-    protected String getFindAllQuery() {
+    public String getFindAllQuery() {
         return FIND_ALL_CARDS;
     }
 
     @Override
-    protected String getUpdateQuery() {
+    public String getUpdateQuery() {
         return UPDATE_CARD_BY_ID;
     }
 
     @Override
-    protected String getDeleteQuery() {
+    public String getDeleteQuery() {
         return DELETE_CARD_BY_ID;
     }
 
     @Override
-    protected void prepareStatementForSave(PreparedStatement statement, Card card) throws DaoException {
+    public void prepareStatementForSave(PreparedStatement statement, Card card) throws DaoException {
         try {
             statement.setInt(1, card.getNumber());
             statement.setInt(2, card.getDiscount());
@@ -76,7 +76,7 @@ public class CardDao extends AbstractDao<Card> implements ICardDao {
     }
 
     @Override
-    protected Card prepareStatementForFind(ResultSet resultSet) throws DaoException {
+    public Card prepareStatementForFind(ResultSet resultSet) throws DaoException {
         try {
             Card card = new Card();
             card.setId(resultSet.getLong("card_id"));
@@ -89,7 +89,7 @@ public class CardDao extends AbstractDao<Card> implements ICardDao {
     }
 
     @Override
-    protected void prepareStatementForUpdate(PreparedStatement statement, Card card, Long id) throws DaoException {
+    public void prepareStatementForUpdate(PreparedStatement statement, Card card, Long id) throws DaoException {
         try {
             statement.setInt(1, card.getNumber());
             statement.setInt(2, card.getDiscount());

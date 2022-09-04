@@ -35,42 +35,42 @@ public class ProductDao extends AbstractDao<Product> implements IProductDao {
     }
 
     @Override
-    protected String getEntityName() {
+    public String getEntityName() {
         return NAME;
     }
 
     @Override
-    protected String getInsertQuery() {
+    public String getInsertQuery() {
         return INSERT_PRODUCT;
     }
 
     @Override
-    protected String getFindQuery() {
+    public String getFindQuery() {
         return GET_PRODUCT_BY_ID;
     }
 
     @Override
-    protected String getAllQuery() {
+    public String getAllQuery() {
         return GET_ALL_PRODUCTS;
     }
 
     @Override
-    protected String getFindAllQuery() {
+    public String getFindAllQuery() {
         return FIND_ALL_PRODUCTS;
     }
 
     @Override
-    protected String getUpdateQuery() {
+    public String getUpdateQuery() {
         return UPDATE_PRODUCT_BY_ID;
     }
 
     @Override
-    protected String getDeleteQuery() {
+    public String getDeleteQuery() {
         return DELETE_PRODUCT_BY_ID;
     }
 
     @Override
-    protected void prepareStatementForSave(PreparedStatement statement, Product product) throws DaoException {
+    public void prepareStatementForSave(PreparedStatement statement, Product product) throws DaoException {
         try {
             statement.setString(1, product.getName());
             statement.setDouble(2, product.getPrice());
@@ -81,7 +81,7 @@ public class ProductDao extends AbstractDao<Product> implements IProductDao {
     }
 
     @Override
-    protected Product prepareStatementForFind(ResultSet resultSet) throws DaoException {
+    public Product prepareStatementForFind(ResultSet resultSet) throws DaoException {
         try {
             Product product = new Product();
             product.setId(resultSet.getLong("product_id"));
@@ -95,7 +95,7 @@ public class ProductDao extends AbstractDao<Product> implements IProductDao {
     }
 
     @Override
-    protected void prepareStatementForUpdate(PreparedStatement statement, Product product, Long id) throws DaoException {
+    public void prepareStatementForUpdate(PreparedStatement statement, Product product, Long id) throws DaoException {
         try {
             statement.setString(1, product.getName());
             statement.setDouble(2, product.getPrice());

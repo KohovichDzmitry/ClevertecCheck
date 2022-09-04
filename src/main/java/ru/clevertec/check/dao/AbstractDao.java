@@ -10,7 +10,7 @@ import ru.clevertec.check.model.AEntity;
 import java.sql.*;
 import java.util.Comparator;
 
-public abstract class AbstractDao<T extends AEntity> implements GenericDao<T> {
+public abstract class AbstractDao<T extends AEntity> implements GenericDao<T>, IGetQuery, IPrepareStatement<T> {
 
     @Override
     public T save(T entity) throws DaoException {
@@ -121,24 +121,4 @@ public abstract class AbstractDao<T extends AEntity> implements GenericDao<T> {
     public CustomList<T> getAllSorted(Comparator<T> comparator) throws DaoException {
         return CustomList.toCustomList(getAll().stream().sorted(comparator).toArray());
     }
-
-    protected abstract String getEntityName();
-
-    protected abstract String getInsertQuery();
-
-    protected abstract String getFindQuery();
-
-    protected abstract String getAllQuery();
-
-    protected abstract String getFindAllQuery();
-
-    protected abstract String getUpdateQuery();
-
-    protected abstract String getDeleteQuery();
-
-    protected abstract void prepareStatementForSave(PreparedStatement statement, T entity) throws DaoException;
-
-    protected abstract T prepareStatementForFind(ResultSet resultSet) throws DaoException;
-
-    protected abstract void prepareStatementForUpdate(PreparedStatement statement, T entity, Long id) throws DaoException;
 }
