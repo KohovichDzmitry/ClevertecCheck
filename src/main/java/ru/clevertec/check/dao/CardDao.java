@@ -1,5 +1,7 @@
 package ru.clevertec.check.dao;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import ru.clevertec.check.api.dao.ICardDao;
 import ru.clevertec.check.api.exceptions.DaoException;
 import ru.clevertec.check.dao.connection.ConnectionPool;
@@ -10,12 +12,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CardDao extends AbstractDao<Card> implements ICardDao {
 
     private static final CardDao INSTANCE = new CardDao();
 
     private static final String NAME = "скидочную карту";
-
     private static final String INSERT_CARD = "INSERT INTO cards (card_number, discount) VALUES (?, ?)";
     private static final String GET_CARD_BY_ID = "SELECT card_id, card_number, discount FROM cards WHERE card_id = ?";
     private static final String GET_CARD_BY_NUMBER = "SELECT card_id, card_number, discount FROM cards WHERE card_number = ?";
@@ -23,9 +25,6 @@ public class CardDao extends AbstractDao<Card> implements ICardDao {
     private static final String FIND_ALL_CARDS = "SELECT card_id, card_number, discount FROM cards LIMIT ? OFFSET ?";
     private static final String UPDATE_CARD_BY_ID = "UPDATE cards SET card_number = ?, discount = ? WHERE card_id = ?";
     private static final String DELETE_CARD_BY_ID = "DELETE FROM cards WHERE card_id = ?";
-
-    private CardDao() {
-    }
 
     public static CardDao getInstance() {
         return INSTANCE;

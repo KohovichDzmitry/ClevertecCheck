@@ -2,6 +2,7 @@ package ru.clevertec.check.servlet.card;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import lombok.SneakyThrows;
 import ru.clevertec.check.api.exceptions.ServiceException;
 import ru.clevertec.check.custom.CustomList;
 import ru.clevertec.check.model.Card;
@@ -22,9 +23,10 @@ public class CardServlet extends HttpServlet {
 
     private final CardService cardService = CardService.getInstance();
 
+    @SneakyThrows
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String pageSize = req.getParameter("page_size");
+        String pageSize = req.getParameter("pageSize");
         String page = req.getParameter("page");
         try {
             CustomList<Card> cards = cardService.findAll(pageSize, page);
@@ -38,8 +40,9 @@ public class CardServlet extends HttpServlet {
         }
     }
 
+    @SneakyThrows
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         JsonObject data = new Gson().fromJson(req.getReader(), JsonObject.class);
         String number = data.get("card_number").toString().replaceAll("\"", "");
         String discount = data.get("discount").toString().replaceAll("\"", "");
@@ -57,8 +60,9 @@ public class CardServlet extends HttpServlet {
         }
     }
 
+    @SneakyThrows
     @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
         JsonObject data = new Gson().fromJson(req.getReader(), JsonObject.class);
         Long id = Long.valueOf(data.get("card_id").toString().replaceAll("\"", ""));
         String number = data.get("card_number").toString().replaceAll("\"", "");
@@ -77,8 +81,9 @@ public class CardServlet extends HttpServlet {
         }
     }
 
+    @SneakyThrows
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         Long id = Long.valueOf(req.getParameter("card_id"));
         try {
             cardService.delete(id);

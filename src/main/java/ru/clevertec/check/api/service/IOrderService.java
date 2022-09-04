@@ -1,30 +1,21 @@
 package ru.clevertec.check.api.service;
 
-import com.itextpdf.layout.element.Table;
 import ru.clevertec.check.api.exceptions.ServiceException;
 import ru.clevertec.check.custom.CustomList;
-import ru.clevertec.check.model.Order;
 import ru.clevertec.check.model.Product;
 
-import java.io.PrintWriter;
+import java.io.OutputStream;
+import java.util.Map;
 
-public interface IOrderService extends GenericService<Order> {
+public interface IOrderService {
 
-    Order getOrderByIdProduct(Long id) throws ServiceException;
+    void printCheck(Map<String, String[]> map, OutputStream out) throws ServiceException;
 
-    CustomList<Product> listProductsFromOrder() throws ServiceException;
+    void parseOrder(CustomList<Product> products, String[] arrayCount) throws ServiceException;
+
+    Double getProductStockCost(CustomList<Product> products, Long id, Boolean mark) throws ServiceException;
 
     Long numberOfProductsFromOrderWithStock(CustomList<Product> customList);
 
-    Double getTotalSum() throws ServiceException;
-
-    Double getProductStockCost(Long id, Boolean mark) throws ServiceException;
-
-    void printEndingCheck(PrintWriter pw, Long card_id) throws ServiceException;
-
-    void printEndingCheckPDF(Table table, Long card_id) throws ServiceException;
-
-    void printProductFromTheOrder(PrintWriter pw) throws ServiceException;
-
-    void printProductFromTheOrderPDF(Table table) throws ServiceException;
+    Double getTotalSum(CustomList<Product> products) throws ServiceException;
 }

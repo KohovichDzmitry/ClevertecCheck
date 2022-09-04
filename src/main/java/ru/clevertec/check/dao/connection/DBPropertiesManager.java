@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class DBPropertiesManager {
+public final class DBPropertiesManager {
 
     private static final Properties properties;
     private static final String PROPERTIES_FILE = "database.properties";

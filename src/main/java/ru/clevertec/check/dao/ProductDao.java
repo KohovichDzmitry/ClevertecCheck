@@ -1,5 +1,7 @@
 package ru.clevertec.check.dao;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import ru.clevertec.check.api.dao.IProductDao;
 import ru.clevertec.check.api.exceptions.DaoException;
 import ru.clevertec.check.dao.connection.ConnectionPool;
@@ -10,12 +12,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProductDao extends AbstractDao<Product> implements IProductDao {
 
     private static final ProductDao INSTANCE = new ProductDao();
 
     private static final String NAME = "продукт";
-
     private static final String INSERT_PRODUCT = "INSERT INTO products (product_name, price, stock) VALUES (?, ?, ?)";
     private static final String GET_PRODUCT_BY_ID = "SELECT product_id, product_name, price, stock " +
             "FROM products WHERE product_id = ?";
@@ -27,9 +29,6 @@ public class ProductDao extends AbstractDao<Product> implements IProductDao {
     private static final String UPDATE_PRODUCT_BY_ID = "UPDATE products SET product_name = ?, price = ?, stock = ? " +
             "WHERE product_id = ?";
     private static final String DELETE_PRODUCT_BY_ID = "DELETE FROM products WHERE product_id = ?";
-
-    private ProductDao() {
-    }
 
     public static ProductDao getInstance() {
         return INSTANCE;

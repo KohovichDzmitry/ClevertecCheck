@@ -1,17 +1,19 @@
 package ru.clevertec.check.dao.connection;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Value;
+
 import java.sql.*;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
+@Value
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProxyConnection implements Connection {
 
-    private final Connection connection;
-
-    ProxyConnection(Connection connection) {
-        this.connection = connection;
-    }
+    Connection connection;
 
     @Override
     public Statement createStatement() throws SQLException {

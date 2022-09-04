@@ -1,5 +1,9 @@
 package ru.clevertec.check.service;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 import ru.clevertec.check.api.dao.IProductDao;
 import ru.clevertec.check.api.exceptions.DaoException;
 import ru.clevertec.check.api.exceptions.ServiceException;
@@ -12,13 +16,13 @@ import ru.clevertec.check.validator.ProductDataValidator;
 import java.util.Comparator;
 import java.util.Map;
 
+@Value
+@EqualsAndHashCode(callSuper = false)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProductService extends AbstractService<Product, IProductDao> implements IProductService {
 
     private static final ProductService INSTANCE = new ProductService();
-    private final IProductDao productDao = ProductDao.getInstance();
-
-    private ProductService() {
-    }
+    IProductDao productDao = ProductDao.getInstance();
 
     public static ProductService getInstance() {
         return INSTANCE;

@@ -1,6 +1,7 @@
 package ru.clevertec.check.servlet.product;
 
 import com.google.gson.Gson;
+import lombok.SneakyThrows;
 import ru.clevertec.check.api.exceptions.ServiceException;
 import ru.clevertec.check.custom.CustomList;
 import ru.clevertec.check.model.Product;
@@ -19,6 +20,7 @@ public class GetSortedByPriceAllProductsServlet extends HttpServlet {
 
     private final ProductService productService = ProductService.getInstance();
 
+    @SneakyThrows
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {

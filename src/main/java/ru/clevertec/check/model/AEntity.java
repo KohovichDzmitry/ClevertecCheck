@@ -1,14 +1,11 @@
 package ru.clevertec.check.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public abstract class AEntity {
 
     private Long id;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 }

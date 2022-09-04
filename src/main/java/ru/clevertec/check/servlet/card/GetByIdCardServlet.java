@@ -1,6 +1,7 @@
 package ru.clevertec.check.servlet.card;
 
 import com.google.gson.Gson;
+import lombok.SneakyThrows;
 import ru.clevertec.check.api.exceptions.ServiceException;
 import ru.clevertec.check.model.Card;
 import ru.clevertec.check.service.CardService;
@@ -18,6 +19,7 @@ public class GetByIdCardServlet extends HttpServlet {
 
     private final CardService cardService = CardService.getInstance();
 
+    @SneakyThrows
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long id = Long.valueOf(req.getParameter("card_id"));

@@ -1,169 +1,58 @@
 package ru.clevertec.check.service;
 
-import com.itextpdf.layout.border.Border;
-import com.itextpdf.layout.element.Cell;
-import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.property.TextAlignment;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Value;
 import ru.clevertec.check.annotation.Log;
-import ru.clevertec.check.api.dao.ICardDao;
-import ru.clevertec.check.api.dao.IOrderDao;
-import ru.clevertec.check.api.dao.IProductDao;
 import ru.clevertec.check.api.exceptions.DaoException;
 import ru.clevertec.check.api.exceptions.ServiceException;
+import ru.clevertec.check.api.service.ICardService;
 import ru.clevertec.check.api.service.IOrderService;
+import ru.clevertec.check.api.service.IProductService;
+import ru.clevertec.check.custom.CustomArrayList;
 import ru.clevertec.check.custom.CustomList;
-import ru.clevertec.check.dao.CardDao;
-import ru.clevertec.check.dao.OrderDao;
-import ru.clevertec.check.dao.ProductDao;
-import ru.clevertec.check.model.Order;
+import ru.clevertec.check.format.FormatPDF;
+import ru.clevertec.check.format.FormatTXT;
+import ru.clevertec.check.model.Card;
 import ru.clevertec.check.model.Product;
 import ru.clevertec.check.service.handler.OrderServiceHandler;
-import ru.clevertec.check.validator.OrderDataValidator;
+import ru.clevertec.check.validator.ProductDataValidator;
 
-import java.io.PrintWriter;
+import java.io.OutputStream;
 import java.lang.reflect.Proxy;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 
-public class OrderService extends AbstractService<Order, IOrderDao> implements IOrderService {
+@Value
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class OrderService implements IOrderService {
 
     private static final OrderService INSTANCE = new OrderService();
-    private final IProductDao productDao = ProductDao.getInstance();
-    private final ICardDao cardDao = CardDao.getInstance();
-    private final IOrderDao orderDao = OrderDao.getInstance();
-
+    IProductService productService = ProductService.getInstance();
+    ICardService cardService = CardService.getInstance();
     private static final Double DISCOUNT_PERCENT = 10d;
-
-    private OrderService() {
-    }
 
     public static OrderService getInstance() {
         return INSTANCE;
     }
 
     @Override
-    protected IOrderDao getDao() {
-        return orderDao;
-    }
-
-    @Override
-    protected Order actionForSave(Map<String, String> parameters) throws ServiceException {
-        if (!OrderDataValidator.isValidOrderParameters(parameters)) {
-            throw new ServiceException("Ошибка при валидации данных заказа");
-        }
+    public void printCheck(Map<String, String[]> map, OutputStream out) throws ServiceException {
         try {
-            Product product = productDao.getById(Long.valueOf(parameters.get("id_product")));
-            Order order = new Order();
-            order.setProduct(product);
-            order.setQuantity(Integer.valueOf(parameters.get("quantity")));
-            return order;
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    private IOrderService getProxyOrderService() {
-        IOrderService iOrderService = this;
-        ClassLoader productServiceClassLoader = iOrderService.getClass().getClassLoader();
-        Class<?>[] productServiceInterfaces = iOrderService.getClass().getInterfaces();
-        iOrderService = (IOrderService) Proxy.newProxyInstance(productServiceClassLoader,
-                productServiceInterfaces, new OrderServiceHandler(iOrderService));
-        return iOrderService;
-    }
-
-    @Override
-    public void printProductFromTheOrder(PrintWriter pw) throws ServiceException {
-        CustomList<Product> actualList = this.getProxyOrderService().listProductsFromOrder();
-        try {
-            actualList.stream()
-                    .forEach(product -> {
-                        pw.println(orderDao.getOrderByIdProduct(product.getId()).getQuantity() + "\t\t"
-                                + product.getName() + "\t\t\t\t" + product.getPrice() + "\t"
-                                + getProductStockCost(product.getId(), false)
-                                * orderDao.getOrderByIdProduct(product.getId()).getQuantity());
-                        if (product.getStock() == 1 && numberOfProductsFromOrderWithStock(actualList) > 4) {
-                            pw.println("\t(на товар \"" + product.getName() + "\" акция -10%)\t"
-                                    + BigDecimal.valueOf(getProductStockCost(product.getId(), true)
-                                            * orderDao.getOrderByIdProduct(product.getId()).getQuantity())
-                                    .setScale(2, RoundingMode.HALF_UP).doubleValue());
-                        }
-                    });
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
-    public void printProductFromTheOrderPDF(Table table) throws ServiceException {
-        CustomList<Product> actualList = this.getProxyOrderService().listProductsFromOrder();
-        try {
-            actualList.stream()
-                    .forEach(product -> {
-                        table.addCell(new Cell().add(String.valueOf(orderDao.getOrderByIdProduct(product.getId())
-                                .getQuantity())).setBorder(Border.NO_BORDER));
-                        table.addCell(new Cell().add(product.getName()).setBorder(Border.NO_BORDER));
-                        table.addCell(new Cell().add(String.valueOf(product.getPrice())).setBorder(Border.NO_BORDER));
-                        table.addCell(new Cell().add(String.valueOf(getProductStockCost(product.getId(), false)
-                                * orderDao.getOrderByIdProduct(product.getId()).getQuantity())).setBorder(Border.NO_BORDER));
-                        if (product.getStock() == 1 && numberOfProductsFromOrderWithStock(actualList) > 4) {
-                            table.addCell(new Cell().add("(на ").setBorder(Border.NO_BORDER)
-                                    .setTextAlignment(TextAlignment.RIGHT));
-                            table.addCell(new Cell().add("товар \"" + product.getName() + "\" акция ")
-                                    .setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.JUSTIFIED_ALL));
-                            table.addCell(new Cell().add("-10%)").setBorder(Border.NO_BORDER));
-                            table.addCell(new Cell().add(String.valueOf(BigDecimal.valueOf(getProductStockCost(product
-                                            .getId(), true) * orderDao.getOrderByIdProduct(product.getId()).getQuantity())
-                                    .setScale(2, RoundingMode.HALF_UP).doubleValue())).setBorder(Border.NO_BORDER));
-                        }
-                    });
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
-    public void printEndingCheck(PrintWriter pw, Long card_id) throws ServiceException {
-        try {
-            pw.println("Сумма\t\t\t\t\t\t\t\t" + BigDecimal.valueOf(this.getProxyOrderService().getTotalSum())
-                    .setScale(2, RoundingMode.HALF_UP).doubleValue());
-            pw.println("Скидка по предъявленной карте\t\t"
-                    + cardDao.getById(card_id).getDiscount() + "%");
-            pw.println("Сумма с учетом скидки\t\t\t\t"
-                    + BigDecimal.valueOf(getTotalSum() * ((100 - cardDao
-                            .getById(card_id).getDiscount())) / 100)
-                    .setScale(2, RoundingMode.HALF_UP).doubleValue());
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
-    public void printEndingCheckPDF(Table table, Long card_id) throws ServiceException {
-        try {
-            table.addCell(new Cell().add("Сумма").setBorder(Border.NO_BORDER));
-            table.addCell(new Cell().add(String.valueOf(BigDecimal.valueOf(this.getProxyOrderService().getTotalSum())
-                    .setScale(2, RoundingMode.HALF_UP).doubleValue())).setBorder(Border.NO_BORDER));
-            table.addCell(new Cell().add("Скидка по предъявленной карте").setBorder(Border.NO_BORDER));
-            table.addCell(new Cell().add(cardDao.getById(card_id).getDiscount() + "%").setBorder(Border.NO_BORDER));
-            table.addCell(new Cell().add("Сумма с учетом скидки").setBorder(Border.NO_BORDER));
-            table.addCell(new Cell().add(String.valueOf(BigDecimal.valueOf(getTotalSum() * ((100 - cardDao
-                            .getById(card_id).getDiscount())) / 100).setScale(2, RoundingMode.HALF_UP)
-                    .doubleValue())).setBorder(Border.NO_BORDER));
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
-    public Order getOrderByIdProduct(Long id) throws ServiceException {
-        if (!OrderDataValidator.isValidProductIDInOrder(String.valueOf(id))) {
-            throw new ServiceException("Ошибка при валидации id продукта из заказа");
-        }
-        try {
-            return orderDao.getOrderByIdProduct(id);
+            String[] arrayId = map.get("id");
+            String[] arrayCount = map.get("count");
+            String[] arrayCard = map.get("card");
+            CustomList<Product> products = new CustomArrayList<>();
+            for (String s : arrayId) {
+                Product product = productService.getById(Long.parseLong(s));
+                products.add(product);
+            }
+            Card card = cardService.getCardByNumber(Integer.valueOf(arrayCard[0]));
+            this.getProxyOrderService().parseOrder(products, arrayCount);
+            FormatPDF formatPDF = new FormatPDF(products, card.getDiscount(), out);
+            formatPDF.setFormat();
+            FormatTXT formatTXT = new FormatTXT(products, card.getDiscount());
+            formatTXT.setFormat();
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -171,12 +60,35 @@ public class OrderService extends AbstractService<Order, IOrderDao> implements I
 
     @Log
     @Override
-    public CustomList<Product> listProductsFromOrder() throws ServiceException {
+    public void parseOrder(CustomList<Product> products, String[] arrayCount) throws ServiceException {
+        for (int i = 0; i < products.size(); i++) {
+            if (ProductDataValidator.isValidQuantityProduct(arrayCount[i])) {
+                int quantity = Integer.parseInt(arrayCount[i]);
+                products.get(i).setQuantity(quantity);
+            } else {
+                throw new ServiceException("Ошибка при валидации количества продукта. Количество продукта должно быть "
+                        + "больше нуля");
+            }
+        }
+    }
+
+    private IOrderService getProxyOrderService() {
+        IOrderService iOrderService = this;
+        ClassLoader orderServiceClassLoader = iOrderService.getClass().getClassLoader();
+        Class<?>[] orderServiceInterfaces = iOrderService.getClass().getInterfaces();
+        iOrderService = (IOrderService) Proxy.newProxyInstance(orderServiceClassLoader,
+                orderServiceInterfaces, new OrderServiceHandler());
+        return iOrderService;
+    }
+
+    @Override
+    public Double getProductStockCost(CustomList<Product> products, Long id, Boolean mark) throws ServiceException {
         try {
-            return CustomList.toCustomList(Arrays
-                    .stream(orderDao.getAll().stream()
-                            .mapToLong(order -> order.getProduct().getId()).toArray())
-                    .boxed().map(productDao::getById).toArray());
+            return Optional.of(productService.getById(id))
+                    .filter(product -> mark && product.getStock() == 1
+                            && numberOfProductsFromOrderWithStock(products) > 4)
+                    .map(product -> product.getPrice() * ((100 - DISCOUNT_PERCENT) / 100))
+                    .orElse(productService.getById(id).getPrice());
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -188,28 +100,13 @@ public class OrderService extends AbstractService<Order, IOrderDao> implements I
                 .filter(number -> number.getStock() == 1).count();
     }
 
-    @Log
     @Override
-    public Double getTotalSum() throws ServiceException {
+    public Double getTotalSum(CustomList<Product> products) throws ServiceException {
         try {
-            return orderDao.getAll().stream()
-                    .map(product -> product.getQuantity() * getProductStockCost(product.getProduct().getId(), true))
+            return products.stream()
+                    .map(product -> product.getQuantity() * getProductStockCost(products, product.getId(), true))
                     .reduce(Double::sum)
                     .orElseThrow(() -> new ServiceException("Неверный расчет стоимости заказа"));
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
-    public Double getProductStockCost(Long id, Boolean mark) throws ServiceException {
-        CustomList<Product> actualList = listProductsFromOrder();
-        try {
-            return Optional.of(productDao.getById(id))
-                    .filter(product -> mark && product.getStock() == 1
-                            && numberOfProductsFromOrderWithStock(actualList) > 4)
-                    .map(product -> product.getPrice() * ((100 - DISCOUNT_PERCENT) / 100))
-                    .orElse(productDao.getById(id).getPrice());
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

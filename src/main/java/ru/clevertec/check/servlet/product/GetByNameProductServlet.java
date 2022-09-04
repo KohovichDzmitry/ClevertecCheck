@@ -1,6 +1,7 @@
 package ru.clevertec.check.servlet.product;
 
 import com.google.gson.Gson;
+import lombok.SneakyThrows;
 import ru.clevertec.check.api.exceptions.ServiceException;
 import ru.clevertec.check.model.Product;
 import ru.clevertec.check.service.ProductService;
@@ -18,6 +19,7 @@ public class GetByNameProductServlet extends HttpServlet {
 
     private final ProductService productService = ProductService.getInstance();
 
+    @SneakyThrows
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String name = req.getParameter("product_name");

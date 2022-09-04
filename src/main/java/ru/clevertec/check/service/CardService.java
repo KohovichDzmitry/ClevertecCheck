@@ -1,5 +1,9 @@
 package ru.clevertec.check.service;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 import ru.clevertec.check.api.dao.ICardDao;
 import ru.clevertec.check.api.exceptions.DaoException;
 import ru.clevertec.check.api.exceptions.ServiceException;
@@ -10,13 +14,13 @@ import ru.clevertec.check.validator.CardDataValidator;
 
 import java.util.Map;
 
+@Value
+@EqualsAndHashCode(callSuper = false)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CardService extends AbstractService<Card, ICardDao> implements ICardService {
 
     private final static CardService INSTANCE = new CardService();
-    private final ICardDao cardDao = CardDao.getInstance();
-
-    private CardService() {
-    }
+    ICardDao cardDao = CardDao.getInstance();
 
     public static CardService getInstance() {
         return INSTANCE;
