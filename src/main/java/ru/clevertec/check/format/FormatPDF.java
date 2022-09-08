@@ -20,7 +20,6 @@ import ru.clevertec.check.api.exceptions.ServiceException;
 import ru.clevertec.check.api.service.IOrderService;
 import ru.clevertec.check.custom.CustomList;
 import ru.clevertec.check.model.Product;
-import ru.clevertec.check.service.OrderService;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -35,7 +34,7 @@ public class FormatPDF implements Format {
     private static final float TABLE_WIDTH = 300F;
     CustomList<Product> products;
     Integer discount;
-    IOrderService orderService = OrderService.getInstance();
+    IOrderService orderService;
     OutputStream out;
 
     @SneakyThrows

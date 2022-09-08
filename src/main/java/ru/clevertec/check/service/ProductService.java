@@ -4,29 +4,25 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
+import org.springframework.stereotype.Service;
 import ru.clevertec.check.api.dao.IProductDao;
 import ru.clevertec.check.api.exceptions.DaoException;
 import ru.clevertec.check.api.exceptions.ServiceException;
 import ru.clevertec.check.api.service.IProductService;
 import ru.clevertec.check.custom.CustomList;
-import ru.clevertec.check.dao.ProductDao;
 import ru.clevertec.check.model.Product;
 import ru.clevertec.check.validator.ProductDataValidator;
 
 import java.util.Comparator;
 import java.util.Map;
 
+@Service
 @Value
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProductService extends AbstractService<Product, IProductDao> implements IProductService {
 
-    private static final ProductService INSTANCE = new ProductService();
-    IProductDao productDao = ProductDao.getInstance();
-
-    public static ProductService getInstance() {
-        return INSTANCE;
-    }
+    IProductDao productDao;
 
     @Override
     protected IProductDao getDao() {

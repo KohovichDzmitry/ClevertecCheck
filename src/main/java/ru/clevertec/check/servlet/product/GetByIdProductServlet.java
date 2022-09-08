@@ -2,10 +2,13 @@ package ru.clevertec.check.servlet.product;
 
 import com.google.gson.Gson;
 import lombok.SneakyThrows;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import ru.clevertec.check.api.exceptions.ServiceException;
 import ru.clevertec.check.model.Product;
 import ru.clevertec.check.service.ProductService;
+import ru.clevertec.check.spring.Configuration;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +18,15 @@ import java.io.PrintWriter;
 @WebServlet("/api/products/id")
 public class GetByIdProductServlet extends HttpServlet {
 
-    private final ProductService productService = ProductService.getInstance();
+    private ProductService productService;
+
+    @PostConstruct
+    public void init() {
+        AnnotationConfigApplicationContext context =
+                new AnnotationConfigApplicationContext(Configuration.class);
+        productService = context.getBean("productService", ProductService.class);
+        context.close();
+    }
 
     @SneakyThrows
     @Override

@@ -1,5 +1,7 @@
 package ru.clevertec.check.servlet.filter;
 
+import lombok.SneakyThrows;
+
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import java.io.IOException;
@@ -7,8 +9,9 @@ import java.io.IOException;
 @WebFilter(urlPatterns = "/*")
 public class EncodingFilter implements Filter {
 
+    @SneakyThrows
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
     }
 
     @Override

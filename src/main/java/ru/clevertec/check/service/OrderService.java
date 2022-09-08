@@ -3,6 +3,7 @@ package ru.clevertec.check.service;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Value;
+import org.springframework.stereotype.Service;
 import ru.clevertec.check.annotation.Log;
 import ru.clevertec.check.api.exceptions.DaoException;
 import ru.clevertec.check.api.exceptions.ServiceException;
@@ -23,18 +24,14 @@ import java.lang.reflect.Proxy;
 import java.util.Map;
 import java.util.Optional;
 
+@Service
 @Value
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class OrderService implements IOrderService {
 
-    private static final OrderService INSTANCE = new OrderService();
-    IProductService productService = ProductService.getInstance();
-    ICardService cardService = CardService.getInstance();
+    IProductService productService;
+    ICardService cardService;
     private static final Double DISCOUNT_PERCENT = 10d;
-
-    public static OrderService getInstance() {
-        return INSTANCE;
-    }
 
     @Override
     public void printCheck(Map<String, String[]> map, OutputStream out) throws ServiceException {
@@ -49,9 +46,9 @@ public class OrderService implements IOrderService {
             }
             Card card = cardService.getCardByNumber(Integer.valueOf(arrayCard[0]));
             this.getProxyOrderService().parseOrder(products, arrayCount);
-            FormatPDF formatPDF = new FormatPDF(products, card.getDiscount(), out);
+            FormatPDF formatPDF = new FormatPDF(products, card.getDiscount(), this, out);
             formatPDF.setFormat();
-            FormatTXT formatTXT = new FormatTXT(products, card.getDiscount());
+            FormatTXT formatTXT = new FormatTXT(products, card.getDiscount(), this);
             formatTXT.setFormat();
         } catch (DaoException e) {
             throw new ServiceException(e);
@@ -77,7 +74,7 @@ public class OrderService implements IOrderService {
         ClassLoader orderServiceClassLoader = iOrderService.getClass().getClassLoader();
         Class<?>[] orderServiceInterfaces = iOrderService.getClass().getInterfaces();
         iOrderService = (IOrderService) Proxy.newProxyInstance(orderServiceClassLoader,
-                orderServiceInterfaces, new OrderServiceHandler());
+                orderServiceInterfaces, new OrderServiceHandler(this));
         return iOrderService;
     }
 

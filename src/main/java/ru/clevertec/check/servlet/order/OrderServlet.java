@@ -1,9 +1,12 @@
 package ru.clevertec.check.servlet.order;
 
 import lombok.SneakyThrows;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import ru.clevertec.check.api.exceptions.ServiceException;
 import ru.clevertec.check.service.OrderService;
+import ru.clevertec.check.spring.Configuration;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +17,15 @@ import java.util.Map;
 @WebServlet("/api/order")
 public class OrderServlet extends HttpServlet {
 
-    private final OrderService orderService = OrderService.getInstance();
+    private OrderService orderService;
+
+    @PostConstruct
+    public void init() {
+        AnnotationConfigApplicationContext context =
+                new AnnotationConfigApplicationContext(Configuration.class);
+        orderService = context.getBean("orderService", OrderService.class);
+        context.close();
+    }
 
     @SneakyThrows
     @Override

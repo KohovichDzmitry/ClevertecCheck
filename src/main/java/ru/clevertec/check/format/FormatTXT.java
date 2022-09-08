@@ -8,7 +8,6 @@ import ru.clevertec.check.api.exceptions.ServiceException;
 import ru.clevertec.check.api.service.IOrderService;
 import ru.clevertec.check.custom.CustomList;
 import ru.clevertec.check.model.Product;
-import ru.clevertec.check.service.OrderService;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -21,11 +20,11 @@ public class FormatTXT implements Format {
 
     CustomList<Product> products;
     Integer discount;
-    IOrderService orderService = OrderService.getInstance();
+    IOrderService orderService;
 
     @SneakyThrows
     public void setFormat() throws ServiceException {
-        File file = new File("C:\\Users\\Dmitry\\IdeaProjects\\Clevertec\\src\\main\\resources\\check");
+        File file = new File("C:\\Users\\Dmitry\\IdeaProjects\\Clevertec\\src\\main\\resources\\print\\check");
         try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8)))) {
             pw.println("\t\t\t  " + NAME_OF_SHOP);
             pw.println("\t\t " + ADDRESS);

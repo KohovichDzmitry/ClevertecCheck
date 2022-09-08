@@ -49,7 +49,7 @@ public enum ConnectionPool {
             }
             freeConnections.offer((ProxyConnection) connection);
         } else {
-            System.out.println("Данный connection не пренадлежит к ProxyConnection");
+            System.out.println("Данный connection не принадлежит к ProxyConnection");
         }
     }
 
