@@ -4,9 +4,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.clevertec.check.util.CustomArrayList;
-import ru.clevertec.check.util.CustomIterator;
-import ru.clevertec.check.util.CustomList;
+import ru.clevertec.check.custom.CustomArrayList;
+import ru.clevertec.check.custom.CustomIterator;
+import ru.clevertec.check.custom.CustomList;
 
 public class CustomArrayListTest {
 

@@ -1,91 +1,64 @@
-package ru.clevertec.check.task.service;
-
-import org.junit.jupiter.api.*;
-import ru.clevertec.check.exception.ProjectException;
-import ru.clevertec.check.io.CardReader;
-import ru.clevertec.check.io.OrderReader;
-import ru.clevertec.check.io.ProductReader;
-import ru.clevertec.check.model.card.CardDao;
-import ru.clevertec.check.model.card.ICardDao;
-import ru.clevertec.check.model.order.IOrderDao;
-import ru.clevertec.check.model.order.OrderDao;
-import ru.clevertec.check.model.product.IProductDao;
-import ru.clevertec.check.model.product.Product;
-import ru.clevertec.check.model.product.ProductDao;
-import ru.clevertec.check.service.ProjectService;
-import ru.clevertec.check.util.CustomList;
-
-public class ProjectManagerTest {
-
-    static IProductDao productDao = new ProductDao();
-    static IOrderDao orderDao = new OrderDao();
-    ICardDao cardDao = new CardDao();
-    ProjectService projectService = new ProjectService(productDao, cardDao, orderDao);
-
-    @BeforeAll
-    static void generateProducts() {
-        ProductReader productReader = new ProductReader();
-        productReader.read(productDao);
-    }
-
-    @BeforeAll
-    static void generateOrder() {
-        OrderReader orderReader = new OrderReader();
-        orderReader.read(orderDao);
-    }
-
-    @BeforeEach
-    void generateCards() {
-        CardReader cardReader = new CardReader();
-        cardReader.read(cardDao);
-    }
-
-    @AfterAll
-    static void deleteProducts() {
-        productDao = null;
-    }
-
-    @AfterAll
-    static void deleteOrder() {
-        orderDao = null;
-    }
-
-    @AfterEach
-    void deleteCards() {
-        cardDao = null;
-    }
-
-    @DisplayName("Проверка наличия продукта из заказа по id - позитивный тест")
-    @Test
-    void listProductsFromOrderTest() {
-        CustomList<Product> actualList = projectService.listProductsFromOrder();
-        actualList.stream().forEach(product -> Assertions
-                .assertEquals(product, productDao.getProductById(product.getId())));
-    }
-
-    @DisplayName("Проверка наличия продукта из заказа по id - негативный тест")
-    @Test
-    void listProductsFromOrderFailTest() {
-        CustomList<Product> actualList = projectService.listProductsFromOrder();
-        actualList.add(new Product("Вафли", 2.21, 1));
-        actualList.add(new Product("Майонез", 1.55, 0));
-        actualList.add(new Product("Сыр", 3.48, 1));
-        Assertions.assertThrows(ProjectException.class, () -> actualList
-                .stream().forEach(product -> Assertions
-                        .assertEquals(product, productDao.getProductById(product.getId()))));
-    }
-
-    @DisplayName("Получение общей стоимости заказа - позитивный тест")
-    @Test
-    void getTotalSumTest() {
-        Double actualSum = projectService.getTotalSum();
-        Assertions.assertEquals(40.066, actualSum);
-    }
-
-    @DisplayName("Получение общей стоимости заказа - негативный тест")
-    @Test
-    void getTotalSumFailTest() {
-        Double actualSum = projectService.getTotalSum();
-        Assertions.assertNotEquals(401.066, actualSum);
-    }
-}
+//package ru.clevertec.check.task.service;
+//
+//import org.junit.jupiter.api.AfterAll;
+//import org.junit.jupiter.api.AfterEach;
+//import org.junit.jupiter.api.BeforeAll;
+//import org.junit.jupiter.api.BeforeEach;
+//import ru.clevertec.check.api.dao.ICardDao;
+//import ru.clevertec.check.api.dao.IProductDao;
+//
+//public class ProjectManagerTest {
+//
+//    static IProductDao productDao;
+//    ICardDao cardDao;
+//
+//    @BeforeAll
+//    static void generateProduct() {
+//        productDao.getAll();
+//    }
+//
+//    @BeforeEach
+//    void generateCards() {
+//        cardDao.getAll();
+//    }
+//
+//    @AfterAll
+//    static void deleteProductsAndOrder() {
+//        productDao = null;
+//    }
+//
+//    @AfterEach
+//    void deleteCards() {
+//        cardDao = null;
+//    }
+////
+////    @DisplayName("Проверка наличия продукта из заказа по id - позитивный тест")
+////    @Test
+////    void listProductsFromOrderTest() {
+////        CustomList<Product> actualList = projectService.listProductsFromOrder();
+////        actualList.stream().forEach(product -> Assertions
+////                .assertEquals(product, productDao.getById(product.getId())));
+////    }
+//
+////    @DisplayName("Проверка наличия продукта из заказа по id - негативный тест")
+////    @ParameterizedTest
+////    @ValueSource(longs = {112, 22, 33, 45404})
+////    void listProductsFromOrderFailTest(Long expectedProduct) {
+////        Assertions.assertThrows(DaoException.class, () ->
+////                productDao.getById(expectedProduct));
+////    }
+//
+////    @DisplayName("Получение общей стоимости заказа - позитивный тест")
+////    @Test
+////    void getTotalSumTest() {
+////        Double actualSum = projectService.getTotalSum();
+////        Assertions.assertEquals(40.066, actualSum);
+////    }
+////
+////    @DisplayName("Получение общей стоимости заказа - негативный тест")
+////    @Test
+////    void getTotalSumFailTest() {
+////        Double actualSum = projectService.getTotalSum();
+////        Assertions.assertNotEquals(401.066, actualSum);
+////    }
+//}

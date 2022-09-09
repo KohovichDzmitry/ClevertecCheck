@@ -1,0 +1,112 @@
+package ru.clevertec.check.dao;
+
+import org.springframework.stereotype.Repository;
+import ru.clevertec.check.api.dao.ICardDao;
+import ru.clevertec.check.api.exceptions.DaoException;
+import ru.clevertec.check.dao.connection.ConnectionPool;
+import ru.clevertec.check.model.Card;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+@Repository
+public class CardDao extends AbstractDao<Card> implements ICardDao {
+
+    private static final String NAME = "скидочную карту";
+    private static final String INSERT_CARD = "INSERT INTO cards (card_number, discount) VALUES (?, ?)";
+    private static final String GET_CARD_BY_ID = "SELECT card_id, card_number, discount FROM cards WHERE card_id = ?";
+    private static final String GET_CARD_BY_NUMBER = "SELECT card_id, card_number, discount FROM cards WHERE card_number = ?";
+    private static final String GET_ALL_CARDS = "SELECT card_id, card_number, discount FROM cards";
+    private static final String FIND_ALL_CARDS = "SELECT card_id, card_number, discount FROM cards LIMIT ? OFFSET ?";
+    private static final String UPDATE_CARD_BY_ID = "UPDATE cards SET card_number = ?, discount = ? WHERE card_id = ?";
+    private static final String DELETE_CARD_BY_ID = "DELETE FROM cards WHERE card_id = ?";
+
+    @Override
+    public String getEntityName() {
+        return NAME;
+    }
+
+    @Override
+    public String getInsertQuery() {
+        return INSERT_CARD;
+    }
+
+    @Override
+    public String getFindQuery() {
+        return GET_CARD_BY_ID;
+    }
+
+    @Override
+    public String getAllQuery() {
+        return GET_ALL_CARDS;
+    }
+
+    @Override
+    public String getFindAllQuery() {
+        return FIND_ALL_CARDS;
+    }
+
+    @Override
+    public String getUpdateQuery() {
+        return UPDATE_CARD_BY_ID;
+    }
+
+    @Override
+    public String getDeleteQuery() {
+        return DELETE_CARD_BY_ID;
+    }
+
+    @Override
+    public void prepareStatementForSave(PreparedStatement statement, Card card) throws DaoException {
+        try {
+            statement.setInt(1, card.getNumber());
+            statement.setInt(2, card.getDiscount());
+        } catch (SQLException e) {
+            throw new DaoException("Не удалось выполнить запрос");
+        }
+    }
+
+    @Override
+    public Card prepareStatementForFind(ResultSet resultSet) throws DaoException {
+        try {
+            Card card = new Card();
+            card.setId(resultSet.getLong("card_id"));
+            card.setNumber(resultSet.getInt("card_number"));
+            card.setDiscount(resultSet.getInt("discount"));
+            return card;
+        } catch (SQLException e) {
+            throw new DaoException("Не удалось выполнить запрос");
+        }
+    }
+
+    @Override
+    public void prepareStatementForUpdate(PreparedStatement statement, Card card, Long id) throws DaoException {
+        try {
+            statement.setInt(1, card.getNumber());
+            statement.setInt(2, card.getDiscount());
+            statement.setLong(3, id);
+        } catch (SQLException e) {
+            throw new DaoException("Не удалось выполнить запрос");
+        }
+    }
+
+    @Override
+    public Card getCardByNumber(Integer number) throws DaoException {
+        Card card;
+        try (Connection connection = ConnectionPool.INSTANCE.getConnection();
+             PreparedStatement statement = connection.prepareStatement(GET_CARD_BY_NUMBER)) {
+            statement.setInt(1, number);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                card = prepareStatementForFind(resultSet);
+            } else {
+                throw new DaoException(String.format("Не удалось найти " + NAME + " по введённому номеру: %d", number));
+            }
+            return card;
+        } catch (SQLException e) {
+            throw new DaoException(String.format("Ошибка при попытке найти" + NAME + "по введённому номеру: %d", number));
+        }
+    }
+}
