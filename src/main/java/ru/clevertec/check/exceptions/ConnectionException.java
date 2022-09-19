@@ -1,4 +1,4 @@
-package ru.clevertec.check.api.exceptions;
+package ru.clevertec.check.exceptions;
 
 public class ConnectionException extends RuntimeException {
 

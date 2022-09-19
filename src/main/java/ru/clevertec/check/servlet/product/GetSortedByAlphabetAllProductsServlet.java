@@ -2,12 +2,12 @@ package ru.clevertec.check.servlet.product;
 
 import com.google.gson.Gson;
 import lombok.SneakyThrows;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import ru.clevertec.check.api.exceptions.ServiceException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import ru.clevertec.check.exceptions.ServiceException;
+import ru.clevertec.check.service.product.IProductService;
 import ru.clevertec.check.custom.CustomList;
-import ru.clevertec.check.model.Product;
-import ru.clevertec.check.service.ProductService;
-import ru.clevertec.check.spring.Configuration;
+import ru.clevertec.check.dto.ProductDto;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.annotation.WebServlet;
@@ -19,21 +19,19 @@ import java.io.PrintWriter;
 @WebServlet("/api/products/sorted_by_alphabet")
 public class GetSortedByAlphabetAllProductsServlet extends HttpServlet {
 
-    private ProductService productService;
+    @Autowired
+    private IProductService productService;
 
     @PostConstruct
     public void init() {
-        AnnotationConfigApplicationContext context =
-                new AnnotationConfigApplicationContext(Configuration.class);
-        productService = context.getBean("productService", ProductService.class);
-        context.close();
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
     }
 
     @SneakyThrows
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            CustomList<Product> products = productService.getAllSortedByAlphabet();
+            CustomList<ProductDto> products = productService.findAllAndOrderByName();
             String json = new Gson().toJson(products);
             try (PrintWriter out = resp.getWriter()) {
                 out.write(json);

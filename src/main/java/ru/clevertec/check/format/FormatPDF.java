@@ -15,9 +15,8 @@ import com.itextpdf.layout.property.TextAlignment;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.Value;
-import ru.clevertec.check.api.exceptions.DaoException;
-import ru.clevertec.check.api.exceptions.ServiceException;
-import ru.clevertec.check.api.service.IOrderService;
+import ru.clevertec.check.exceptions.ServiceException;
+import ru.clevertec.check.service.order.IOrderService;
 import ru.clevertec.check.custom.CustomList;
 import ru.clevertec.check.model.Product;
 
@@ -105,8 +104,6 @@ public class FormatPDF implements Format {
             document.add(new Paragraph("*".repeat(41)));
             document.add(new Table(columnWidth).addCell(setTextCenter(THANKS)));
             document.close();
-        } catch (DaoException e) {
-            throw new ServiceException(e);
         }
     }
 

@@ -2,10 +2,10 @@ package ru.clevertec.check.servlet.card;
 
 import com.google.gson.Gson;
 import lombok.SneakyThrows;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import ru.clevertec.check.api.exceptions.ServiceException;
-import ru.clevertec.check.service.CardService;
-import ru.clevertec.check.spring.Configuration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import ru.clevertec.check.exceptions.ServiceException;
+import ru.clevertec.check.service.card.ICardService;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.annotation.WebServlet;
@@ -17,14 +17,12 @@ import java.io.PrintWriter;
 @WebServlet("/api/cards/count")
 public class GetCountAllCardsServlet extends HttpServlet {
 
-    private CardService cardService;
+    @Autowired
+    private ICardService cardService;
 
     @PostConstruct
     public void init() {
-        AnnotationConfigApplicationContext context =
-                new AnnotationConfigApplicationContext(Configuration.class);
-        cardService = context.getBean("cardService", CardService.class);
-        context.close();
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
     }
 
     @SneakyThrows
