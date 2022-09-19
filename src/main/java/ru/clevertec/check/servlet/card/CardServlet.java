@@ -3,12 +3,13 @@ package ru.clevertec.check.servlet.card;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import lombok.SneakyThrows;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import ru.clevertec.check.api.exceptions.ServiceException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import ru.clevertec.check.exceptions.ServiceException;
+import ru.clevertec.check.service.card.ICardService;
 import ru.clevertec.check.custom.CustomList;
+import ru.clevertec.check.dto.CardDto;
 import ru.clevertec.check.model.Card;
-import ru.clevertec.check.service.CardService;
-import ru.clevertec.check.spring.Configuration;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.annotation.WebServlet;
@@ -16,20 +17,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
 
 @WebServlet("/api/cards")
 public class CardServlet extends HttpServlet {
 
-    private CardService cardService;
+    @Autowired
+    private ICardService cardService;
 
     @PostConstruct
     public void init() {
-        AnnotationConfigApplicationContext context =
-                new AnnotationConfigApplicationContext(Configuration.class);
-        cardService = context.getBean("cardService", CardService.class);
-        context.close();
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
     }
 
     @SneakyThrows
@@ -38,7 +35,7 @@ public class CardServlet extends HttpServlet {
         String pageSize = req.getParameter("pageSize");
         String page = req.getParameter("page");
         try {
-            CustomList<Card> cards = cardService.findAll(pageSize, page);
+            CustomList<CardDto> cards = cardService.findAll(pageSize, page);
             String json = new Gson().toJson(cards);
             try (PrintWriter out = resp.getWriter()) {
                 out.write(json);
@@ -53,15 +50,14 @@ public class CardServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         JsonObject data = new Gson().fromJson(req.getReader(), JsonObject.class);
-        String number = data.get("card_number").toString().replaceAll("\"", "");
-        String discount = data.get("discount").toString().replaceAll("\"", "");
-        Map<String, String> cardParameters = new HashMap<>();
-        cardParameters.put("card_number", number);
-        cardParameters.put("discount", discount);
+        Integer number = Integer.valueOf(data.get("card_number").toString().replaceAll("\"", ""));
+        Integer discount = Integer.parseInt(data.get("discount").toString().replaceAll("\"", ""));
+        Card card = Card.builder().number(number).discount(discount).build();
         try {
-            Card card = cardService.save(cardParameters);
+            CardDto cardDto = cardService.save(card);
+            String json = new Gson().toJson(cardDto);
             try (PrintWriter out = resp.getWriter()) {
-                out.write(String.valueOf(card));
+                out.write(String.valueOf(json));
                 resp.setStatus(201);
             }
         } catch (ServiceException e) {
@@ -72,17 +68,15 @@ public class CardServlet extends HttpServlet {
     @SneakyThrows
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
-        JsonObject data = new Gson().fromJson(req.getReader(), JsonObject.class);
-        Long id = Long.valueOf(data.get("card_id").toString().replaceAll("\"", ""));
-        String number = data.get("card_number").toString().replaceAll("\"", "");
-        String discount = data.get("discount").toString().replaceAll("\"", "");
-        Map<String, String> cardParameters = new HashMap<>();
-        cardParameters.put("card_number", number);
-        cardParameters.put("discount", discount);
+        Integer number = Integer.valueOf(req.getParameter("card_number"));
+        Integer discount = Integer.valueOf(req.getParameter("discount"));
+        Long id = Long.valueOf(req.getParameter("card_id"));
+        Card card = Card.builder().number(number).discount(discount).build();
         try {
-            Card card = cardService.update(cardParameters, id);
+            CardDto cardDto = cardService.update(card, id);
+            String json = new Gson().toJson(cardDto);
             try (PrintWriter out = resp.getWriter()) {
-                out.write(String.valueOf(card));
+                out.write(String.valueOf(json));
                 resp.setStatus(200);
             }
         } catch (ServiceException e) {

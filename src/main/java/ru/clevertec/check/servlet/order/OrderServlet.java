@@ -1,10 +1,10 @@
 package ru.clevertec.check.servlet.order;
 
 import lombok.SneakyThrows;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import ru.clevertec.check.api.exceptions.ServiceException;
-import ru.clevertec.check.service.OrderService;
-import ru.clevertec.check.spring.Configuration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import ru.clevertec.check.exceptions.ServiceException;
+import ru.clevertec.check.service.order.IOrderService;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.annotation.WebServlet;
@@ -17,14 +17,12 @@ import java.util.Map;
 @WebServlet("/api/order")
 public class OrderServlet extends HttpServlet {
 
-    private OrderService orderService;
+    @Autowired
+    private IOrderService orderService;
 
     @PostConstruct
     public void init() {
-        AnnotationConfigApplicationContext context =
-                new AnnotationConfigApplicationContext(Configuration.class);
-        orderService = context.getBean("orderService", OrderService.class);
-        context.close();
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
     }
 
     @SneakyThrows

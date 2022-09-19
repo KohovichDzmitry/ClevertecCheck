@@ -29,22 +29,3 @@ CREATE TABLE IF NOT EXISTS public.cards
 
 ALTER TABLE IF EXISTS public.cards
     OWNER to postgres;
-
--- changeset Kohovich Dmitry:3
-CREATE TABLE IF NOT EXISTS public.custom_order
-(
-    order_id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
-    id_product integer NOT NULL,
-    quantity integer NOT NULL,
-    CONSTRAINT custom_order_pkey PRIMARY KEY (order_id),
-    CONSTRAINT fk_product_id_order FOREIGN KEY (id_product)
-    REFERENCES public.products (product_id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION,
-    CONSTRAINT check_quantity CHECK (quantity > 0)
-    )
-
-    TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS public.custom_order
-    OWNER to postgres;

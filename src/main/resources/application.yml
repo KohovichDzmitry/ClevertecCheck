@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://127.0.0.1:5432/clevertec_check
+    username: postgres
+    password: Dima6026105!
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+        show_sql: true
+        format_sql: true
+
+check:
+  pageSizeDefault: 20
+  pageDefault: 0
+  discountPercent: 10

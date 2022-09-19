@@ -1,6 +1,6 @@
-package ru.clevertec.check.api.service;
+package ru.clevertec.check.service.order;
 
-import ru.clevertec.check.api.exceptions.ServiceException;
+import ru.clevertec.check.exceptions.ServiceException;
 import ru.clevertec.check.custom.CustomList;
 import ru.clevertec.check.model.Product;
 

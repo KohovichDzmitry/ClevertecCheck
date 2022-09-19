@@ -2,11 +2,9 @@ plugins {
     id 'java'
     id 'application'
     id 'war'
-    id 'org.liquibase.gradle' version '2.1.1'
+    id 'org.springframework.boot' version '2.7.3'
+    id 'io.spring.dependency-management' version '1.0.13.RELEASE'
 }
-
-group 'ru.clevertec'
-version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -20,81 +18,42 @@ sourceSets {
     }
 }
 
-configurations {
-    liquibaseRuntime.extendsFrom runtime
-}
-
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.9.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params'
+
     jmhImplementation 'org.openjdk.jmh:jmh-core:1.35'
     jmhAnnotationProcessor 'org.openjdk.jmh:jmh-generator-annprocess:1.35'
-    implementation 'com.google.code.gson:gson:2.9.0'
-    implementation 'org.apache.logging.log4j:log4j-api:2.18.0'
-    implementation 'org.apache.logging.log4j:log4j-core:2.18.0'
-    implementation 'org.slf4j:slf4j-api:2.0.0'
-    implementation 'org.slf4j:slf4j-simple:2.0.0'
-    implementation 'org.postgresql:postgresql:42.5.0'
+
+    implementation 'com.google.code.gson:gson'
+    implementation 'org.apache.logging.log4j:log4j-api'
+    implementation 'org.apache.logging.log4j:log4j-core'
+    runtimeOnly 'org.postgresql:postgresql'
     implementation 'javax:javaee-api:8.0.1'
     implementation 'javax.servlet:servlet-api:2.5'
     implementation 'com.itextpdf:itext7-core:7.0.4'
-    implementation 'com.itextpdf:itextpdf:5.5.13.3'
-    liquibaseRuntime 'org.liquibase:liquibase-core:4.15.0'
-    liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl:3.0.2'
-    liquibaseRuntime 'info.picocli:picocli:4.6.3'
-    liquibaseRuntime 'org.yaml:snakeyaml:1.30'
-    liquibaseRuntime 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
-    liquibaseRuntime 'org.postgresql:postgresql:42.5.0'
-    annotationProcessor 'org.projectlombok:lombok:1.18.24'
-    implementation 'org.projectlombok:lombok:1.18.24'
-    implementation "org.yaml:snakeyaml:1.30"
-    implementation "org.springframework:spring-context:5.3.22"
-    implementation "org.springframework:spring-core:5.3.22"
-    implementation "org.springframework:spring-beans:5.3.22"
+    annotationProcessor 'org.projectlombok:lombok'
+    implementation 'org.projectlombok:lombok'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.modelmapper:modelmapper:3.1.0'
+    implementation 'org.liquibase:liquibase-core'
+    implementation 'org.mapstruct:mapstruct:1.5.2.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.2.Final'
+    implementation 'com.mchange:c3p0:0.9.5.5'
 }
 
-application {
-    mainClassName = 'ru.clevertec.check.Main'
-}
-
-test {
-    useJUnitPlatform()
-}
-
-jar {
-    manifest {
-        attributes 'Main-Class': 'ru.clevertec.check.Main'
-    }
-}
-
-sourceCompatibility = JavaVersion.VERSION_11
-
-class FileDownloader extends DefaultTask {
-    @Input
-    String sourceUrl
-
-    @OutputFile
-    File target
-
-    @TaskAction
-    void download() {
-        try {
-            ant.get(src: sourceUrl, dest: target)
-        } catch (Exception e) {
-            println e
-        }
-    }
-}
-
-task downloadFileFromRepo(type: FileDownloader) {
-    sourceUrl = 'https://github.com/KohovichDzmitry/ClevertecCheck/blob/85664a955db49f3cc1dd2cff169c5bcab135137a/src/main/resources/check'
-    target = new File('src/main/resources/check.txt')
-}
-
+group = 'ru.clevertec'
+version = '1.0-SNAPSHOT'
+JavaVersion.VERSION_11
 compileJava.options.encoding = 'UTF-8'
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
+}
+
+application {
+    mainClassName = 'ru.clevertec.check.Main'
 }
 
 task jmh(type: JavaExec, dependsOn: jmhClasses) {
@@ -104,33 +63,6 @@ task jmh(type: JavaExec, dependsOn: jmhClasses) {
 
 classes.finalizedBy(jmhClasses)
 
-liquibase {
-    activities {
-        main {
-            changeLogFile 'src/main/resources/db/changelog/db.changelog-master.yaml'
-            driver "org.postgresql.Driver"
-            url "jdbc:postgresql://127.0.0.1:5432/clevertec_check"
-            username "postgres"
-            password "Dima6026105!"
-        }
-    }
+test {
+    useJUnitPlatform()
 }
-
-task deploy_changeLog {
-    doFirst() {
-        liquibase {
-            activities {
-                main {
-                    changeLogFile 'src/main/resources/db/changelog/db.changelog-master.yaml'
-                    driver "org.postgresql.Driver"
-                    url "jdbc:postgresql://127.0.0.1:5432/clevertec_check"
-                    username "postgres"
-                    password "Dima6026105!"
-                }
-            }
-        }
-    }
-}
-
-update.dependsOn(deploy_changeLog)
-processResources.dependsOn(update)

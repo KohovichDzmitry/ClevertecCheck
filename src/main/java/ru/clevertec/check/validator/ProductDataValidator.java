@@ -1,8 +1,7 @@
 package ru.clevertec.check.validator;
 
 import lombok.NoArgsConstructor;
-
-import java.util.Map;
+import ru.clevertec.check.model.Product;
 
 @NoArgsConstructor
 public class ProductDataValidator {
@@ -12,14 +11,14 @@ public class ProductDataValidator {
     private static final String PRODUCT_STOCK_REGEX = "([10])";
     private static final String PRODUCT_QUANTITY_REGEX = "([1-9]|1\\d|20)";
 
-    public static boolean isValidProductParameters(Map<String, String> productParameters) {
-        if (!isValidNameProduct(productParameters.get("product_name"))) {
+    public static boolean isValidProductParameters(Product product) {
+        if (!isValidNameProduct(product.getName())) {
             return false;
         }
-        if (!isValidPriceProduct(productParameters.get("price"))) {
+        if (!isValidPriceProduct(String.valueOf(product.getPrice()))) {
             return false;
         }
-        return isValidStockProduct(productParameters.get("stock"));
+        return isValidStockProduct(String.valueOf(product.getStock()));
     }
 
     public static boolean isValidNameProduct(String name) {
