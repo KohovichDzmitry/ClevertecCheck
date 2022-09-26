@@ -5,12 +5,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Component;
 import ru.clevertec.check.annotation.Log;
-import ru.clevertec.check.api.service.IOrderService;
+import ru.clevertec.check.service.IOrderService;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
+@Component
 @Value
 @RequiredArgsConstructor
 public class OrderServiceHandler implements InvocationHandler {
