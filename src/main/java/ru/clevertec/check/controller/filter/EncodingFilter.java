@@ -1,11 +1,11 @@
-package ru.clevertec.check.servlet.filter;
+package ru.clevertec.check.controller.filter;
 
 import lombok.SneakyThrows;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 
-@WebFilter(urlPatterns = "/*")
+@WebFilter(urlPatterns = {"/api/v1/products/*", "/api/v1/cards/*"})
 public class EncodingFilter implements Filter {
 
     @Override

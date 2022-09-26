@@ -1,7 +1,7 @@
 package ru.clevertec.check.validator;
 
 import lombok.NoArgsConstructor;
-import ru.clevertec.check.model.Product;
+import ru.clevertec.check.entity.Product;
 
 @NoArgsConstructor
 public class ProductDataValidator {

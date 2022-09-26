@@ -1,29 +1,26 @@
-package ru.clevertec.check.service.card;
+package ru.clevertec.check.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.clevertec.check.exceptions.ServiceException;
-import ru.clevertec.check.custom.CustomArrayList;
-import ru.clevertec.check.custom.CustomList;
 import ru.clevertec.check.dto.CardDto;
+import ru.clevertec.check.entity.Card;
+import ru.clevertec.check.exceptions.ServiceException;
 import ru.clevertec.check.mapper.CardMapper;
-import ru.clevertec.check.model.Card;
 import ru.clevertec.check.repository.CardRepository;
+import ru.clevertec.check.service.ICardService;
 import ru.clevertec.check.validator.CardDataValidator;
 
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class CardService implements ICardService {
 
-    @Value("${check.pageSizeDefault}")
-    private int pageSize;
-    @Value("${check.pageDefault}")
-    private int page;
     private final CardRepository cardRepository;
     private final CardMapper cardMapper;
 
@@ -44,24 +41,8 @@ public class CardService implements ICardService {
     }
 
     @Override
-    public CustomList<CardDto> getAll() {
-        CustomList<CardDto> cards = new CustomArrayList<>();
-        cardRepository.findAll().stream().map(cardMapper::toDto).forEach(cards::add);
-        return cards;
-    }
-
-    @Override
-    public CustomList<CardDto> findAll(String pageSizeStr, String pageStr) {
-        if (pageSizeStr != null) {
-            pageSize = Integer.parseInt(pageSizeStr);
-        }
-        if (pageStr != null) {
-            page = Integer.parseInt(pageStr);
-        }
-        CustomList<CardDto> cards = new CustomArrayList<>();
-        cardRepository.findAll(PageRequest.of(page, pageSize)).stream()
-                .map(cardMapper::toDto).forEach(cards::add);
-        return cards;
+    public List<CardDto> findAll(Pageable pageable) {
+        return cardRepository.findAll(pageable).stream().map(cardMapper::toDto).collect(toList());
     }
 
     @Override
@@ -87,7 +68,7 @@ public class CardService implements ICardService {
     }
 
     @Override
-    public CardDto findCardByNumber(Integer number) throws ServiceException {
+    public CardDto findByNumber(Integer number) throws ServiceException {
         if (!CardDataValidator.isValidNumberCard(String.valueOf(number))) {
             throw new ServiceException("Ошибка при валидации номера скидочной карты. Доступные номера скидочных карт: " +
                     "0000, 1111, 2222, 3333, 4444 или 5555");

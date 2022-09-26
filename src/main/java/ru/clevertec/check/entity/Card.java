@@ -1,4 +1,4 @@
-package ru.clevertec.check.model;
+package ru.clevertec.check.entity;
 
 import lombok.*;
 

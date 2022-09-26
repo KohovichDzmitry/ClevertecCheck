@@ -2,7 +2,7 @@ package ru.clevertec.check.repository;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.clevertec.check.model.Product;
+import ru.clevertec.check.entity.Product;
 
 import java.util.List;
 import java.util.Optional;

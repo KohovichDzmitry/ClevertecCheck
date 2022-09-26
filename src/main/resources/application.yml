@@ -10,8 +10,21 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQL10Dialect
         show_sql: true
         format_sql: true
+  data:
+    web:
+      pageable:
+        default-page-size: 20
+
+logging:
+  file:
+    path: src/main/resources/log
 
 check:
-  pageSizeDefault: 20
-  pageDefault: 0
   discountPercent: 10
+  id: id
+  count: count
+  card: card
+  tableWidth: 300
+  pathPdf: src/main/resources/print/check.pdf
+  pathTxt: src/main/resources/print/check.txt
+  font: src/main/resources/font/Courier10 Cyr BT.ttf

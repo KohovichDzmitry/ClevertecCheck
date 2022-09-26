@@ -15,5 +15,4 @@ public class ProductDto {
     private String name;
     private Double price;
     private Integer stock;
-    private Integer quantity;
 }

@@ -1,29 +1,27 @@
-package ru.clevertec.check.service.product;
+package ru.clevertec.check.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.clevertec.check.exceptions.ServiceException;
-import ru.clevertec.check.custom.CustomArrayList;
-import ru.clevertec.check.custom.CustomList;
 import ru.clevertec.check.dto.ProductDto;
+import ru.clevertec.check.entity.Product;
+import ru.clevertec.check.exceptions.ServiceException;
 import ru.clevertec.check.mapper.ProductMapper;
-import ru.clevertec.check.model.Product;
 import ru.clevertec.check.repository.ProductRepository;
+import ru.clevertec.check.service.IProductService;
 import ru.clevertec.check.validator.ProductDataValidator;
+
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ProductService implements IProductService {
 
-    @Value("${check.pageSizeDefault}")
-    private int pageSize;
-    @Value("${check.pageDefault}")
-    private int page;
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
 
@@ -45,24 +43,8 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public CustomList<ProductDto> getAll() {
-        CustomList<ProductDto> products = new CustomArrayList<>();
-        productRepository.findAll().stream().map(productMapper::toDto).forEach(products::add);
-        return products;
-    }
-
-    @Override
-    public CustomList<ProductDto> findAll(String pageSizeStr, String pageStr) {
-        if (pageSizeStr != null) {
-            pageSize = Integer.parseInt(pageSizeStr);
-        }
-        if (pageStr != null) {
-            page = Integer.parseInt(pageStr);
-        }
-        CustomList<ProductDto> products = new CustomArrayList<>();
-        productRepository.findAll(PageRequest.of(page, pageSize)).stream()
-                .map(productMapper::toDto).forEach(products::add);
-        return products;
+    public List<ProductDto> findAll(Pageable pageable) {
+        return productRepository.findAll(pageable).stream().map(productMapper::toDto).collect(toList());
     }
 
     @Override
@@ -89,7 +71,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public ProductDto findProductByName(String name) throws ServiceException {
+    public ProductDto findByName(String name) throws ServiceException {
         if (!ProductDataValidator.isValidNameProduct(name)) {
             throw new ServiceException("Ошибка при валидации названия продукта. Название продукта должно начинаться " +
                     "с прописной буквы!");
@@ -105,18 +87,14 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public CustomList<ProductDto> findAllAndOrderByName() {
-        CustomList<ProductDto> products = new CustomArrayList<>();
-        productRepository.findAllAndOrderBy(Sort.by("name"))
-                .stream().map(productMapper::toDto).forEach(products::add);
-        return products;
+    public List<ProductDto> findAllAndOrderByName() {
+        return productRepository.findAllAndOrderBy(Sort.by("name"))
+                .stream().map(productMapper::toDto).collect(toList());
     }
 
     @Override
-    public CustomList<ProductDto> findAllAndOrderByPrice() {
-        CustomList<ProductDto> products = new CustomArrayList<>();
-        productRepository.findAllAndOrderBy(Sort.by("price"))
-                .stream().map(productMapper::toDto).forEach(products::add);
-        return products;
+    public List<ProductDto> findAllAndOrderByPrice() {
+        return productRepository.findAllAndOrderBy(Sort.by("price"))
+                .stream().map(productMapper::toDto).collect(toList());
     }
 }

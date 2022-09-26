@@ -33,3 +33,5 @@ build/
 .idea/
 target
 *.db
+*.pdf
+*.txt

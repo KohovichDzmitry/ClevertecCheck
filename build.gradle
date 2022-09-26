@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'application'
-    id 'war'
+    id 'io.freefair.lombok' version '6.5.1'
     id 'org.springframework.boot' version '2.7.3'
     id 'io.spring.dependency-management' version '1.0.13.RELEASE'
 }
@@ -29,18 +29,14 @@ dependencies {
     implementation 'org.apache.logging.log4j:log4j-api'
     implementation 'org.apache.logging.log4j:log4j-core'
     runtimeOnly 'org.postgresql:postgresql'
-    implementation 'javax:javaee-api:8.0.1'
-    implementation 'javax.servlet:servlet-api:2.5'
     implementation 'com.itextpdf:itext7-core:7.0.4'
     annotationProcessor 'org.projectlombok:lombok'
     implementation 'org.projectlombok:lombok'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.modelmapper:modelmapper:3.1.0'
     implementation 'org.liquibase:liquibase-core'
     implementation 'org.mapstruct:mapstruct:1.5.2.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.2.Final'
-    implementation 'com.mchange:c3p0:0.9.5.5'
 }
 
 group = 'ru.clevertec'
@@ -53,7 +49,7 @@ tasks.withType(JavaCompile) {
 }
 
 application {
-    mainClassName = 'ru.clevertec.check.Main'
+    mainClassName = 'ru.clevertec.check.Application'
 }
 
 task jmh(type: JavaExec, dependsOn: jmhClasses) {

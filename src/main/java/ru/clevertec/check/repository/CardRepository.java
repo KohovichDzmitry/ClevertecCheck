@@ -1,7 +1,7 @@
 package ru.clevertec.check.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.clevertec.check.model.Card;
+import ru.clevertec.check.entity.Card;
 
 import java.util.Optional;
 

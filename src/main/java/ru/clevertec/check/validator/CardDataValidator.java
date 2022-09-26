@@ -1,7 +1,7 @@
 package ru.clevertec.check.validator;
 
 import lombok.NoArgsConstructor;
-import ru.clevertec.check.model.Card;
+import ru.clevertec.check.entity.Card;
 
 import java.util.regex.Pattern;
 

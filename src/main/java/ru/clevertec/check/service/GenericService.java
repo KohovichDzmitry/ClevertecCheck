@@ -1,7 +1,9 @@
 package ru.clevertec.check.service;
 
+import org.springframework.data.domain.Pageable;
 import ru.clevertec.check.exceptions.ServiceException;
-import ru.clevertec.check.custom.CustomList;
+
+import java.util.List;
 
 public interface GenericService<T, D> {
 
@@ -9,9 +11,7 @@ public interface GenericService<T, D> {
 
     D findById(Long id) throws ServiceException;
 
-    CustomList<D> getAll();
-
-    CustomList<D> findAll(String pageSizeStr, String pageStr);
+    List<D> findAll(Pageable pageable);
 
     D update(T entity, Long id) throws ServiceException;
 
